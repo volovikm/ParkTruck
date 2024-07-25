@@ -1,0 +1,92 @@
+.map{
+    width: 100%; 
+    margin-top: 80px;
+    height: calc(100% - 80px);
+    z-index: 1;
+    position: fixed;
+}
+
+.map_button{
+    width: 80px; 
+    height: 80px;
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+}
+
+.add_parking_button{
+    background-color: rgb(23, 99, 191);
+    color: rgb(255, 255, 255);
+    border: 0px;
+    border-radius: 50%;
+}
+
+.cancel_add_parking_button{
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 50%;
+    width: 40px; 
+    height: 40px;
+    position: absolute;
+    right: 0px;
+    bottom: 70px;
+    display: none;
+    z-index: 4;
+    cursor: pointer;
+}
+
+.selection_marker{
+    background-image: url('../images/red_marker.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 33px;
+    height: 40px;
+    left: 49.5%;
+    top: 51.5%;
+    position: absolute;
+    z-index: 2;
+    display: none;
+}
+
+.map_buttons_div{
+    position: fixed;
+    right: 5vh;
+    bottom: 5vh;
+    z-index: 3;
+}
+
+.single_map_button_div{
+    margin-bottom: 15px;
+}
+
+.filter{
+    position: absolute;
+    width: 240px;
+    height: 28px;
+    top: 135px;
+    right: 3px;
+    background-color: white;
+    z-index: 3;
+    box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .15), 0 2px 5px -3px rgba(0, 0, 0, .15);
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.filter_text{
+    margin: auto;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    text-align: center;
+    padding-top:6px;
+    padding-left:5px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.filter_select_div{
+    padding-top:5px;
+    display: inline-block;
+    vertical-align: top;
+}

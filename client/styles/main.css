@@ -1,0 +1,137 @@
+.main_button {
+    background-color: rgb(23, 99, 191);
+    color: white;
+    border: none;
+    font-size: 16px;
+    border-radius: 10px;
+    opacity: 0.8;
+    cursor: pointer;
+    padding: 14px 20px;
+}
+
+.secondary_button {
+    background-color: white;
+    color: rgb(23, 99, 191);
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid rgb(23, 99, 191);
+    opacity: 0.8;
+    cursor: pointer;
+    padding: 14px 20px;
+}
+
+.disabled_button {
+    background-color: white;
+    color: DarkGray;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 2px solid rgb(194, 190, 190);
+    pointer-events: none;
+    padding: 14px 20px;
+}
+
+.link_button {
+    background: transparent;
+    border: none;
+    text-decoration: underline;
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.body{
+    background-color: #e6f0f7; 
+    font-family:Arial, Verdana, sans-serif;
+}
+
+.interface_block {
+    background-color: white;
+    color: rgb(23, 99, 191);
+    border-radius: 10px;
+    border: 1px solid rgb(23, 99, 191);
+    padding: 0 0;
+}
+
+.base_form{
+    width: 380px;
+}
+
+.basic_input{
+    border-radius: 10px;
+    border: 1px solid rgb(23, 99, 191);
+    width: 100%;
+    height: 35px;
+    padding-left: 10px;
+    margin: 8px 0;
+    display: inline-block;
+    box-sizing: border-box;
+    text-decoration-color: rgb(23, 99, 191);
+}
+
+.invisible_input{
+    display: none;
+}
+
+.password-control_div{
+    margin-top: 0px;
+    height: 0px;
+}
+
+.password-control {
+    position: relative;
+    top: -35px;
+    right: -150px;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url(../images/eye.png) 0 0 no-repeat;
+    cursor: pointer;
+}
+
+.password-control.view {
+    background: url(../images/no-eye.png) 0 0 no-repeat;
+    cursor: pointer;
+}
+
+.link {
+    color: #002bc7;
+    text-decoration: none;
+}
+
+.error_message{
+    color: #c41104;
+}
+
+.main_form_div{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: fit-content;
+    margin-top: 60px;
+}
+
+.input_form_div{
+    padding: 16px;
+}
+
+.account_input{
+    background-color: #e6f0f7;
+}
+
+.input_label {
+    color: rgb(23, 99, 191);
+    font-weight: bold;
+}
+
+.label_div{
+    text-align: left;
+}
+
+.form_header{
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.form_header_note{
+    margin-top: 15px;
+}

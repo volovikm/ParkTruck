@@ -1,0 +1,301 @@
+<?php
+        class DataBaseRequests
+        {
+                //Соединение с базой данных
+                public function connectDataBase() 
+                {
+                        $db = new PDO('mysql:host=127.0.0.1;dbname=prk4440820_base', 'root', '');
+                        return($db);
+                }
+
+                
+                //Запросы по аккаунту
+
+                //Запрос на регистрацию пользователя
+                public function regNewUserRequest($reg_data) 
+                {
+                        $db=$this->connectDataBase();
+
+                        try {
+                                $sql = "INSERT INTO users (
+                                telephone, 
+                                role,
+                                password_hash,
+                                reg_confirm_code
+                                ) VALUES (
+                                :telephone, 
+                                :role,
+                                :password_hash,
+                                :reg_confirm_code
+                                )";
+                                $stmt=$db->prepare($sql);
+                                $stmt->bindValue(":telephone", $reg_data['telephone']);
+                                $stmt->bindValue(":role", $reg_data['role']);
+                                $stmt->bindValue(":password_hash", $reg_data['password_hash']);
+                                $stmt->bindValue(":reg_confirm_code", $reg_data['reg_confirm_code']);
+                                $affectedRowsNumber=$stmt->execute();
+                                if($affectedRowsNumber > 0 ){
+                                        return(true);
+                                }
+                                return(false);
+                        }catch (PDOException $e) {}
+                }    
+
+                //Запрос на проверку существования аккаунта с данным номером телефона и ролью
+                public function checkExistingAccount($reg_data,$confirmed) 
+                {
+                        $db=$this->connectDataBase();
+
+                        if($confirmed){
+                                $reg_confirmed='1';
+                        }else{
+                                $reg_confirmed='0';
+                        }
+
+                        try 
+                        {
+                                $sql="SELECT * FROM `users` WHERE 
+                                telephone = :telephone AND 
+                                reg_confirmed = :reg_confirmed";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":telephone", $reg_data['telephone']);
+                                $stmt->bindValue(":reg_confirmed", $reg_confirmed);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                if(isset($array[0]))
+                                {
+                                        $array=$array[0];
+                                }
+                                return($array);
+                        }catch (PDOException $e) {}
+                        return(false);
+                }
+
+                //Запрос на удаление существующего аккаунта с данным телефоном и ролью
+                public function deleteExistingAccount($user_id)
+                {
+                        $db=$this->connectDataBase();
+
+                        try {
+                                $sql = "DELETE FROM users WHERE 
+                                id = :user_id";
+                                $stmt=$db->prepare($sql);
+                                $stmt->bindValue(":user_id", $user_id);
+                                $affectedRowsNumber=$stmt->execute();
+                                if($affectedRowsNumber > 0 ){
+                                        return(true);
+                                }
+                                return(false);
+                        }catch (PDOException $e) {}
+                }
+
+                //Запрос на данные аккаунта с номером телефона
+                public function findUserByTelephone($telephone) 
+                {
+                        $db=$this->connectDataBase();
+
+                        try 
+                        {
+                                $sql="SELECT * FROM `users` WHERE 
+                                telephone = :telephone AND
+                                deleted = :deleted";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":telephone", $telephone);
+                                $stmt->bindValue(":deleted", '0');
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                if(isset($array[0]))
+                                {
+                                        $array=$array[0];
+                                }
+                                return($array);
+                        }catch (PDOException $e) {}
+                        return(false);
+                }
+
+                //Запрос на данные аккаунта по id
+                public function findUserById($user_id) 
+                {
+                        $db=$this->connectDataBase();
+
+                        try 
+                        {
+                                $sql="SELECT * FROM `users` WHERE 
+                                id = :user_id";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":user_id", $user_id);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                if(isset($array[0]))
+                                {
+                                        $array=$array[0];
+                                }
+                                return($array);
+                        }catch (PDOException $e) {}
+                        return(false);
+                }
+
+                //Запрос на подтверждение регистрации пользователя
+                public function confirmRegUser($user_id) 
+                {
+                        $db=$this->connectDataBase();
+
+                        try 
+                        {
+                                $sql = "UPDATE users SET
+                                reg_confirmed=:reg_confirmed
+                                WHERE 
+                                id=:user_id";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":reg_confirmed", '1');
+                                $stmt->bindValue(":user_id", $user_id);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                $affectedRowsNumber=$stmt->execute(); 
+                                if($affectedRowsNumber > 0 ){
+                                        return(true);
+                                }
+                        }catch (PDOException $e) {}
+                        return(false);
+                }
+
+                //Запрос на обновление времени таймаута отправки СМС с кодом подтверждение регистрации
+                public function updateRegConfirmSMSTimeout($user_id,$new_timeout) 
+                {
+                        $db=$this->connectDataBase();
+
+                        try 
+                        {
+                                $sql = "UPDATE users SET
+                                reg_confirm_code_sms_time=:reg_confirm_code_sms_time
+                                WHERE 
+                                id=:user_id";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":reg_confirm_code_sms_time", $new_timeout);
+                                $stmt->bindValue(":user_id", $user_id);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                $affectedRowsNumber=$stmt->execute(); 
+                                if($affectedRowsNumber > 0 ){
+                                        return(true);
+                                }
+                        }catch (PDOException $e) {}
+                        return(false);
+                }
+
+
+                //Запросы по парковкам
+
+                //Запрос данных всех парковок
+                public function allParkingsDataRequest() 
+                {
+                        $db=$this->connectDataBase();
+
+                        $array=false;
+                        try 
+                        {
+                                $sql="SELECT * FROM `parkings`";
+                                $stmt = $db->prepare($sql);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        }catch (PDOException $e) {}
+                        return($array);
+                }
+
+                //Запрос данных парковок пользователя
+                public function userParkingsDataRequest($user_id) 
+                {
+                        $db=$this->connectDataBase();
+
+                        $array=false;
+                        try 
+                        {
+                                $sql="SELECT * FROM `parkings` 
+                                WHERE
+                                user_id = :user_id";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":user_id", $user_id);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        }catch (PDOException $e) {}
+                        return($array);
+                }
+
+                //Запрос данных конкретной парковки
+                public function parkingCardDataRequest($parking_id) 
+                {
+                        $db=$this->connectDataBase();
+
+                        $array=false;
+                        try 
+                        {
+                                $sql="SELECT * FROM `parkings` 
+                                WHERE
+                                parking_id = :parking_id";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":parking_id", $parking_id);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        }catch (PDOException $e) {}
+                        return($array);
+                }
+
+                //Запрос данных парковки по координатам
+                public function findParkingByCoordinates($latitude,$longitude)
+                {
+                        $db=$this->connectDataBase();
+
+                        $array=false;
+                        try 
+                        {
+                                $sql="SELECT * FROM `parkings` 
+                                WHERE
+                                latitude = :latitude AND
+                                longitude = :longitude";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":latitude", $latitude);
+                                $stmt->bindValue(":longitude", $longitude);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        }catch (PDOException $e) {}
+                        return($array);
+                }
+
+                //Запрос на добавление новой парковки
+                public function addNewParkingRequest($parking_data) 
+                {
+                        $db=$this->connectDataBase();
+
+                        try {
+                                $sql = "INSERT INTO parkings (
+                                parking_id,
+                                name, 
+                                latitude,
+                                longitude,
+                                adress,
+                                user_id
+                                ) VALUES (
+                                :parking_id,
+                                :name, 
+                                :latitude,
+                                :longitude,
+                                :adress,
+                                :user_id
+                                )";
+                                $stmt=$db->prepare($sql);
+                                $stmt->bindValue(":parking_id", $parking_data['parking_id']);
+                                $stmt->bindValue(":name", $parking_data['name']);
+                                $stmt->bindValue(":latitude", $parking_data['latitude']);
+                                $stmt->bindValue(":longitude", $parking_data['longitude']);
+                                $stmt->bindValue(":adress", $parking_data['adress']);
+                                $stmt->bindValue(":user_id", $parking_data['user_id']);
+                                $affectedRowsNumber=$stmt->execute();
+                                if($affectedRowsNumber > 0 ){
+                                        return(true);
+                                }
+                                return(false);
+                        }catch (PDOException $e) {}
+                }
+
+        }
+?>
