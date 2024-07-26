@@ -40,35 +40,35 @@ class Request extends DataBaseRequests
             if(isset($request_content['get_parkings_data']))
             {
                 $response=$this->getParkingsData($request_content);
-                $this->response_json=json_encode($response);
+                $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
             }
 
             //Запрос на авторизацию
             if(isset($request_content['auth']))
             {
                 $response=$this->auth($request_content);
-                $this->response_json=json_encode($response);
+                $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
             }
 
             //Запрос на регистрацию
             if(isset($request_content['reg']))
             {
                 $response=$this->reg($request_content);
-                $this->response_json=json_encode($response);
+                $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
             }
 
             //Запрос на подтверждение регистрации
             if(isset($request_content['reg_confirm']))
             {
                 $response=$this->regConfirm($request_content);
-                $this->response_json=json_encode($response);
+                $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
             }
 
             //Запррос на отправку СМС кода подтверждения регистрации
             if(isset($request_content['send_sms_reg_confirm_code']))
             {
                 $response=$this->sendSMSRegConfirmCode($request_content);
-                $this->response_json=json_encode($response);
+                $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
             }
 
             //Запрос на действия с карточкой парковки
@@ -84,7 +84,7 @@ class Request extends DataBaseRequests
                     $response=$this->editParkingCard($request_content);
                 }
                 
-                $this->response_json=json_encode($response);
+                $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
             }
 
             //Запрос на вывод данных списка
@@ -92,7 +92,7 @@ class Request extends DataBaseRequests
             {
                 $response=$this->getListData($request_content);
 
-                $this->response_json=json_encode($response);
+                $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
             }
         }
     }
@@ -416,6 +416,7 @@ class Request extends DataBaseRequests
         {
             $parking_id=$list_info;
             $list_data=$this->allParkingPlacesRequest($parking_id);
+            $list_data["header"]=["","Стоимость, руб","Длина","Ширина","Высота"];
             $list_data["required_info"]=["choice_checkbox","cost","price_units","length","width","height","height_not_limited"];
         }
 
