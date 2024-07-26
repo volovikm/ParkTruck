@@ -334,5 +334,5 @@ function parkingPlaceFormHandler(action)
         }
     }
 
-    //Сохранение данных формы
+    //Сохранение данных формы в списке
 }

@@ -297,5 +297,23 @@
                         }catch (PDOException $e) {}
                 }
 
+
+                //Запросы по парковочным местам
+                public function allParkingPlacesRequest($parking_id) 
+                {
+                        $db=$this->connectDataBase();
+
+                        $array=false;
+                        try 
+                        {
+                                $sql="SELECT * FROM `parking_places` WHERE parking_id= :parking_id";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":parking_id", $parking_id);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        }catch (PDOException $e) {}
+                        return($array);
+                }
+
         }
 ?>

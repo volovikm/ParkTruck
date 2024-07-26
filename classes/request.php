@@ -11,6 +11,8 @@
     Метод sendSMSRegConfirmCode - принимает запрос на отправку кода по СМС, запускает отправку СМС
     Метод addNewParkingCard - принимает запрос на добавление новой карточки парковки, проверяет данные, запускает добавление
     Метод editParkingCard - принимает запрос на редактирование существующей карточки парковки, проверяет данные, запускает редактирование
+
+    Метод getListData - принимает запрос на вывод данных списка, возвращает массив списка
 */
 
 require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/data_base/bd.php");
@@ -69,7 +71,7 @@ class Request extends DataBaseRequests
                 $this->response_json=json_encode($response);
             }
 
-            //Запррос на действия с карточкой парковки
+            //Запрос на действия с карточкой парковки
             if(isset($request_content['parking_card_action']))
             {
                 if($request_content['parking_card_action']=="create_new")
@@ -82,6 +84,14 @@ class Request extends DataBaseRequests
                     $response=$this->editParkingCard($request_content);
                 }
                 
+                $this->response_json=json_encode($response);
+            }
+
+            //Запрос на вывод данных списка
+            if(isset($request_content['list']))
+            {
+                $response=$this->getListData($request_content);
+
                 $this->response_json=json_encode($response);
             }
         }
@@ -390,6 +400,26 @@ class Request extends DataBaseRequests
 
         //Успешное редактирование парковки
         $response='{"response":"parking_card_edit_complete"}';
+        return($response);
+    }
+
+
+
+    //Методы работы со списками
+    public function getListData($request_content) //Метод получения данных списков
+    {
+        $list_type=$request_content['list_type'];
+        $list_info=$request_content['list_info'];
+
+        //Список парковочных мест
+        if($list_type=="parking_places")
+        {
+            $parking_id=$list_info;
+            $list_data=$this->allParkingPlacesRequest($parking_id);
+        }
+
+        $response=$list_data;
+
         return($response);
     }
 }

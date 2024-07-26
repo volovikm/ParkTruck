@@ -179,9 +179,6 @@ class Form extends Input
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
         $account = new Account();
 
-        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/client/list.php");
-        $list = new List_();
-
         $user_data=$account->checkAuth();
         $role=$account->getRole($user_data);
 
@@ -336,11 +333,6 @@ class Form extends Input
 
 
 
-        //Список парковочных мест
-        $parking_places_list=$list->parkingPlacesList($form_data);
-
-
-
         $form='
         <form id="parking_card_form" class="parking_card_form">
 
@@ -386,8 +378,11 @@ class Form extends Input
 
                 </div>
 
-                <div class="list">
-                    '.$parking_places_list.'
+                <div id="list_container" class="list">
+                    <div id="list_row_pattern_1" class="list_row_blue list_row_pattern"></div>
+                    <div id="list_row_pattern_2" class="list_row_white list_row_pattern"></div>
+                    <script src="scripts/list.js"></script>
+                    <script>listRequest("parking_places","'.$form_data['parking_id'].'");</script>
                 </div>
 
                 '.$parking_place_form.'

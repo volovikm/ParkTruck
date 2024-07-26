@@ -135,3 +135,19 @@
 .form_header_note{
     margin-top: 15px;
 }
+
+.list_row_white{
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+    min-height: 40px;
+}
+
+.list_row_blue{
+    background-color: #e6f0f7;
+    width: 100%;
+    min-height: 40px;
+}
+
+.list_row_pattern{
+    display: none;
+}
