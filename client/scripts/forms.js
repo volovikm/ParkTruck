@@ -250,3 +250,43 @@ function parkingCardFormHandler(action)
     var data_json = JSON.stringify(data);
     requestTo(parkingCardDataHandler,data_json,url);
 }
+
+//Обработчик формы парковочного места
+function parkingPlaceFormHandler(action)
+{
+    var parking_place_form = document.getElementById("parking_place_form");
+    let inputs = parking_place_form.querySelectorAll('input');
+
+    for (let i = 0; i < inputs.length; i++) 
+    {
+        let input=inputs[i];
+
+        console.log(input);
+        
+        /*
+        //Поле ввода названия парковки
+        if(input.id=="name")
+        {
+            name_=input.value;
+        }
+
+        //Поле ввода широты
+        if(input.id=="latitude")
+        {
+            latitude=input.value;
+        }
+
+        //Поле ввода долготы
+        if(input.id=="longitude")
+        {
+            longitude=input.value;
+        }
+
+        //Поле ввода адреса
+        if(input.id=="adress")
+        {
+            adress=input.value;
+        }
+            */
+    }
+}
