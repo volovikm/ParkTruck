@@ -43,3 +43,14 @@ function readCookie(name) {
 	));
 	return matches ? decodeURIComponent(matches[1]) : undefined;
 }
+
+//Функция преобразования объекта в массив
+function objectToArray(obj)
+{
+	arr=[];
+	for (var key in obj) {
+        arr[key]=obj[key];
+    }
+
+	return(arr);
+}

@@ -416,6 +416,7 @@ class Request extends DataBaseRequests
         {
             $parking_id=$list_info;
             $list_data=$this->allParkingPlacesRequest($parking_id);
+            $list_data["required_info"]=["choice_checkbox","cost","price_units","length","width","height","height_not_limited"];
         }
 
         $response=$list_data;

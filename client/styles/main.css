@@ -139,15 +139,22 @@
 .list_row_white{
     background-color: rgb(255, 255, 255);
     width: 100%;
-    min-height: 40px;
+    height: 40px;
 }
 
 .list_row_blue{
     background-color: #e6f0f7;
     width: 100%;
-    min-height: 40px;
+    height: 40px;
 }
 
 .list_row_pattern{
     display: none;
+}
+
+.list_column_block{
+    display: inline-block;
+    vertical-align: top;
+    height: 100%;
+    padding-top: 10px;
 }
