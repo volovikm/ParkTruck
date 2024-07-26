@@ -310,6 +310,7 @@ class Form extends Input
             ';
 
             //Форма ввода данных парковочного места
+            $form_data["action"]="create_new";
             $parking_place_form=$this->parkingPlacesForm($form_data);
 
             $buttons=$buttons.$save_parking_card_button; //Кнопка сохранить
@@ -409,6 +410,7 @@ class Form extends Input
     //Форма парковочного места
     public function parkingPlacesForm($form_data)
     {
+        $action=$form_data["action"];
         $parking_place_lenght_input="";
         $parking_place_width_input="";
         $parking_place_height_input="";
@@ -476,8 +478,14 @@ class Form extends Input
 
             </div>
 
+            <div class="error_message_div">
+                <div id="error_message_parking_place" class="error_message">
+
+                </div>
+            </div>
+
             <div class="button_div">
-                <button id="save_parking_place_button" class="main_button" type="button">Сохранить</button>
+                <button id="save_parking_place_button" onclick="parkingPlaceFormHandler(`'.$action.'`)" class="main_button" type="button">Сохранить</button>
                 <button id="cancel_parking_place_button" class="secondary_button" type="button">Отменить</button>
             </div>
 

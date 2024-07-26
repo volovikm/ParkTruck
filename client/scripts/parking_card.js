@@ -85,23 +85,6 @@ function cancelParkingPlaceButtonHandler() //Обработчик кнопки �
 }
 cancelParkingPlaceButtonHandler();
 
-function saveParkingPlaceButtonHandler() //Обработчик кнопки сохранения парковочного места
-{
-    let save_parking_place_button=document.getElementById("save_parking_place_button");
-    if(save_parking_place_button===null)
-    {return(false);}
-
-    //click listener на кнопку
-    save_parking_place_button.addEventListener("click", (event) => {
-    
-        let parking_place_form=document.getElementById("parking_place_form");
-        let parking_place_data=[];
-        //createParkingPlaceLine(parking_place_data);
-    });
-}
-saveParkingPlaceButtonHandler();
-
-
 
 
 //Обработчик ответов сервера

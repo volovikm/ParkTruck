@@ -256,37 +256,83 @@ function parkingPlaceFormHandler(action)
 {
     var parking_place_form = document.getElementById("parking_place_form");
     let inputs = parking_place_form.querySelectorAll('input');
+    let selects = parking_place_form.querySelectorAll('select');
+
+    let length="";
+    let width="";
+    let height="";
+    let height_not_limited=false;
+    let price="";
+    let price_units="";
 
     for (let i = 0; i < inputs.length; i++) 
     {
         let input=inputs[i];
 
-        console.log(input);
-        
-        /*
-        //Поле ввода названия парковки
-        if(input.id=="name")
+        //Поле ввода длины
+        if(input.id=="length")
         {
-            name_=input.value;
+            length=input.value;
         }
 
-        //Поле ввода широты
-        if(input.id=="latitude")
+        //Поле ввода ширины
+        if(input.id=="width")
         {
-            latitude=input.value;
+            width=input.value;
         }
 
-        //Поле ввода долготы
-        if(input.id=="longitude")
+        //Поле ввода высоты
+        if(input.id=="height")
         {
-            longitude=input.value;
+            height=input.value;
         }
 
-        //Поле ввода адреса
-        if(input.id=="adress")
+        //Чекбокс неограниченной высоты
+        if(input.id=="height_not_limited" && input.checked)
         {
-            adress=input.value;
+            height_not_limited=true;
         }
-            */
+
+        //Поле ввода стоимости
+        if(input.id=="price")
+        {
+            price=input.value;
+        }
     }
+
+    for (let i = 0; i < selects.length; i++) 
+    {
+        let select=selects[i];
+    
+        //Поле ввода единиц измерения стоимости
+        if(select.id=="price_units")
+        {
+            price_units=select.value;
+        }
+    }
+
+    //Проверки формы
+    let error_message=document.getElementById("error_message_parking_place");
+
+    //Проверка пустой формы
+    if(action=="create_new")
+    {
+        if(length==="" || width==="")
+        {
+            error_message.innerHTML="Заполните размеры парковочного места";
+            return(false);
+        }
+        if(height==="" && height_not_limited===false)
+        {
+            error_message.innerHTML="Заполните размеры парковочного места";
+            return(false);
+        }
+        if(price==="")
+        {
+            error_message.innerHTML="Заполните стоимость парковки";
+            return(false);
+        }
+    }
+
+    //Сохранение данных формы
 }
