@@ -180,7 +180,9 @@ function parkingCardFormHandler(action)
     let latitude="";
     let longitude="";
     let adress="";
+    let parking_places="";
 
+    //Сбор данных input, select
     let inputs = document.querySelectorAll('input');
     for (let i = 0; i < inputs.length; i++) 
     {
@@ -211,6 +213,14 @@ function parkingCardFormHandler(action)
         }
     }
 
+    //Сбор данных парковочных мест
+    var parking_places_json=readCookie("parking_places_data");
+    if(parking_places_json !== undefined)
+    {
+        var parking_places_data = JSON.parse(parking_places_json);
+        parking_places=objectToArray(parking_places_data);
+    }
+
     //Проверки формы
     let error_message=document.getElementById("error_message");
 
@@ -232,6 +242,11 @@ function parkingCardFormHandler(action)
             error_message.innerHTML="Неверный адрес";
             return(false);
         }
+        if(parking_places==="")
+        {
+            error_message.innerHTML="Введите парковочные места";
+            return(false);
+        }
     }
 
     if(action=="edit")
@@ -246,9 +261,11 @@ function parkingCardFormHandler(action)
         latitude: latitude,
         longitude: longitude,
         adress: adress,
+        parking_places: parking_places
     };
     var data_json = JSON.stringify(data);
-    requestTo(parkingCardDataHandler,data_json,url);
+    console.log(data_json);
+    //requestTo(parkingCardDataHandler,data_json,url);
 }
 
 //Обработчик формы парковочного места
@@ -258,6 +275,7 @@ function parkingPlaceFormHandler(action)
     let inputs = parking_place_form.querySelectorAll('input');
     let selects = parking_place_form.querySelectorAll('select');
 
+    let size="";
     let length="";
     let width="";
     let height="";
@@ -303,6 +321,12 @@ function parkingPlaceFormHandler(action)
     for (let i = 0; i < selects.length; i++) 
     {
         let select=selects[i];
+
+        //Поле ввода типового размера
+        if(select.id=="size")
+        {
+            size=select.value;
+        }
     
         //Поле ввода единиц измерения стоимости
         if(select.id=="price_units")
@@ -317,16 +341,6 @@ function parkingPlaceFormHandler(action)
     //Проверка пустой формы
     if(action=="create_new")
     {
-        if(length==="" || width==="")
-        {
-            error_message.innerHTML="Заполните размеры парковочного места";
-            return(false);
-        }
-        if(height==="" && height_not_limited===false)
-        {
-            error_message.innerHTML="Заполните размеры парковочного места";
-            return(false);
-        }
         if(price==="")
         {
             error_message.innerHTML="Заполните стоимость парковки";
@@ -334,5 +348,70 @@ function parkingPlaceFormHandler(action)
         }
     }
 
+    //Сбор общего массива с данными формы, преобразование для отображения в списке
+    var parking_place_clear_data = {  //Массив с чистыми данными для дальнейшей отправки на сервер
+        "size": size,
+        "length": length,
+        "width": width,
+        "height": height,
+        "height_not_limited": height_not_limited,
+        "price": price,
+        "price_units": price_units,
+    }
+    var parking_places_json=readCookie("parking_places_data");
+    if(parking_places_json !== undefined)
+    {
+        var parking_places_data = JSON.parse(parking_places_json);
+        var parking_places_array=objectToArray(parking_places_data);
+    }
+    else
+    {
+        parking_places_array=[];
+    }
+    parking_places_array.push(parking_place_clear_data);
+    parking_places_data = JSON.stringify(parking_places_array);
+    writeCookie("parking_places_data", parking_places_data, 30);
+
+    //Преобразование данных
+    if(price_units=="days")
+    {price=price+" руб/сутки";}
+    if(price_units=="hours")
+    {price=price+" руб/час"; }
+
+    if(size=='C')
+    {size="Грузовой";}
+    if(size=='CE')
+    {size="Грузовой с прицепом";}
+    if(size=='C1')
+    {size="Малый грузовой";}
+    if(size=='B')
+    {size="Легковой";}
+
+    if(height_not_limited)
+    {height="Не ограничена";}
+    //Преобразование данных
+
+    var parking_place_data = {  //Массив с преобразованными данными для вывода в список
+    "size": size,
+    "length": length,
+    "width": width,
+    "height": height,
+    "height_not_limited": height_not_limited,
+    "price": price,
+    "price_units": price_units,
+    }
+
     //Сохранение данных формы в списке
+    var list_data_json=readCookie("list_data");
+    list_data_json=list_data_json.replace("/", '');
+    var list_data = JSON.parse(list_data_json);
+    var list_array=objectToArray(list_data);
+    list_array.push(parking_place_data);
+    listDisplay(list_array);
+
+    //Закрытие формы
+    parking_place_form.style.display="none";
+    var parking_place_form_inputs=parking_place_form.querySelectorAll("input");
+    for(i=0; i<parking_place_form_inputs.length;i++)
+    {parking_place_form_inputs[i].value="";}
 }

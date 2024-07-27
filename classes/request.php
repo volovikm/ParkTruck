@@ -416,8 +416,42 @@ class Request extends DataBaseRequests
         {
             $parking_id=$list_info;
             $list_data=$this->allParkingPlacesRequest($parking_id);
-            $list_data["header"]=["","Стоимость, руб","Длина","Ширина","Высота"];
-            $list_data["required_info"]=["choice_checkbox","cost","price_units","length","width","height","height_not_limited"];
+
+            $list_data["header"]=[
+                "choice_checkbox"=>"",
+                "size"=>"Размер",
+                "price"=>"Стоимость",
+                "length"=>"Длина, м",
+                "width"=>"Ширина, м",
+                "height"=>"Высота, м"
+            ];
+
+            //Подготовка данных для вывода
+            for($i=0;$i<count($list_data);$i++)
+            {
+                if(!isset($list_data[$i]))
+                {continue;}
+
+                //Единицы измерения стоимости
+                if($list_data[$i]["price_units"]=="days")
+                {$list_data[$i]["price"]=$list_data[$i]["price"]." руб\сутки";}
+                if($list_data[$i]["price_units"]=="hours")
+                {$list_data[$i]["price"]=$list_data[$i]["price"]." руб\час";}
+
+                //Органичение высоты
+                if($list_data[$i]["height_not_limited"]=='1')
+                {$list_data[$i]["height"]="Не ограничена";}
+
+                //Размер
+                if($list_data[$i]["size"]=='C')
+                {$list_data[$i]["size"]="Грузовой";}
+                if($list_data[$i]["size"]=='CE')
+                {$list_data[$i]["size"]="Грузовой с прицепом";}
+                if($list_data[$i]["size"]=='C1')
+                {$list_data[$i]["size"]="Малый грузовой";}
+                if($list_data[$i]["size"]=='B')
+                {$list_data[$i]["size"]="Легковой";}
+            }
         }
 
         $response=$list_data;

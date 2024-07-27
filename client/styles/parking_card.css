@@ -19,6 +19,7 @@
     display: inline-block;
     vertical-align: top;
     padding: 10px;
+    white-space: normal;
 }
 
 .main_space{
@@ -79,10 +80,12 @@
     left: 50%;
     text-align: center;
     display: none;
+    z-index: 3;
 }
 
 .button_div{
     margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 .price_div{

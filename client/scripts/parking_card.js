@@ -86,6 +86,13 @@ function cancelParkingPlaceButtonHandler() //Обработчик кнопки �
 cancelParkingPlaceButtonHandler();
 
 
+//Функция сброса данных парковочных мест в куки
+function dropParkingPlacesData()
+{
+    deleteCookie("parking_places_data");
+}
+dropParkingPlacesData();
+
 
 //Обработчик ответов сервера
 function parkingCardDataHandler(parking_card_data_json)

@@ -44,6 +44,13 @@ function readCookie(name) {
 	return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
+//Функция удаления куки
+function deleteCookie(name) {
+	var date = new Date;
+	date.setDate(date.getDate() + -1);
+	document.cookie = name+"="+1+"; path=/; expires=" + date.toUTCString();
+}
+
 //Функция преобразования объекта в массив
 function objectToArray(obj)
 {
@@ -53,4 +60,12 @@ function objectToArray(obj)
     }
 
 	return(arr);
+}
+
+//Функция преобразования массива в объект
+function arrayToObject(arr)
+{
+	var obj=Object.assign({}, arr);
+
+	return(obj);
 }

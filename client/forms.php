@@ -206,6 +206,13 @@ class Form extends Input
         </div>
         ';
 
+        //Кнопка сохранить как черновик
+        $save_parking_card_as_draft_button=' 
+        <div class="sidebar_button_div">
+            <button onclick="" class="secondary_button sidebar_button" type="button">Сохранить как черновик</button>
+        </div>
+        ';
+
         //Кнопка редактировать парковку
         $edit_parking_card_button='
         <div class="sidebar_button_div">
@@ -311,6 +318,7 @@ class Form extends Input
             $parking_place_form=$this->parkingPlacesForm($form_data);
 
             $buttons=$buttons.$save_parking_card_button; //Кнопка сохранить
+            $buttons=$buttons.$save_parking_card_as_draft_button; //Кнопка сохранить как черновик
             $buttons=$buttons.$add_parking_place_button; //Кнопка добавить парковочное место
             $buttons=$buttons.$copy_parking_place_button; //Кнопка скопировать существующее парковочное место N раз (зависима от выбора места - только одиночный выбор)
             $buttons=$buttons.$delete_parking_place_button; //Кнопка удалить парковочное место (зависима от выбора места - возможен множественный выбор)
@@ -374,13 +382,26 @@ class Form extends Input
 
             <div class="main_space">
 
+                <div class="info_note_main_header_div">
+                    Парковочные места
+                </div>
+
                 <div class="list_filter_div">
 
                 </div>
 
                 <div id="list_container" class="list">
-                    <div id="list_row_pattern_1" class="list_row_blue list_row_pattern"></div>
-                    <div id="list_row_pattern_2" class="list_row_white list_row_pattern"></div>
+
+                    <div id="list_rows" class="list_rows">
+                    </div>
+
+                    <div id="list_content" class="list_content">
+                    </div>
+
+                    <div id="list_row_pattern_1" class="list_row_1 list_row list_row_pattern"></div>
+                    <div id="list_row_pattern_2" class="list_row_2 list_row list_row_pattern"></div>
+                    <input id="choice_checkbox_pattern" class="choice_checkbox choice_checkbox_pattern" type="checkbox">
+                    
                     <script src="scripts/list.js"></script>
                     <script>listRequest("parking_places","'.$form_data['parking_id'].'");</script>
                 </div>
