@@ -335,6 +335,14 @@ class Request extends DataBaseRequests
             return($response);
         }
 
+        //Проверка наличия хотя бы одного парковочного места
+        $parking_places=$request_content['parking_places'];
+        if(count($parking_places)<1)
+        {
+            $response='{"response":"no_parking_places"}';
+            return($response);
+        }
+
         //Оставшиеся данные парковки
         $parking_data['user_id']=$user_data['id'];
         $parking_data['parking_id']=$random->randomString(20);
@@ -346,6 +354,9 @@ class Request extends DataBaseRequests
             $response='{"response":"request_error"}';
             return($response);
         }
+
+        //Внесение данных парковочных мест в базу
+        $this->addNewParkingPlacesRequest($parking_places,$parking_data['parking_id']);
 
         //Успешное добавление парковки
         $response='{"response":"parking_card_add_complete"}';

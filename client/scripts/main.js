@@ -69,3 +69,9 @@ function arrayToObject(arr)
 
 	return(obj);
 }
+
+//Функция обработки чекбокса выбора в списке
+function choiceCheckbox(id)
+{
+	
+}

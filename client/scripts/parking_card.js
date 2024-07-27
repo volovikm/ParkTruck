@@ -124,6 +124,13 @@ function parkingCardDataHandler(parking_card_data_json)
         return(false);
     }
 
+    //Ошибка сервера
+    if(response==="no_parking_places")
+    {
+        error_message.innerHTML="Добавьте хотя бы одно парковочное место";
+        return(false);
+    }
+
     //Успешное добавление карточки
     if(response==="parking_card_add_complete")
     {

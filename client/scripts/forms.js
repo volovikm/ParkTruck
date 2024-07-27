@@ -264,8 +264,7 @@ function parkingCardFormHandler(action)
         parking_places: parking_places
     };
     var data_json = JSON.stringify(data);
-    console.log(data_json);
-    //requestTo(parkingCardDataHandler,data_json,url);
+    requestTo(parkingCardDataHandler,data_json,url);
 }
 
 //Обработчик формы парковочного места

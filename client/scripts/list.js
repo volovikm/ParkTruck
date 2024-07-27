@@ -40,6 +40,7 @@ function listDisplay(list_array)
     var column_header_block="";
     var choice_checkbox_pattern=document.getElementById("choice_checkbox_pattern");
     var choice_checkbox="";
+    var row_id="";
 
     var header_info=list_array["header"];
 
@@ -96,8 +97,11 @@ function listDisplay(list_array)
             //Добавление чекбоксов
             if(key=="choice_checkbox")
             {
+                row_id=list_array[i]["id"];
+
                 choice_checkbox=choice_checkbox_pattern.cloneNode(false);
                 choice_checkbox.style.display="block";
+                choice_checkbox.setAttribute("onclick", "choiceCheckbox('"+row_id+"')");
                 column_block.innerHTML="";
                 column_block.append(choice_checkbox);
             }

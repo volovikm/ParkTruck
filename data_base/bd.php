@@ -315,5 +315,45 @@
                         return($array);
                 }
 
+                public function addNewParkingPlacesRequest($parking_places,$parking_id) 
+                {
+                        $db=$this->connectDataBase();
+
+                        foreach($parking_places as $parking_place)
+                        {
+                                try {
+                                        $sql = "INSERT INTO parking_places (
+                                        parking_id,
+                                        size, 
+                                        price,
+                                        price_units,
+                                        length,
+                                        width,
+                                        height,
+                                        height_not_limited
+                                        ) VALUES (
+                                        :parking_id,
+                                        :size, 
+                                        :price,
+                                        :price_units,
+                                        :length,
+                                        :width,
+                                        :height,
+                                        :height_not_limited
+                                        )";
+                                        $stmt=$db->prepare($sql);
+                                        $stmt->bindValue(":parking_id", $parking_id);
+                                        $stmt->bindValue(":size", $parking_place['size']);
+                                        $stmt->bindValue(":price", $parking_place['price']);
+                                        $stmt->bindValue(":price_units", $parking_place['price_units']);
+                                        $stmt->bindValue(":length", $parking_place['length']);
+                                        $stmt->bindValue(":width", $parking_place['width']);
+                                        $stmt->bindValue(":height", $parking_place['height']);
+                                        $stmt->bindValue(":height_not_limited",(int) $parking_place['height_not_limited']);
+                                        $affectedRowsNumber=$stmt->execute();
+                                }catch (PDOException $e) {}
+                        }
+                }
+
         }
 ?>
