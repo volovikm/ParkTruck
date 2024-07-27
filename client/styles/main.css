@@ -200,3 +200,7 @@
 .choice_checkbox_pattern{
     display: none;
 }
+
+.choice_input{
+    display: none;
+}

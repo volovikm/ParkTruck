@@ -73,5 +73,17 @@ function arrayToObject(arr)
 //Функция обработки чекбокса выбора в списке
 function choiceCheckbox(id)
 {
+	var choice_input = document.getElementById("choice_input");
 	
+	var choice_value=choice_input.value;
+	var choice_arr=choice_value.split(["_"]);
+
+	if(choice_arr.indexOf(id)!=-1)
+	{
+		choice_input.value=choice_input.value.replace("_"+id, '');
+	}
+	else
+	{
+		choice_input.value=choice_input.value+"_"+id;
+	}
 }

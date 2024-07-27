@@ -401,6 +401,7 @@ class Form extends Input
                     <div id="list_row_pattern_1" class="list_row_1 list_row list_row_pattern"></div>
                     <div id="list_row_pattern_2" class="list_row_2 list_row list_row_pattern"></div>
                     <input id="choice_checkbox_pattern" class="choice_checkbox choice_checkbox_pattern" type="checkbox">
+                    <input id="choice_input" class="choice_input">
                     
                     <script src="scripts/list.js"></script>
                     <script>listRequest("parking_places","'.$form_data['parking_id'].'");</script>
