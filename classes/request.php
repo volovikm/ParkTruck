@@ -119,8 +119,14 @@ class Request extends DataBaseRequests
 
         $filter=$request_content['filter'];
 
-        //Вывод всех меток
+        //Вывод всех активных меток
         if($role=="driver" || $role=="unauthorized" || ($role=="parking_owner" && $filter=="all"))
+        {
+            $data=$this->allActiveParkingsDataRequest();
+        }
+
+        //Вывод всех меток
+        if($role=="parking_owner" && $filter=="all")
         {
             $data=$this->allParkingsDataRequest();
         }

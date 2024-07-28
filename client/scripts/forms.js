@@ -172,7 +172,7 @@ function regConfirmFormHandler(reg_confirm_form){
 }
 
 //Обработчик формы карточки парковки
-function parkingCardFormHandler(action)
+function parkingCardFormHandler(action,draft=false)
 {
     let url="../request_handler.php";
 
@@ -221,6 +221,9 @@ function parkingCardFormHandler(action)
         parking_places=objectToArray(parking_places_data);
     }
 
+    //Определение черновика
+    if(draft){draft='1';}
+
     //Проверки формы
     let error_message=document.getElementById("error_message");
 
@@ -261,6 +264,7 @@ function parkingCardFormHandler(action)
         latitude: latitude,
         longitude: longitude,
         adress: adress,
+        draft: draft,
         parking_places: parking_places
     };
     var data_json = JSON.stringify(data);

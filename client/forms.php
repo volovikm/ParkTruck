@@ -195,6 +195,17 @@ class Form extends Input
 
         $parking_place_form="";
 
+        $draft_info=""; //Информация о черновике
+        if($form_data['draft']=='1')
+        {
+            $draft_info='
+            <div class="info_note_div">
+                <span class="info_note_header_value">Черновик:</span> 
+                <span class="info_note_value">Сохраните парковку чтобы её видели все пользователи</span> 
+            </div>
+            ';
+        }
+
 
 
         //Кнопки действия по парковке
@@ -209,7 +220,7 @@ class Form extends Input
         //Кнопка сохранить как черновик
         $save_parking_card_as_draft_button=' 
         <div class="sidebar_button_div">
-            <button onclick="" class="secondary_button sidebar_button" type="button">Сохранить как черновик</button>
+            <button onclick="parkingCardFormHandler(`'.$action.'`,true)" class="secondary_button sidebar_button" type="button">Сохранить как черновик</button>
         </div>
         ';
 
@@ -351,6 +362,8 @@ class Form extends Input
                     <div class="info_note_main_header_div">
                         Общая информация
                     </div>
+
+                    '.$draft_info.'
 
                     <div class="info_note_div">
                         <span class="info_note_header_value">Адрес: </span> 

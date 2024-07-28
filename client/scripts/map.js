@@ -97,9 +97,16 @@ function parkingsMarks(myMap,parkings_data) //Вывод меток парков
 
         let preset='islands#blueParkingIcon';
         
+        //Собственные метки
         if(parkings_data[i]['user_id']==parkings_data[i]['current_user_id'])
         {
             preset='islands#redParkingIcon';
+        }
+
+        //Метки черновика
+        if(parkings_data[i]['user_id']==parkings_data[i]['current_user_id'] && parkings_data[i]['draft']=="1")
+        {
+            preset='islands#grayParkingIcon';
         }
 
         //Метка

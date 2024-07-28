@@ -202,6 +202,22 @@
                         return($array);
                 }
 
+                //Запрос данных всех активных парковок
+                public function allActiveParkingsDataRequest() 
+                {
+                        $db=$this->connectDataBase();
+
+                        $array=false;
+                        try 
+                        {
+                                $sql="SELECT * FROM `parkings` WHERE draft='0'";
+                                $stmt = $db->prepare($sql);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        }catch (PDOException $e) {}
+                        return($array);
+                }
+
                 //Запрос данных парковок пользователя
                 public function userParkingsDataRequest($user_id) 
                 {
@@ -273,14 +289,16 @@
                                 latitude,
                                 longitude,
                                 adress,
-                                user_id
+                                user_id,
+                                draft
                                 ) VALUES (
                                 :parking_id,
                                 :name, 
                                 :latitude,
                                 :longitude,
                                 :adress,
-                                :user_id
+                                :user_id,
+                                :draft
                                 )";
                                 $stmt=$db->prepare($sql);
                                 $stmt->bindValue(":parking_id", $parking_data['parking_id']);
@@ -289,6 +307,7 @@
                                 $stmt->bindValue(":longitude", $parking_data['longitude']);
                                 $stmt->bindValue(":adress", $parking_data['adress']);
                                 $stmt->bindValue(":user_id", $parking_data['user_id']);
+                                $stmt->bindValue(":draft", $parking_data['draft']);
                                 $affectedRowsNumber=$stmt->execute();
                                 if($affectedRowsNumber > 0 ){
                                         return(true);

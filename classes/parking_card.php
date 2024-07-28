@@ -46,6 +46,7 @@ class ParkingCard extends DataBaseRequests
         $form_data['longitude']=$parking_data['longitude'];
         $form_data['adress']=$parking_data['adress'];
         $form_data['user_id']=$parking_data['user_id'];
+        $form_data['draft']=$parking_data['draft'];
 
         $form_data['action']="watch";
 

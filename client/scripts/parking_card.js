@@ -69,6 +69,8 @@ function cancelEditButtonHandler(parking_id) //Обработчик кнопки
     });
 }
 
+//function 
+
 //Обработчики кнопок формы парковочного места
 function cancelParkingPlaceButtonHandler() //Обработчик кнопки выхода из парковочного места
 {
