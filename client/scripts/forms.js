@@ -172,7 +172,7 @@ function regConfirmFormHandler(reg_confirm_form){
 }
 
 //Обработчик формы карточки парковки
-function parkingCardFormHandler(action,draft=false)
+function parkingCardFormHandler(action,draft=false,parking_id=false)
 {
     let url="../request_handler.php";
 
@@ -260,6 +260,7 @@ function parkingCardFormHandler(action,draft=false)
     //Отправка данных формы
     var data = {
         parking_card_action: action,
+        parking_id: parking_id,
         name: name_,
         latitude: latitude,
         longitude: longitude,

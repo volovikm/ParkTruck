@@ -69,8 +69,6 @@ function cancelEditButtonHandler(parking_id) //Обработчик кнопки
     });
 }
 
-//function 
-
 //Обработчики кнопок формы парковочного места
 function cancelParkingPlaceButtonHandler() //Обработчик кнопки выхода из парковочного места
 {
@@ -137,5 +135,11 @@ function parkingCardDataHandler(parking_card_data_json)
     if(response==="parking_card_add_complete")
     {
         window.location.href="../index.php";
+    }
+
+    //Успешное добавление карточки (с черновиком)
+    if(response==="parking_card_add_draft_complete")
+    {
+        window.location.reload();
     }
 }

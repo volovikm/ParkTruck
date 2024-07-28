@@ -11,6 +11,7 @@
     Метод sendSMSRegConfirmCode - принимает запрос на отправку кода по СМС, запускает отправку СМС
     Метод addNewParkingCard - принимает запрос на добавление новой карточки парковки, проверяет данные, запускает добавление
     Метод editParkingCard - принимает запрос на редактирование существующей карточки парковки, проверяет данные, запускает редактирование
+    Метод saveDraftParkingCard - принимает запрос на сохранение черновика, запускает запрос в базу на сохранение черновика
 
     Метод getListData - принимает запрос на вывод данных списка, возвращает массив списка
 */
@@ -82,6 +83,11 @@ class Request extends DataBaseRequests
                 if($request_content['parking_card_action']=="edit")
                 {
                     $response=$this->editParkingCard($request_content);
+                }
+
+                if($request_content['parking_card_action']=="save_draft")
+                {
+                    $response=$this->saveDraftParkingCard($request_content);
                 }
                 
                 $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
@@ -366,10 +372,11 @@ class Request extends DataBaseRequests
 
         //Успешное добавление парковки
         $response='{"response":"parking_card_add_complete"}';
+        
         return($response);
     }
 
-    public function editParkingCard($request_content) //Метод добавления новой парковки
+    public function editParkingCard($request_content) //Метод редактирования
     {
         /*
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/validation.php");
@@ -417,6 +424,26 @@ class Request extends DataBaseRequests
 
         //Успешное редактирование парковки
         $response='{"response":"parking_card_edit_complete"}';
+        return($response);
+    }
+
+    public function saveDraftParkingCard($request_content) //Метод сохранения черновика парковки
+    {
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
+        $account = new Account();
+        $user_data=$account->checkAuth();
+
+        $parking_data=$request_content;
+        
+        $response=$this->removeDraftStatusRequest($user_data['id'],$parking_data);
+        if(!$response)
+        {
+            $response='{"response":"request_error"}';
+            return($response);
+        }
+
+        //Успешная отметка черновика
+        $response='{"response":"parking_card_add_draft_complete"}';
         return($response);
     }
 

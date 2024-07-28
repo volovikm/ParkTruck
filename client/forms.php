@@ -196,8 +196,10 @@ class Form extends Input
         $parking_place_form="";
 
         $draft_info=""; //Информация о черновике
+        $draft=false;
         if($form_data['draft']=='1')
         {
+            $draft=true;
             $draft_info='
             <div class="info_note_div">
                 <span class="info_note_header_value">Черновик:</span> 
@@ -221,6 +223,13 @@ class Form extends Input
         $save_parking_card_as_draft_button=' 
         <div class="sidebar_button_div">
             <button onclick="parkingCardFormHandler(`'.$action.'`,true)" class="secondary_button sidebar_button" type="button">Сохранить как черновик</button>
+        </div>
+        ';
+
+        //Кнопка сохранить черновик 
+        $save_draft_parking_card_button=' 
+        <div class="sidebar_button_div">
+            <button onclick="parkingCardFormHandler(`save_draft`,false,`'.$form_data['parking_id'].'`)" class="main_button sidebar_button" type="button">Сохранить парковку</button>
         </div>
         ';
 
@@ -298,6 +307,7 @@ class Form extends Input
 
         if($role=="parking_owner" && $action=="watch")
         {
+            if($draft){$buttons=$buttons.$save_draft_parking_card_button;} //Кнопка сохранить черновик
             $buttons=$buttons.$edit_parking_card_button; //Кнопка редактировать карточку парковки
             $buttons=$buttons.$change_parking_place_button; //Кнопка действий с парковочным местом (указать занятым, освободить, запретить занимать) (зависима от выбора места - только одиночный выбор)
             $buttons=$buttons.$exit_button; //Кнопка выйти
