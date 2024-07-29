@@ -454,6 +454,7 @@ class Form extends Input
             <script>editButtonHandler("'.$form_data['parking_id'].'");</script>
             <script>cancelEditButtonHandler("'.$form_data['parking_id'].'");</script>
             <script>setAdressFromCookie("'.$action.'");</script>
+            <script>dropParkingPlacesData();</script>
 
             '.$button_scripts.'
 
