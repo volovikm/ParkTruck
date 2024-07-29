@@ -378,9 +378,9 @@ function parkingPlaceFormHandler(action)
 
     //Преобразование данных
     if(price_units=="days")
-    {price=price+" руб/сутки";}
+    {price=price+" руб\\сутки";}
     if(price_units=="hours")
-    {price=price+" руб/час"; }
+    {price=price+" руб\\час"; }
 
     if(size=='C')
     {size="Грузовой";}
@@ -407,6 +407,7 @@ function parkingPlaceFormHandler(action)
 
     //Сохранение данных формы в списке
     var list_data_json=readCookie("list_data");
+    //console.log(list_data_json);
     list_data_json=list_data_json.replace("/", '');
     var list_data = JSON.parse(list_data_json);
     var list_array=objectToArray(list_data);

@@ -110,5 +110,7 @@ function listDisplay(list_array)
             column.append(column_block);
         }
     }
+
+    //console.log(list_array);
 }
 
