@@ -349,11 +349,17 @@
                         try 
                         {
                                 $sql = "UPDATE parkings SET
-                                draft='0'
+                                name=:name,
+                                latitude=:latitude,
+                                longitude=:longitude,
+                                adress=:adress
                                 WHERE 
                                 parking_id=:parking_id AND 
                                 user_id=:user_id";
                                 $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":latitude", $parking_data['latitude']);
+                                $stmt->bindValue(":longitude", $parking_data['longitude']);
+                                $stmt->bindValue(":adress", $parking_data['adress']);
                                 $stmt->bindValue(":parking_id", $parking_data['parking_id']);
                                 $stmt->bindValue(":user_id", $user_id);
                                 $stmt->execute();
@@ -395,7 +401,7 @@
                                         size, 
                                         price,
                                         price_units,
-                                        length,
+                                        length_,
                                         width,
                                         height,
                                         height_not_limited
@@ -404,7 +410,7 @@
                                         :size, 
                                         :price,
                                         :price_units,
-                                        :length,
+                                        :length_,
                                         :width,
                                         :height,
                                         :height_not_limited
@@ -414,13 +420,30 @@
                                         $stmt->bindValue(":size", $parking_place['size']);
                                         $stmt->bindValue(":price", $parking_place['price']);
                                         $stmt->bindValue(":price_units", $parking_place['price_units']);
-                                        $stmt->bindValue(":length", $parking_place['length']);
+                                        $stmt->bindValue(":length_", $parking_place['length_']);
                                         $stmt->bindValue(":width", $parking_place['width']);
                                         $stmt->bindValue(":height", $parking_place['height']);
                                         $stmt->bindValue(":height_not_limited",(int) $parking_place['height_not_limited']);
                                         $affectedRowsNumber=$stmt->execute();
                                 }catch (PDOException $e) {}
                         }
+                }
+
+                public function deleteAllParkingPlacesRequest($parking_id)
+                {
+                        $db=$this->connectDataBase();
+
+                        try {
+                                $sql = "DELETE FROM parking_places WHERE 
+                                parking_id = :parking_id";
+                                $stmt=$db->prepare($sql);
+                                $stmt->bindValue(":parking_id", $parking_id);
+                                $affectedRowsNumber=$stmt->execute();
+                                if($affectedRowsNumber > 0 ){
+                                        return(true);
+                                }
+                                return(false);
+                        }catch (PDOException $e) {}
                 }
 
         }

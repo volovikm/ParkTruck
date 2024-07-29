@@ -391,16 +391,19 @@ class Request extends DataBaseRequests
         //Валидация полученных данных
  
         //Редактирование данных парковки в базе
+        /*
         $response=$this->editParkingRequest($user_data["id"],$parking_data);
         if(!$response)
         {
             $response='{"response":"request_error"}';
             return($response);
         }
+            */
 
         //Редактирование данных парковочных мест в базе
-        //$parking_places=$request_content['parking_places'];
-        //$this->editParkingPlacesRequest($parking_places,$parking_data['parking_id']);
+        $parking_places=$request_content['parking_places'];
+        $this->deleteAllParkingPlacesRequest($parking_data['parking_id']);
+        $this->addNewParkingPlacesRequest($parking_places,$parking_data['parking_id']);
 
         //Успешное редактирование парковки
         $response='{"response":"parking_card_edit_complete"}';

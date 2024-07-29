@@ -290,19 +290,13 @@ function deleteParkingPlaceButtonHandler() //Обработчик кнопки �
         }
 
         //Удаление всех элементов по маркеру "removed"
-        for(let i=0;i<list_array.length;i++)
+        while(list_array.indexOf("removed")!=-1)
         {
-            if(list_array[i]==="removed")
-            {
-                list_array.splice(i, 1);
-            }
+            list_array.splice(list_array.indexOf("removed"), 1);
         }
-        for(let i=0;i<list_server_array.length;i++)
+        while(list_server_array.indexOf("removed")!=-1)
         {
-            if(list_server_array[i]==="removed")
-            {
-                list_server_array.splice(i, 1);
-            }
+            list_server_array.splice(list_server_array.indexOf("removed"), 1);
         }
 
         listDisplay(list_array); //Вывод на отображение 
@@ -334,7 +328,6 @@ function dropParkingPlacesData()
 {
     deleteCookie("parking_places_data");
 }
-//dropParkingPlacesData();
 
 
 //Обработчик ответов сервера
@@ -384,5 +377,13 @@ function parkingCardDataHandler(parking_card_data_json)
     if(response==="parking_card_add_draft_complete")
     {
         window.location.reload();
+    }
+
+    //Успешное редактирование карточки
+    if(response==="parking_card_edit_complete")
+    {
+        let params = (new URL(document.location)).searchParams; 
+        var parking_id=params.get("parking_id");
+        window.location.href="../client/parking_card.php?parking_id="+parking_id;
     }
 }
