@@ -34,6 +34,8 @@ function listDisplay(list_array)
     let list_content=document.getElementById("list_content");
     let list_rows=document.getElementById("list_rows");
 
+    var choice_input = document.getElementById("choice_input");
+
     var column="";
     var row="";
     var column_block="";
@@ -103,6 +105,9 @@ function listDisplay(list_array)
                 choice_checkbox=choice_checkbox_pattern.cloneNode(false);
                 choice_checkbox.style.display="block";
                 choice_checkbox.setAttribute("onclick", "choiceCheckbox('"+row_id+"')");
+                choice_checkbox.checked=false;
+                choice_input.value="";
+                choice_input.click();
                 column_block.innerHTML="";
                 column_block.append(choice_checkbox);
             }

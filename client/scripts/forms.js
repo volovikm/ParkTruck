@@ -374,13 +374,14 @@ function parkingPlaceFormHandler(action)
     }
     parking_places_array.push(parking_place_clear_data);
     parking_places_data = JSON.stringify(parking_places_array);
+    //console.log(parking_places_data);
     writeCookie("parking_places_data", parking_places_data, 30);
 
     //Преобразование данных
     if(price_units=="days")
-    {price=price+" руб\\сутки";}
+    {price=price+" руб/сутки";}
     if(price_units=="hours")
-    {price=price+" руб\\час"; }
+    {price=price+" руб/час"; }
 
     if(size=='C')
     {size="Грузовой";}
@@ -407,8 +408,6 @@ function parkingPlaceFormHandler(action)
 
     //Сохранение данных формы в списке
     var list_data_json=readCookie("list_data");
-    //console.log(list_data_json);
-    list_data_json=list_data_json.replace("/", '');
     var list_data = JSON.parse(list_data_json);
     var list_array=objectToArray(list_data);
     list_array.push(parking_place_data);
