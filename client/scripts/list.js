@@ -91,7 +91,7 @@ function listDisplay(list_array)
         for(let i=0; i<list_array.length; i++)
         {
             //list_array[i][key] - значение каждой ячейки списка
-
+            
             column_block = document.createElement("div");
             column_block.innerHTML=list_array[i][key];
             column_block.classList="list_column_block";

@@ -341,6 +341,30 @@
                         return(false);
                 }
 
+                //Запрос на редактирование существующей парковки
+                public function editParkingRequest($user_id,$parking_data)
+                {
+                        $db=$this->connectDataBase();
+
+                        try 
+                        {
+                                $sql = "UPDATE parkings SET
+                                draft='0'
+                                WHERE 
+                                parking_id=:parking_id AND 
+                                user_id=:user_id";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":parking_id", $parking_data['parking_id']);
+                                $stmt->bindValue(":user_id", $user_id);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                $affectedRowsNumber=$stmt->execute(); 
+                                if($affectedRowsNumber > 0 ){
+                                        return(true);
+                                }
+                        }catch (PDOException $e) {}
+                        return(false);
+                }
 
                 //Запросы по парковочным местам
                 public function allParkingPlacesRequest($parking_id) 

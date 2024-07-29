@@ -217,18 +217,18 @@ class Form extends Input
         //Кнопка сохранить
         $save_parking_card_button=' 
         <div class="sidebar_button_div">
-            <button onclick="parkingCardFormHandler(`'.$action.'`)" class="main_button sidebar_button" type="button">Сохранить парковку</button>
+            <button onclick="parkingCardFormHandler(`'.$action.'`,false,`'.$form_data['parking_id'].'`)" class="main_button sidebar_button" type="button">Сохранить парковку</button>
         </div>
         ';
 
         //Кнопка сохранить как черновик 
         $save_parking_card_as_draft_button=' 
         <div class="center_text">
-            <span class="link_button" onclick="parkingCardFormHandler(`'.$action.'`,true)">Сохранить как черновик</span>
+            <span class="link_button" onclick="parkingCardFormHandler(`'.$action.'`,true,`'.$form_data['parking_id'].'`)">Сохранить как черновик</span>
         </div>
         ';
 
-        //Кнопка сохранить черновик 
+        //Кнопка сохранить черновик как общедоступную парковку
         $save_draft_parking_card_button=' 
         <div class="sidebar_button_div">
             <button onclick="parkingCardFormHandler(`save_draft`,false,`'.$form_data['parking_id'].'`)" class="main_button sidebar_button" type="button">Сохранить парковку</button>
@@ -294,7 +294,7 @@ class Form extends Input
         //Кнопка забронировать парковочное место
         $rent_parking_place_button='
         <div class="sidebar_button_div">
-            <button onclick="rentParkingPlaceButtonHandler()" class="main_button sidebar_button" type="button">Забронировать</button>
+            <button class="main_button sidebar_button" type="button">Забронировать</button>
         </div>
         ';
 
@@ -365,12 +365,19 @@ class Form extends Input
             //Форма ввода данных парковочного места
             $parking_place_form=$this->parkingPlacesForm($form_data);
 
+            //Сохранение в куки данных парковочных мест
+            $parking_places_data_script='
+            <script>
+            
+            </script>
+            ';
+
             $buttons=$buttons.$save_parking_card_button; //Кнопка сохранить
             $buttons=$buttons.$add_parking_place_button; //Кнопка добавить парковочное место
             $buttons=$buttons.$cancel_button;//Кнопка отменить
-            //Кнопка скопировать существующее парковочное место N раз (зависима от выбора места - только одиночный выбор)
-            //Кнопка редактировать парковочное место (зависима от выбора места)
-            //Кнопка удалить парковочное место (зависима от выбора места - возможен множественный выбор)
+            $buttons=$buttons.$copy_parking_place_button; //Кнопка скопировать существующее парковочное место N раз (зависима от выбора места - только одиночный выбор)
+            $buttons=$buttons.$edit_parking_place_button; //Кнопка редактирования парковочного места (зависима от выбора места - только одиночный выбор)
+            $buttons=$buttons.$delete_parking_place_button; //Кнопка удалить парковочное место (зависима от выбора места - возможен множественный выбор)
             $buttons=$buttons.$exit_button; //Кнопка выйти
         }
 

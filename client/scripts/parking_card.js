@@ -12,6 +12,17 @@ function setAdressFromCookie(action) //Функция определния ад�
     }
 }
 
+function saveParkingPlacesDataToCookie() //Функция сохранения в куки данных парковочных мест
+{
+    var list_data_json=readCookie("list_data");
+    var list_data = JSON.parse(list_data_json);
+    var list_array=objectToArray(list_data);
+    var clear_list_array=list_array["clear_data"];
+    var parking_places_data = JSON.stringify(clear_list_array); //Вывод на отправку на сервер
+    writeCookie("parking_places_data", parking_places_data, 30); 
+}
+saveParkingPlacesDataToCookie();
+
 
 //Обработчики кнопок сайдбара
 function cancelButtonHandler() //Обработчик кнопки возврата на главную
@@ -44,6 +55,10 @@ function addParkingPlaceButtonHandler() //Обработчик кнопки до
         let inputs = parking_place_form.querySelectorAll('input');
         for (let i = 0; i < inputs.length; i++) 
         {inputs[i].value="";}
+
+        //Изменение onclick кнопки сохранить парковочное место
+        var save_parking_place_button=document.getElementById("save_parking_place_button");
+        save_parking_place_button.setAttribute("onclick","parkingPlaceFormHandler(`create_new`)");
     });
 }
 addParkingPlaceButtonHandler();
@@ -89,20 +104,63 @@ function copyParkingPlaceButtonHandler() //Обработчик кнопки к�
     
         var parking_place_id=choice_arr[0];
 
+        //Массив отображения
         var list_data_json=readCookie("list_data");
         var list_data = JSON.parse(list_data_json);
         var list_array=objectToArray(list_data);
 
+        //Массив отправки на сервер
+        var list_server_data_json=readCookie("parking_places_data");
+        var list_server_data = JSON.parse(list_server_data_json);
+        var list_server_array=objectToArray(list_server_data);
+
+        var existing_par=false;
+        if(list_server_array[parking_place_id]===undefined) //Разрешение конфликта id существующих мест и новых
+        {
+            for (let i = 0; i < list_server_array.length; i++) 
+            {
+                if(list_server_array[i]["id"]==parking_place_id)
+                {
+                    parking_place_id=i;
+                    existing_par=true;
+                    break;
+                }
+            }
+        }
+
+        //Изменение id для копирования существующих записей
+        if(existing_par)
+        {
+            //Для массива отображения
+            var parking_place_server_array=objectToArray(parking_place_server_data);
+            parking_place_server_array["id"]=list_server_array.length+1;
+            parking_place_server_data=arrayToObject(parking_place_server_array);
+
+            //Для массива отправки
+            var parking_place_server_array=objectToArray(parking_place_server_data);
+            parking_place_server_array["id"]=list_server_array.length+1;
+            parking_place_server_data=arrayToObject(parking_place_server_array);
+        }
+
         //Добавление парковочного места в массив отображения
         var parking_place_data=list_array[parking_place_id];
+        if(existing_par)
+        {
+            var parking_place_array=objectToArray(parking_place_data);
+            parking_place_array["id"]=list_array.length+1;
+            parking_place_data=arrayToObject(parking_place_array);
+        }
         list_array.push(parking_place_data);
         listDisplay(list_array);
 
         //Добавление парковочного места в массив отправки на сервер
-        var list_server_data_json=readCookie("parking_places_data");
-        var list_server_data = JSON.parse(list_server_data_json);
-        var list_server_array=objectToArray(list_server_data);
         var parking_place_server_data=list_server_array[parking_place_id];
+        if(existing_par)
+        {
+            var parking_place_server_array=objectToArray(parking_place_server_data);
+            parking_place_server_array["id"]=list_server_array.length+1;
+            parking_place_server_data=arrayToObject(parking_place_server_array);
+        }
         list_server_array.push(parking_place_server_data);
         var parking_places_server_data = JSON.stringify(list_server_array);
         writeCookie("parking_places_data", parking_places_server_data, 30);
@@ -137,14 +195,22 @@ function editParkingPlaceButtonHandler() //Обработчик кнопки р�
 
         //Получение данных выбранного парковочного места
         var parking_place_data=list_array[parking_place_id];
-        var parking_server_place_data=list_server_array[parking_place_id];
+        var parking_place_server_data=list_server_array[parking_place_id];
+        if(parking_place_server_data===undefined) //Разрешение конфликта id существующих мест и новых
+        {
+            for (let i = 0; i < list_server_array.length; i++) 
+            {
+                if(list_server_array[i]["id"]==parking_place_id)
+                {parking_place_server_data=list_server_array[i];}
+            }
+        }
 
         //Вызов формы парковочного места
         var parking_place_form=document.getElementById("parking_place_form");
         var save_parking_place_button=document.getElementById("save_parking_place_button");
         save_parking_place_button.setAttribute("onclick","parkingPlaceFormHandler(`edit`,"+parking_place_id+")");
         parking_place_form.style.display="block";
-
+        
         //Заполнение формы парковочного места
         let inputs = parking_place_form.querySelectorAll('input');
         let selects = parking_place_form.querySelectorAll('select');
@@ -153,19 +219,19 @@ function editParkingPlaceButtonHandler() //Обработчик кнопки р�
             let input=inputs[i];
 
             //Поля ввода
-            input.value=parking_server_place_data[input.id];
+            input.value=parking_place_server_data[input.id];
 
             //Чекбокс неограниченной высоты
             if(input.id=="height_not_limited")
             {
-                input.checked=parking_server_place_data["height_not_limited"];
+                input.checked=parking_place_server_data["height_not_limited"];
             }
         }
         for (let i = 0; i < selects.length; i++) 
         {
             let select=selects[i];
         
-            select.value=parking_server_place_data[select.id];
+            select.value=parking_place_server_data[select.id];
         }
     });
 }
@@ -205,6 +271,16 @@ function deleteParkingPlaceButtonHandler() //Обработчик кнопки �
         for(let i=0;i<choice_arr.length;i++)
         {
             parking_place_id=choice_arr[i];
+
+            //Определение id существующих мест
+            if(list_array[parking_place_id]===undefined)
+            {
+                for (let i = 0; i < list_array.length; i++) 
+                {
+                    if(list_array[i]["id"]==parking_place_id)
+                    {parking_place_id=i;}
+                }
+            }
     
             //Удаление парковочного места из массива  отображения
             list_array.splice(parking_place_id, 1,"removed");
@@ -258,7 +334,7 @@ function dropParkingPlacesData()
 {
     deleteCookie("parking_places_data");
 }
-dropParkingPlacesData();
+//dropParkingPlacesData();
 
 
 //Обработчик ответов сервера

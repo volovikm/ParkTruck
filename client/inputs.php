@@ -156,7 +156,7 @@ class Input
     public function lengthInput($value="")
     {
         $input='
-            <input id="length" class="basic_input" type="number" placeholder="Длина, м" value="'.$value.'">
+            <input id="length_" class="basic_input" type="number" placeholder="Длина, м" value="'.$value.'">
         ';
 
         return($input);

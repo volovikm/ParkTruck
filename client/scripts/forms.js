@@ -292,7 +292,7 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
         let input=inputs[i];
 
         //Поле ввода длины
-        if(input.id=="length")
+        if(input.id=="length_")
         {
             length=input.value;
         }
@@ -352,7 +352,7 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
     //Сбор общего массива с данными формы, преобразование для отображения в списке
     var parking_place_clear_data = {  //Массив с чистыми данными для дальнейшей отправки на сервер
         "size": size,
-        "length": length,
+        "length_": length,
         "width": width,
         "height": height,
         "height_not_limited": height_not_limited,
@@ -372,9 +372,9 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
 
     //Преобразование данных
     if(price_units=="days")
-    {price=price+" руб/сутки";}
+    {price=price+" руб\\сутки";}
     if(price_units=="hours")
-    {price=price+" руб/час"; }
+    {price=price+" руб\\час"; }
 
     if(size=='C')
     {size="Грузовой";}
@@ -390,13 +390,13 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
     //Преобразование данных
 
     var parking_place_data = {  //Массив с преобразованными данными для вывода в список
-    "size": size,
-    "length": length,
-    "width": width,
-    "height": height,
-    "height_not_limited": height_not_limited,
-    "price": price,
-    "price_units": price_units,
+        "size": size,
+        "length_": length,
+        "width": width,
+        "height": height,
+        "height_not_limited": height_not_limited,
+        "price": price,
+        "price_units": price_units,
     }
 
     //Подготовка для отображения списка
@@ -409,8 +409,21 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
         list_array.push(parking_place_data);
         parking_places_array.push(parking_place_clear_data);
     }
+
     if(action=="edit")
     {
+        if(list_array[parking_place_id]===undefined) //Для существующих мест
+        {
+            for (let i = 0; i < list_array.length; i++) 
+            {
+                if(list_array[i]["id"]==parking_place_id)
+                {
+                    parking_place_id=i;
+                    break;
+                }
+            }
+        }
+
         list_array[parking_place_id]=parking_place_data;
         parking_places_array[parking_place_id]=parking_place_clear_data;
     }

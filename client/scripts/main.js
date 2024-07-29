@@ -88,8 +88,6 @@ function choiceCheckbox(id)
 		choice_input.value=choice_input.value+"_"+id;
 		choice_input.click();
 	}
-
-	//console.log(choice_input.value);
 }
 
 //Обработчик включения/выключения зависимых кнопок в списках

@@ -376,51 +376,31 @@ class Request extends DataBaseRequests
         return($response);
     }
 
-    public function editParkingCard($request_content) //Метод редактирования
+    public function editParkingCard($request_content) //Метод редактирования карточки парковки
     {
-        /*
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/validation.php");
         $validation = new Validation();
 
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
         $account = new Account();
 
-        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/random.php");
-        $random=new Random();
-
         $user_data=$account->checkAuth();
 
         $parking_data=$request_content;
 
         //Валидация полученных данных
-        $valid_latitude=$validation->validateCoordinates($parking_data['latitude'],"latitude");
-        $valid_longitude=$validation->validateCoordinates($parking_data['longitude'],"longitude");
-        if(!$valid_latitude || !$valid_longitude)
-        {
-            $response='{"response":"invalid_coordinates}';
-            return($response);
-        }
-
-        //Проверка существования парковки с данными координатами
-        $parking_check_array=$this->findParkingByCoordinates($parking_data['latitude'],$parking_data['longitude']);
-        if(isset($parking_check_array['id']))
-        {
-            $response='{"response":"parking_coordinates_exist"}';
-            return($response);
-        }
-
-        //Оставшиеся данные парковки
-        $parking_data['user_id']=$user_data['id'];
-        $parking_data['parking_id']=$random->randomString(20);
-
-        //Внесение данных новой парковки в базу
-        $response=$this->addNewParkingRequest($parking_data);
+ 
+        //Редактирование данных парковки в базе
+        $response=$this->editParkingRequest($user_data["id"],$parking_data);
         if(!$response)
         {
             $response='{"response":"request_error"}';
             return($response);
         }
-            */
+
+        //Редактирование данных парковочных мест в базе
+        //$parking_places=$request_content['parking_places'];
+        //$this->editParkingPlacesRequest($parking_places,$parking_data['parking_id']);
 
         //Успешное редактирование парковки
         $response='{"response":"parking_card_edit_complete"}';
@@ -460,15 +440,17 @@ class Request extends DataBaseRequests
         {
             $parking_id=$list_info;
             $list_data=$this->allParkingPlacesRequest($parking_id);
+            $list_clear_data=$list_data;
 
             $list_data["header"]=[
                 "choice_checkbox"=>"",
                 "size"=>"Размер",
                 "price"=>"Стоимость",
-                "length"=>"Длина, м",
+                "length_"=>"Длина, м",
                 "width"=>"Ширина, м",
                 "height"=>"Высота, м"
             ];
+            $list_data["clear_data"]=$list_clear_data;
 
             //Подготовка данных для вывода
             for($i=0;$i<count($list_data);$i++)
