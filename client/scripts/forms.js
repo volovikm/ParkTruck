@@ -374,7 +374,6 @@ function parkingPlaceFormHandler(action)
     }
     parking_places_array.push(parking_place_clear_data);
     parking_places_data = JSON.stringify(parking_places_array);
-    //console.log(parking_places_data);
     writeCookie("parking_places_data", parking_places_data, 30);
 
     //Преобразование данных

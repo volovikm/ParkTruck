@@ -157,7 +157,7 @@ function deleteParkingPlaceButtonHandler() //Обработчик кнопки �
         }
         for(let i=0;i<list_server_array.length;i++)
         {
-            if(list_array[i]==="removed")
+            if(list_server_array[i]==="removed")
             {
                 list_server_array.splice(i, 1);
             }
@@ -166,9 +166,6 @@ function deleteParkingPlaceButtonHandler() //Обработчик кнопки �
         listDisplay(list_array); //Вывод на отображение 
         parking_places_server_data = JSON.stringify(list_server_array); //Вывод на отправку 
         writeCookie("parking_places_data", parking_places_server_data, 30); 
-    
-        var qwerty=readCookie("parking_places_data");
-        console.log(qwerty);
     });
 }
 deleteParkingPlaceButtonHandler();
