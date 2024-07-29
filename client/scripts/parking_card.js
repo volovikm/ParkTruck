@@ -105,6 +105,19 @@ function copyParkingPlaceButtonHandler() //Обработчик кнопки к�
 }
 copyParkingPlaceButtonHandler();
 
+function changeParkingPlaceButtonHandler() //Обработчик кнопки редактирования парковочного места
+{
+    let change_parking_place_button=document.getElementById("change_parking_place_button");
+    if(change_parking_place_button===null)
+    {return(false);}
+
+    //click listener на кнопку
+    change_parking_place_button.addEventListener("click", (event) => {
+
+    });
+}
+changeParkingPlaceButtonHandler();
+
 function deleteParkingPlaceButtonHandler() //Обработчик кнопки удаления парковочного места
 {
     let delete_parking_place_button=document.getElementById("delete_parking_place_button");

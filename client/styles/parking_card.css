@@ -20,6 +20,7 @@
     vertical-align: top;
     padding: 10px;
     white-space: normal;
+    overflow-y: auto;
 }
 
 .main_space{
@@ -73,6 +74,7 @@
 
 .list{
     width: 100%;
+    overflow-y: auto;
 }
 
 .parking_place_form_div{
@@ -104,6 +106,7 @@
     text-align: left;
     margin-bottom: 15px;
 }
+
 
 
 

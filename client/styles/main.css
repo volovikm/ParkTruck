@@ -31,6 +31,7 @@
 }
 
 .link_button {
+    color: rgb(23, 99, 191);
     background: transparent;
     border: none;
     text-decoration: underline;
@@ -203,4 +204,8 @@
 
 .choice_input{
     display: none;
+}
+
+.center_text{
+    text-align: center;
 }
