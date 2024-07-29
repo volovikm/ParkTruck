@@ -81,9 +81,39 @@ function choiceCheckbox(id)
 	if(choice_arr.indexOf(id)!=-1)
 	{
 		choice_input.value=choice_input.value.replace("_"+id, '');
+		choice_input.click();
 	}
 	else
 	{
 		choice_input.value=choice_input.value+"_"+id;
+		choice_input.click();
 	}
+}
+
+//Обработчик включения/выключения зависимых кнопок в списках
+function enableListButtons(button_id,class_name,choice_amount)
+{
+	var choice_input=document.getElementById("choice_input");
+	var button=document.getElementById(button_id);
+
+	if(button===null)
+	{return(false);}
+
+	choice_input.addEventListener("click", () => {
+
+		var choice_arr=choice_input.value.split(["_"]);
+		choice_arr.splice(0, 1);
+			
+		if(choice_arr.length==choice_amount || (choice_arr.length>=1 && choice_amount==Infinity))
+		{
+			button.classList.add(class_name);
+			button.classList.remove("disabled_button");
+		}
+		else
+		{
+			button.classList.add("disabled_button");
+			button.classList.remove(class_name);
+		}
+
+	});
 }

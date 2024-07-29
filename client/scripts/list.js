@@ -98,6 +98,7 @@ function listDisplay(list_array)
             if(key=="choice_checkbox")
             {
                 row_id=list_array[i]["id"];
+                if(row_id===undefined){row_id=i;}
 
                 choice_checkbox=choice_checkbox_pattern.cloneNode(false);
                 choice_checkbox.style.display="block";

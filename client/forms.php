@@ -195,6 +195,8 @@ class Form extends Input
 
         $parking_place_form="";
 
+        $button_scripts="";
+
         $draft_info=""; //Информация о черновике
         $draft=false;
         if($form_data['draft']=='1')
@@ -260,23 +262,26 @@ class Form extends Input
         //Кнопка скопировать существующее парковочное место
         $copy_parking_place_button='
         <div class="sidebar_button_div">
-            <button onclick="copyParkingPlaceButtonHandler()" class="disabled_button sidebar_button" type="button">Скопировать парковочное место</button>
+            <button id="copy_parking_place_button" class="disabled_button sidebar_button" type="button">Скопировать парковочное место</button>
         </div>
         ';
+        $button_scripts=$button_scripts.'<script>enableListButtons(`copy_parking_place_button`,`secondary_button`,1)</script>';
 
         //Кнопка удалить парковочное место
         $delete_parking_place_button='
         <div class="sidebar_button_div">
-            <button onclick="deleteParkingPlaceButtonHandler()" class="disabled_button sidebar_button" type="button">Удалить парковочное место</button>
+            <button id="delete_parking_place_button" class="disabled_button sidebar_button" type="button">Удалить парковочное место</button>
         </div>
         ';
+        $button_scripts=$button_scripts.'<script>enableListButtons(`delete_parking_place_button`,`secondary_button`,Infinity)</script>';
 
         //Кнопка изменить парковочное место
         $change_parking_place_button='
         <div class="sidebar_button_div">
-            <button onclick="changeParkingPlaceButtonHandler()" class="disabled_button sidebar_button" type="button">Изменить парковочное место</button>
+            <button id="change_parking_place_button" onclick="changeParkingPlaceButtonHandler()" class="disabled_button sidebar_button" type="button">Изменить парковочное место</button>
         </div>
         ';
+        $button_scripts=$button_scripts.'<script>enableListButtons(`change_parking_place_button`,`secondary_button`,1)</script>';
 
         //Кнопка забронировать парковочное место
         $rent_parking_place_button='
@@ -440,6 +445,8 @@ class Form extends Input
             <script>editButtonHandler("'.$form_data['parking_id'].'");</script>
             <script>cancelEditButtonHandler("'.$form_data['parking_id'].'");</script>
             <script>setAdressFromCookie("'.$action.'");</script>
+
+            '.$button_scripts.'
 
         </form>
         ';
