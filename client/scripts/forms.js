@@ -273,7 +273,7 @@ function parkingCardFormHandler(action,draft=false,parking_id=false)
 }
 
 //Обработчик формы парковочного места
-function parkingPlaceFormHandler(action)
+function parkingPlaceFormHandler(action,parking_place_id=false)
 {
     var parking_place_form = document.getElementById("parking_place_form");
     let inputs = parking_place_form.querySelectorAll('input');
@@ -343,13 +343,10 @@ function parkingPlaceFormHandler(action)
     let error_message=document.getElementById("error_message_parking_place");
 
     //Проверка пустой формы
-    if(action=="create_new")
+    if(price==="")
     {
-        if(price==="")
-        {
-            error_message.innerHTML="Заполните стоимость парковки";
-            return(false);
-        }
+        error_message.innerHTML="Заполните стоимость парковки";
+        return(false);
     }
 
     //Сбор общего массива с данными формы, преобразование для отображения в списке
@@ -372,9 +369,6 @@ function parkingPlaceFormHandler(action)
     {
         parking_places_array=[];
     }
-    parking_places_array.push(parking_place_clear_data);
-    parking_places_data = JSON.stringify(parking_places_array);
-    writeCookie("parking_places_data", parking_places_data, 30);
 
     //Преобразование данных
     if(price_units=="days")
@@ -405,12 +399,25 @@ function parkingPlaceFormHandler(action)
     "price_units": price_units,
     }
 
-    //Сохранение данных формы в списке
+    //Подготовка для отображения списка
     var list_data_json=readCookie("list_data");
     var list_data = JSON.parse(list_data_json);
     var list_array=objectToArray(list_data);
-    list_array.push(parking_place_data);
-    listDisplay(list_array);
+
+    if(action=="create_new")
+    {
+        list_array.push(parking_place_data);
+        parking_places_array.push(parking_place_clear_data);
+    }
+    if(action=="edit")
+    {
+        list_array[parking_place_id]=parking_place_data;
+        parking_places_array[parking_place_id]=parking_place_clear_data;
+    }
+    
+    listDisplay(list_array); //Вывод на отображение
+    parking_places_data = JSON.stringify(parking_places_array); //Вывод на отправку на сервер
+    writeCookie("parking_places_data", parking_places_data, 30); 
 
     //Закрытие формы
     parking_place_form.style.display="none";
