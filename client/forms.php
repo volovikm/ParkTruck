@@ -365,13 +365,6 @@ class Form extends Input
             //Форма ввода данных парковочного места
             $parking_place_form=$this->parkingPlacesForm($form_data);
 
-            //Сохранение в куки данных парковочных мест
-            $parking_places_data_script='
-            <script>
-            
-            </script>
-            ';
-
             $buttons=$buttons.$save_parking_card_button; //Кнопка сохранить
             $buttons=$buttons.$add_parking_place_button; //Кнопка добавить парковочное место
             $buttons=$buttons.$cancel_button;//Кнопка отменить
