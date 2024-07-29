@@ -221,8 +221,7 @@ class Form extends Input
         </div>
         ';
 
-        //Кнопка сохранить как черновик <button onclick="parkingCardFormHandler(`'.$action.'`,true)" class="secondary_button sidebar_button" type="button">Сохранить как черновик</button>
-
+        //Кнопка сохранить как черновик 
         $save_parking_card_as_draft_button=' 
         <div class="center_text">
             <span class="link_button" onclick="parkingCardFormHandler(`'.$action.'`,true)">Сохранить как черновик</span>
@@ -267,6 +266,14 @@ class Form extends Input
         </div>
         ';
         $button_scripts=$button_scripts.'<script>enableListButtons(`copy_parking_place_button`,`secondary_button`,1)</script>';
+
+        //Кнопка редактировать парковочное место
+        $edit_parking_place_button='
+        <div class="sidebar_button_div">
+            <button id="edit_parking_place_button" class="disabled_button sidebar_button" type="button">Редактировать парковочное место</button>
+        </div>
+        ';
+        $button_scripts=$button_scripts.'<script>enableListButtons(`edit_parking_place_button`,`secondary_button`,1)</script>';
 
         //Кнопка удалить парковочное место
         $delete_parking_place_button='
@@ -348,7 +355,7 @@ class Form extends Input
             $buttons=$buttons.$save_parking_card_as_draft_button; //Кнопка сохранить как черновик
             $buttons=$buttons.$add_parking_place_button; //Кнопка добавить парковочное место
             $buttons=$buttons.$copy_parking_place_button; //Кнопка скопировать существующее парковочное место N раз (зависима от выбора места - только одиночный выбор)
-            $buttons=$buttons.$change_parking_place_button; //Кнопка действий с парковочным местом (редактировать,указать занятым, освободить, запретить занимать) (зависима от выбора места - только одиночный выбор)
+            $buttons=$buttons.$edit_parking_place_button; //Кнопка редактирования парковочного места (зависима от выбора места - только одиночный выбор)
             $buttons=$buttons.$delete_parking_place_button; //Кнопка удалить парковочное место (зависима от выбора места - возможен множественный выбор)
             $buttons=$buttons.$exit_button; //Кнопка выйти
         } 
