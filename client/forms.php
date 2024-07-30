@@ -295,7 +295,7 @@ class Form extends Input
         //Кнопка забронировать парковочное место
         $rent_parking_place_button='
         <div class="sidebar_button_div">
-            <button class="main_button sidebar_button" type="button">Забронировать</button>
+            <button id="rent_parking_place_button" class="main_button sidebar_button" type="button">Забронировать</button>
         </div>
         ';
 
@@ -323,7 +323,7 @@ class Form extends Input
         {
             if($draft){$buttons=$buttons.$save_draft_parking_card_button;} //Кнопка сохранить черновик
             $buttons=$buttons.$edit_parking_card_button; //Кнопка редактировать карточку парковки
-            $buttons=$buttons.$change_parking_place_button; //Кнопка действий с парковочным местом (редактировать,указать занятым, освободить, запретить занимать) (зависима от выбора места - только одиночный выбор)
+            //$buttons=$buttons.$change_parking_place_button; //Кнопка действий с парковочным местом (редактировать,указать занятым, освободить, запретить занимать) (зависима от выбора места - только одиночный выбор)
             $buttons=$buttons.$exit_button; //Кнопка выйти
         }
 
