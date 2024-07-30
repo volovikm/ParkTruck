@@ -88,28 +88,57 @@ function listDisplay(list_array)
         column.append(column_header_block);
 
         //Ячейки столбцов
+        var value="";
+        var additional_info="";
+        var value_style="";
+        var block_choice=false;
         for(let i=0; i<list_array.length; i++)
         {
             //list_array[i][key] - значение каждой ячейки списка
-            
+
+            value=list_array[i][key];
+
+            //Опредление наличия дополнительных параметров ячейки
+            additional_info="";
+            if(value!==undefined)
+            {
+                if(Object.keys(value).indexOf("content")!=-1)
+                {
+                    additional_info=value["additional_info"];
+                    value=value["content"];
+                }
+            }
+
             column_block = document.createElement("div");
-            column_block.innerHTML=list_array[i][key];
+            column_block.innerHTML=value;
             column_block.classList="list_column_block";
+
+            row_id=list_array[i]["id"];
+            if(row_id===undefined){row_id=i;}
 
             //Добавление чекбоксов
             if(key=="choice_checkbox")
             {
-                row_id=list_array[i]["id"];
-                if(row_id===undefined){row_id=i;}
-
                 choice_checkbox=choice_checkbox_pattern.cloneNode(false);
                 choice_checkbox.style.display="block";
                 choice_checkbox.setAttribute("onclick", "choiceCheckbox('"+row_id+"')");
                 choice_checkbox.checked=false;
+                choice_checkbox.id="choice_checkbox_"+row_id;
                 choice_input.value="";
                 choice_input.click();
                 column_block.innerHTML="";
                 column_block.append(choice_checkbox);
+            }
+
+            //Применение дополнительных параметров ячейки 
+            if(additional_info!=="")
+            {
+                //Цветовая маркировка
+                if(Object.keys(additional_info).indexOf("style")!=-1)
+                {
+                    value_style=additional_info["style"];
+                    column_block.classList.add("text_"+value_style);
+                }
             }
 
             column.append(column_block);

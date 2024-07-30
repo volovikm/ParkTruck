@@ -24,6 +24,7 @@ function saveParkingPlacesDataToCookie() //Функция сохранения �
 saveParkingPlacesDataToCookie();
 
 
+
 //Обработчики кнопок сайдбара
 function cancelButtonHandler() //Обработчик кнопки возврата на главную
 {
@@ -148,9 +149,11 @@ function copyParkingPlaceButtonHandler() //Обработчик кнопки к�
         {
             var parking_place_array=objectToArray(parking_place_data);
             parking_place_array["id"]=list_array.length+1;
+            parking_place_array["rent"]="";
             parking_place_data=arrayToObject(parking_place_array);
         }
         list_array.push(parking_place_data);
+        console.log(list_array);
         listDisplay(list_array);
 
         //Добавление парковочного места в массив отправки на сервер
@@ -319,17 +322,40 @@ function rentParkingPlaceButtonHandler()
         var choice_arr=choice_input.value.split(["_"]);
         choice_arr.splice(0, 1);
 
-        //Определение выбранных элементов
-        var parking_place_id="";
-        for(let i=0;i<choice_arr.length;i++)
+        let error_message=document.getElementById("error_message");
+
+        //Проверка ошибок
+        error_message.innerHTML="";
+        if(choice_arr.length!=1)
         {
-            parking_place_id=choice_arr[i];
-            console.log(parking_place_id);
+            error_message.innerHTML="Выберите одно парковочное место";
+            return(false);
         }
 
+        //Определение записи о парковочном месте
+        var parking_place_id="";
+        parking_place_id=choice_arr[0];
+        var parking_places_json=readCookie("parking_places_data");
+        var parking_places_data = JSON.parse(parking_places_json);
+        var parking_places_array=objectToArray(parking_places_data);
+        var parking_place_array=[];
+        for(let i=0;i<parking_places_array.length;i++)
+        {
+            if(parking_places_array[i]["id"]==parking_place_id)
+            {
+                parking_place_array=parking_places_array[i];
+            }
+        }
+
+        //Вызов формы бронирования
+
+        console.log(parking_place_array);
+        
     });
 }
 rentParkingPlaceButtonHandler();
+
+
 
 //Обработчики кнопок формы парковочного места
 function cancelParkingPlaceButtonHandler() //Обработчик кнопки выхода из парковочного места

@@ -196,6 +196,7 @@
 .choice_checkbox{
     height: 25px; 
     width: 25px; 
+    cursor: pointer;
 }
 
 .choice_checkbox_pattern{
@@ -208,4 +209,16 @@
 
 .center_text{
     text-align: center;
+}
+
+.text_positive{
+    color: green;
+}
+
+.text_negative{
+    color: red;
+}
+
+.text_neutral{
+    color: grey;
 }

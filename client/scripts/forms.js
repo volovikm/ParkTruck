@@ -254,7 +254,16 @@ function parkingCardFormHandler(action,draft=false,parking_id=false)
 
     if(action=="edit")
     {
-
+        if(name_==="")
+        {
+            error_message.innerHTML="Заполните название парковки";
+            return(false);
+        }
+        if(parking_places==="")
+        {
+            error_message.innerHTML="Введите парковочные места";
+            return(false);
+        }
     }
 
     //Отправка данных формы
@@ -286,6 +295,7 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
     let height_not_limited=false;
     let price="";
     let price_units="";
+    let rent="";
 
     for (let i = 0; i < inputs.length; i++) 
     {
@@ -387,6 +397,19 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
 
     if(height_not_limited)
     {height="Не ограничена";}
+
+    var rent_array=[]
+    rent_array["additional_info"]=[];
+    if(rent=="1")
+    {
+        rent_array["content"]="Забронировано";
+        rent_array["additional_info"]["style"]="negative";
+    }
+    else
+    {
+        rent_array["content"]="Свободно";
+        rent_array["additional_info"]["style"]="positive";
+    }
     //Преобразование данных
 
     var parking_place_data = {  //Массив с преобразованными данными для вывода в список
@@ -397,6 +420,7 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
         "height_not_limited": height_not_limited,
         "price": price,
         "price_units": price_units,
+        "rent": rent_array
     }
 
     //Подготовка для отображения списка

@@ -355,9 +355,32 @@ class Request extends DataBaseRequests
             return($response);
         }
 
+        //Проверка данных парковочных мест
+        for($i=0;$i<count($parking_places);$i++)
+        {
+            //$valid_parking_place=$validation->validateParkingPlace($parking_places[$i]);
+            /*
+            //Проверка размера
+            $valid_size=$validation->validateSize($parking_places[$i]["size"]);
+
+            //Проверка числовых размеров
+            $valid_length=$validation->validateNumbers($parking_places[$i]["size"]);
+            $valid_width=$validation->validateNumbers($parking_places[$i]["width"]);
+            $valid_height=$validation->validateNumbers($parking_places[$i]["height"]);
+
+            //Проверка стоимости
+            $valid_price=$validation->validateNumbers($parking_places[$i]["price"]);
+            $valid_price_units=$validation->validatePriceUnits($parking_places[$i]["price_units"]);
+            */
+        }
+
         //Оставшиеся данные парковки
         $parking_data['user_id']=$user_data['id'];
         $parking_data['parking_id']=$random->randomString(20);
+        for($i=0;$i<count($parking_places);$i++)
+        {
+            $parking_places[$i]["parking_place_id"]=$random->randomString(20);
+        }
 
         //Внесение данных новой парковки в базу
         $response=$this->addNewParkingRequest($parking_data);
@@ -384,6 +407,9 @@ class Request extends DataBaseRequests
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
         $account = new Account();
 
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/random.php");
+        $random=new Random();
+
         $user_data=$account->checkAuth();
 
         $parking_data=$request_content;
@@ -398,6 +424,10 @@ class Request extends DataBaseRequests
 
         //Редактирование данных парковочных мест в базе
         $parking_places=$request_content['parking_places'];
+        for($i=0;$i<count($parking_places);$i++)
+        {
+            $parking_places[$i]["parking_place_id"]=$random->randomString(20);
+        }
         $this->deleteAllParkingPlacesRequest($parking_data['parking_id']);
         $this->addNewParkingPlacesRequest($parking_places,$parking_data['parking_id']);
 
@@ -441,14 +471,18 @@ class Request extends DataBaseRequests
             $list_data=$this->allParkingPlacesRequest($parking_id);
             $list_clear_data=$list_data;
 
+            //Разделы заголовка
             $list_data["header"]=[
                 "choice_checkbox"=>"",
                 "size"=>"Размер",
                 "price"=>"Стоимость",
                 "length_"=>"Длина, м",
                 "width"=>"Ширина, м",
-                "height"=>"Высота, м"
+                "height"=>"Высота, м",
+                "rent"=>""
             ];
+
+            //Данные без изменений
             $list_data["clear_data"]=$list_clear_data;
 
             //Подготовка данных для вывода
@@ -476,6 +510,22 @@ class Request extends DataBaseRequests
                 {$list_data[$i]["size"]="Малый грузовой";}
                 if($list_data[$i]["size"]=='B')
                 {$list_data[$i]["size"]="Легковой";}
+
+                //Данные бронирования
+                $rent=$list_data[$i]["rent"];
+                $list_data[$i]["rent"]=[];
+                if($rent=="1")
+                {
+                    $list_data[$i]["rent"]["content"]="Забронировано";
+                    $list_data[$i]["rent"]["additional_info"]["style"]="negative";
+                    $list_data[$i]["rent"]["additional_info"]["block_choice"]=true;
+                }
+                else
+                {
+                    $list_data[$i]["rent"]["content"]="Свободно";
+                    $list_data[$i]["rent"]["additional_info"]["style"]="positive";
+                    $list_data[$i]["rent"]["additional_info"]["block_choice"]=false;
+                }
             }
         }
 
