@@ -184,6 +184,7 @@
                 }
 
 
+
                 //Запросы по парковкам
 
                 //Запрос данных всех парковок
@@ -349,17 +350,12 @@
                         try 
                         {
                                 $sql = "UPDATE parkings SET
-                                name=:name,
-                                latitude=:latitude,
-                                longitude=:longitude,
-                                adress=:adress
+                                name=:name
                                 WHERE 
                                 parking_id=:parking_id AND 
                                 user_id=:user_id";
                                 $stmt = $db->prepare($sql);
-                                $stmt->bindValue(":latitude", $parking_data['latitude']);
-                                $stmt->bindValue(":longitude", $parking_data['longitude']);
-                                $stmt->bindValue(":adress", $parking_data['adress']);
+                                $stmt->bindValue(":name", $parking_data['name']);
                                 $stmt->bindValue(":parking_id", $parking_data['parking_id']);
                                 $stmt->bindValue(":user_id", $user_id);
                                 $stmt->execute();
@@ -371,6 +367,8 @@
                         }catch (PDOException $e) {}
                         return(false);
                 }
+
+
 
                 //Запросы по парковочным местам
                 public function allParkingPlacesRequest($parking_id) 

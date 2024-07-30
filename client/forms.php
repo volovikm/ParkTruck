@@ -196,6 +196,7 @@ class Form extends Input
         $parking_place_form="";
 
         $button_scripts="";
+        $other_scripts="";
 
         $draft_info=""; //Информация о черновике
         $draft=false;
@@ -362,6 +363,16 @@ class Form extends Input
 
         if($role=="parking_owner" && $action=="edit")
         {
+            //Поле ввода адреса
+            $adress_input=$this->invisibleInput("adress");
+
+            //Поле ввода названия парковки
+            $name_input=$this->nameInput($form_data['name']);
+            $name_display='
+            <div class="info_note_header_value">Название парковки: </div> 
+            <div>'.$name_input.' </div> 
+            ';
+
             //Форма ввода данных парковочного места
             $parking_place_form=$this->parkingPlacesForm($form_data);
 
@@ -372,6 +383,14 @@ class Form extends Input
             $buttons=$buttons.$edit_parking_place_button; //Кнопка редактирования парковочного места (зависима от выбора места - только одиночный выбор)
             $buttons=$buttons.$delete_parking_place_button; //Кнопка удалить парковочное место (зависима от выбора места - возможен множественный выбор)
             $buttons=$buttons.$exit_button; //Кнопка выйти
+        }
+
+
+
+        //Скрипт сброса серверных данных в куки
+        if($action=="create_new")
+        {
+            $other_scripts=$other_scripts."<script>dropParkingPlacesData();</script>";
         }
 
 
@@ -454,9 +473,9 @@ class Form extends Input
             <script>editButtonHandler("'.$form_data['parking_id'].'");</script>
             <script>cancelEditButtonHandler("'.$form_data['parking_id'].'");</script>
             <script>setAdressFromCookie("'.$action.'");</script>
-            <script>dropParkingPlacesData();</script>
-
+            
             '.$button_scripts.'
+            '.$other_scripts.'
 
         </form>
         ';
