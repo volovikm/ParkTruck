@@ -343,9 +343,10 @@ class Form extends Input
             $latitude_input=$this->latitudeInput($form_data['latitude']);
             $longitude_input=$this->longitudeInput($form_data['longitude']);
             $coordinates_display='
-            <div class="info_note_header_value">Координаты: </div> 
+            <div class="invisible_input">
             <div>'.$latitude_input.' </div> 
             <div>'.$longitude_input.' </div> 
+            </div> 
             ';
 
             //Форма ввода данных парковочного места

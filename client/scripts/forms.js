@@ -245,7 +245,7 @@ function parkingCardFormHandler(action,draft=false,parking_id=false)
             error_message.innerHTML="Неверный адрес";
             return(false);
         }
-        if(parking_places==="")
+        if(parking_places==="" || parking_places.length<1)
         {
             error_message.innerHTML="Введите парковочные места";
             return(false);
@@ -259,7 +259,7 @@ function parkingCardFormHandler(action,draft=false,parking_id=false)
             error_message.innerHTML="Заполните название парковки";
             return(false);
         }
-        if(parking_places==="")
+        if(parking_places==="" || parking_places.length<1)
         {
             error_message.innerHTML="Введите парковочные места";
             return(false);
