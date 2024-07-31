@@ -249,6 +249,15 @@ class Form extends Input
             <button id="cancel_edit_button" class="secondary_button sidebar_button" type="button">Отменить</button>
         </div>
         ';
+
+        //Кнопка удалить парковку
+        $delete_parking_button='
+        <div class="sidebar_button_div">
+            <div class="center_text">
+                <button id="delete_parking_button"  class="link_button text_negative" type="button">Удалить парковку</button>
+            </div>
+        </div>
+        ';
         
 
         //Кнопки действия по парковочному месту
@@ -384,6 +393,7 @@ class Form extends Input
             $buttons=$buttons.$edit_parking_place_button; //Кнопка редактирования парковочного места (зависима от выбора места - только одиночный выбор)
             $buttons=$buttons.$delete_parking_place_button; //Кнопка удалить парковочное место (зависима от выбора места - возможен множественный выбор)
             $buttons=$buttons.$exit_button; //Кнопка выйти
+            $buttons=$buttons.$delete_parking_button; //Кнопка удалить карточку
         }
 
 

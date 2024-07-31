@@ -117,3 +117,29 @@ function enableListButtons(button_id,class_name,choice_amount)
 
 	});
 }
+
+//Функция вызова модального окна с подтверждением удаления
+function ConfirmDelete(action){
+
+		function ModalDisplay(action)
+		{
+			var modal_window_div = document.createElement("div");
+			modal_window_div.id="modal_window_div";
+			modal_window_div.innerHTML="\
+			<div class='modal_window_div interface_block'>\
+				<h3 class='modal_window_h3'>Подтвердите удаление</h3>\
+				<div class='modal_window_buttons_block'>\
+					<button class='main_button modal_window_button' onclick='"+action+"'>Удалить</button>\
+					<button class='secondary_button modal_window_button' onclick='document.getElementById(`modal_window_div`).remove()'>Отмена</button>\
+				</div>\
+			</div>\
+			";
+			
+			//Выводим модальное окно
+			var body = document.querySelector("body");
+			body.appendChild(modal_window_div);
+		}
+		
+		ModalDisplay(action);
+	}
+	

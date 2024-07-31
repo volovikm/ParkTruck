@@ -222,3 +222,29 @@
 .text_neutral{
     color: grey;
 }
+
+.modal_window_div{
+    position: absolute;
+    top: 30%;
+    left: 45%;
+    text-align: center;
+    width: 450px;
+}
+
+.modal_window_h3{
+    color: rgb(23, 99, 191);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.modal_window_buttons_block{
+    margin-bottom: 10px; 
+}
+
+.modal_window_button{
+    display: inline-block; 
+    vertical-align: top; 
+    height: 40px; 
+    margin-left: 10px; 
+    margin-right: 10px; 
+    width: 40%;
+}

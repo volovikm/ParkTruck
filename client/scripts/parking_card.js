@@ -309,7 +309,7 @@ function deleteParkingPlaceButtonHandler() //Обработчик кнопки �
 }
 deleteParkingPlaceButtonHandler();
 
-function rentParkingPlaceButtonHandler()
+function rentParkingPlaceButtonHandler() //Обработчик кнопки бронирования парковочного места
 {
     let rent_parking_place_button=document.getElementById("rent_parking_place_button");
     if(rent_parking_place_button===null)
@@ -355,6 +355,22 @@ function rentParkingPlaceButtonHandler()
 }
 rentParkingPlaceButtonHandler();
 
+function deleteParkingButtonHandler() //Обработчик кнопки удаления парковки
+{
+    let delete_parking_button=document.getElementById("delete_parking_button");
+    if(delete_parking_button===null)
+    {return(false);}
+
+    //click listener на кнопку
+    delete_parking_button.addEventListener("click", (event) => {
+
+        var script="";
+
+        ConfirmDelete(script);
+
+    });
+}
+deleteParkingButtonHandler();
 
 
 //Обработчики кнопок формы парковочного места
