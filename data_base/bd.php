@@ -420,6 +420,7 @@
                                         $sql = "INSERT INTO parking_places (
                                         parking_id,
                                         parking_place_id,
+                                        parking_place_name,
                                         size, 
                                         price,
                                         price_units,
@@ -430,6 +431,7 @@
                                         ) VALUES (
                                         :parking_id,
                                         :parking_place_id,
+                                        :parking_place_name,
                                         :size, 
                                         :price,
                                         :price_units,
@@ -441,6 +443,7 @@
                                         $stmt=$db->prepare($sql);
                                         $stmt->bindValue(":parking_id", $parking_id);
                                         $stmt->bindValue(":parking_place_id", $parking_place['parking_place_id']);
+                                        $stmt->bindValue(":parking_place_name", $parking_place['parking_place_name']);
                                         $stmt->bindValue(":size", $parking_place['size']);
                                         $stmt->bindValue(":price", $parking_place['price']);
                                         $stmt->bindValue(":price_units", $parking_place['price_units']);

@@ -210,6 +210,19 @@ class Input
 
         return($input);
     }
+
+    //Поле ввода внутреннего номера парковочного места
+    public function parkingPlaceNameInput($value="")
+    {
+        $input='
+            <div class="label_div">
+                <label class="input_label">Внутренний номер/название</label>
+            </div>
+            <input id="parking_place_name" class="basic_input" max="10" value="'.$value.'">
+        ';
+
+        return($input);
+    }
 }
 
 ?>

@@ -500,6 +500,7 @@ class Form extends Input
     public function parkingPlacesForm($form_data)
     {
         $action=$form_data["action"];
+        $parking_place_name_input="";
         $parking_place_lenght_input="";
         $parking_place_width_input="";
         $parking_place_height_input="";
@@ -507,6 +508,9 @@ class Form extends Input
         $parking_place_price_units_select="";
         $parking_place_height_checkbox="";
         $parking_place_size_select="";
+
+        //Поле ввода внутреннего номера парковочного места
+        $parking_place_name_input=$this->parkingPlaceNameInput();
 
         //Поле ввода типового размера парковочного места
         $parking_place_size_select=$this->sizeSelect();
@@ -534,6 +538,11 @@ class Form extends Input
             <div class="form_header">Парковочное место</div>
 
             <div class="input_form_div">
+
+                <div>
+                '.$parking_place_name_input.'
+                </div>
+
                 <div>
                 '.$parking_place_size_select.'
                 </div>

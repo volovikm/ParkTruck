@@ -361,7 +361,7 @@ class Request extends DataBaseRequests
             return($response);
         }
 
-        //Проверка данных парковочных мест
+        //Валидация данных парковочных мест
         for($i=0;$i<count($parking_places);$i++)
         {
             $valid_parking_place=$validation->validateParkingPlace($parking_places[$i]);
@@ -411,6 +411,18 @@ class Request extends DataBaseRequests
         $user_data=$account->checkAuth();
 
         $parking_data=$request_content;
+
+        //Валидация данных парковочных мест
+        $parking_places=$request_content['parking_places'];
+        for($i=0;$i<count($parking_places);$i++)
+        {
+            $valid_parking_place=$validation->validateParkingPlace($parking_places[$i]);
+            if(!$valid_parking_place)
+            {
+                $response='{"response":"invalid_parking_places"}';
+                return($response);
+            }
+        }
 
         //Редактирование данных парковки в базе
         $response=$this->editParkingRequest($user_data["id"],$parking_data);
@@ -492,6 +504,7 @@ class Request extends DataBaseRequests
             //Разделы заголовка
             $list_data["header"]=[
                 "choice_checkbox"=>"",
+                "parking_place_name"=>"Внутренний номер",
                 "size"=>"Размер",
                 "price"=>"Стоимость",
                 "length_"=>"Длина, м",

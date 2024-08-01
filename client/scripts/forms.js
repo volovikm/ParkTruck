@@ -293,6 +293,7 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
     let inputs = parking_place_form.querySelectorAll('input');
     let selects = parking_place_form.querySelectorAll('select');
 
+    let parking_place_name="";
     let size="";
     let length="";
     let width="";
@@ -305,6 +306,12 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
     for (let i = 0; i < inputs.length; i++) 
     {
         let input=inputs[i];
+
+        //Поле ввода внутреннего номера
+        if(input.id=="parking_place_name")
+        {
+            parking_place_name=input.value;
+        }
 
         //Поле ввода длины
         if(input.id=="length_")
@@ -366,6 +373,7 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
 
     //Сбор общего массива с данными формы, преобразование для отображения в списке
     var parking_place_clear_data = {  //Массив с чистыми данными для дальнейшей отправки на сервер
+        "parking_place_name": parking_place_name,
         "size": size,
         "length_": length,
         "width": width,
@@ -385,7 +393,7 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
         parking_places_array=[];
     }
 
-    //Преобразование данных
+    //Преобразование данных для вывода в список
     if(price_units=="days")
     {price=price+" руб\\сутки";}
     if(price_units=="hours")
@@ -418,6 +426,7 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
     //Преобразование данных
 
     var parking_place_data = {  //Массив с преобразованными данными для вывода в список
+        "parking_place_name": parking_place_name,
         "size": size,
         "length_": length,
         "width": width,
