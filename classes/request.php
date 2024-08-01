@@ -364,20 +364,12 @@ class Request extends DataBaseRequests
         //Проверка данных парковочных мест
         for($i=0;$i<count($parking_places);$i++)
         {
-            //$valid_parking_place=$validation->validateParkingPlace($parking_places[$i]);
-            /*
-            //Проверка размера
-            $valid_size=$validation->validateSize($parking_places[$i]["size"]);
-
-            //Проверка числовых размеров
-            $valid_length=$validation->validateNumbers($parking_places[$i]["size"]);
-            $valid_width=$validation->validateNumbers($parking_places[$i]["width"]);
-            $valid_height=$validation->validateNumbers($parking_places[$i]["height"]);
-
-            //Проверка стоимости
-            $valid_price=$validation->validateNumbers($parking_places[$i]["price"]);
-            $valid_price_units=$validation->validatePriceUnits($parking_places[$i]["price_units"]);
-            */
+            $valid_parking_place=$validation->validateParkingPlace($parking_places[$i]);
+            if(!$valid_parking_place)
+            {
+                $response='{"response":"invalid_parking_places"}';
+                return($response);
+            }
         }
 
         //Оставшиеся данные парковки

@@ -428,10 +428,17 @@ function parkingCardDataHandler(parking_card_data_json)
         return(false);
     }
 
-    //Ошибка сервера
+    //Отсутствует хотя бы одно парковочное место
     if(response==="no_parking_places")
     {
         error_message.innerHTML="Добавьте хотя бы одно парковочное место";
+        return(false);
+    }
+
+    //Неверные данные парковочных мест
+    if(response==="invalid_parking_places")
+    {
+        error_message.innerHTML="Неверные данные парковочных мест";
         return(false);
     }
 
