@@ -12,6 +12,7 @@
     Метод addNewParkingCard - принимает запрос на добавление новой карточки парковки, проверяет данные, запускает добавление
     Метод editParkingCard - принимает запрос на редактирование существующей карточки парковки, проверяет данные, запускает редактирование
     Метод saveDraftParkingCard - принимает запрос на сохранение черновика, запускает запрос в базу на сохранение черновика
+    Метод deleteParkingCard - принимает запрос на удаление существующей парковки, запускает запрос в базу
 
     Метод getListData - принимает запрос на вывод данных списка, возвращает массив списка
 */
@@ -88,6 +89,11 @@ class Request extends DataBaseRequests
                 if($request_content['parking_card_action']=="save_draft")
                 {
                     $response=$this->saveDraftParkingCard($request_content);
+                }
+
+                if($request_content['parking_card_action']=="delete")
+                {
+                    $response=$this->deleteParkingCard($request_content);
                 }
                 
                 $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
@@ -453,6 +459,26 @@ class Request extends DataBaseRequests
 
         //Успешная отметка черновика
         $response='{"response":"parking_card_add_draft_complete"}';
+        return($response);
+    }
+
+    public function deleteParkingCard($request_content) //Метод удаления парковки
+    {
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
+        $account = new Account();
+        $user_data=$account->checkAuth();
+
+        $parking_data=$request_content;
+
+        $response=$this->deleteParkingCardRequest($user_data['id'],$parking_data);
+        if(!$response)
+        {
+            $response='{"response":"request_error"}';
+            return($response);
+        }
+
+        //Успешная отметка черновика
+        $response='{"response":"delete_complete"}';
         return($response);
     }
 

@@ -145,15 +145,14 @@ function copyParkingPlaceButtonHandler() //Обработчик кнопки к�
 
         //Добавление парковочного места в массив отображения
         var parking_place_data=list_array[parking_place_id];
+        var parking_place_array=objectToArray(parking_place_data);
+        parking_place_array["rent"]="";
         if(existing_par)
         {
-            var parking_place_array=objectToArray(parking_place_data);
             parking_place_array["id"]=list_array.length+1;
-            parking_place_array["rent"]="";
             parking_place_data=arrayToObject(parking_place_array);
         }
         list_array.push(parking_place_data);
-        console.log(list_array);
         listDisplay(list_array);
 
         //Добавление парковочного места в массив отправки на сервер
@@ -355,7 +354,7 @@ function rentParkingPlaceButtonHandler() //Обработчик кнопки б�
 }
 rentParkingPlaceButtonHandler();
 
-function deleteParkingButtonHandler() //Обработчик кнопки удаления парковки
+function deleteParkingButtonHandler(parking_id) //Обработчик кнопки удаления парковки
 {
     let delete_parking_button=document.getElementById("delete_parking_button");
     if(delete_parking_button===null)
@@ -364,13 +363,15 @@ function deleteParkingButtonHandler() //Обработчик кнопки уда
     //click listener на кнопку
     delete_parking_button.addEventListener("click", (event) => {
 
-        var script="";
+        var script="deleteParkingFunction(`"+parking_id+"`);";
 
         ConfirmDelete(script);
-
     });
 }
-deleteParkingButtonHandler();
+function deleteParkingFunction(parking_id) //Функция отправки запроса на удаление парковки
+{
+    parkingCardFormHandler("delete",false,parking_id);
+}
 
 
 //Обработчики кнопок формы парковочного места
@@ -452,5 +453,11 @@ function parkingCardDataHandler(parking_card_data_json)
         let params = (new URL(document.location)).searchParams; 
         var parking_id=params.get("parking_id");
         window.location.href="../client/parking_card.php?parking_id="+parking_id;
+    }
+
+    //Успешное удаление парковки
+    if(response==="delete_complete")
+    {
+        window.location.reload();
     }
 }

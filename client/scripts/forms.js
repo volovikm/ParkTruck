@@ -266,6 +266,11 @@ function parkingCardFormHandler(action,draft=false,parking_id=false)
         }
     }
 
+    if(action=="delete")
+    {
+
+    }
+
     //Отправка данных формы
     var data = {
         parking_card_action: action,
@@ -430,6 +435,7 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
 
     if(action=="create_new")
     {
+        parking_place_data["rent"]="";
         list_array.push(parking_place_data);
         parking_places_array.push(parking_place_clear_data);
     }
@@ -447,6 +453,8 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
                 }
             }
         }
+
+        parking_place_data["rent"]="";
 
         list_array[parking_place_id]=parking_place_data;
         parking_places_array[parking_place_id]=parking_place_clear_data;

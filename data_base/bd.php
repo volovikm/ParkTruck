@@ -369,6 +369,28 @@
                         return(false);
                 }
 
+                //Запрос на удаление существующей парковки
+                public function deleteParkingCardRequest($user_id,$parking_data)
+                {
+                        $db=$this->connectDataBase();
+
+                        try {
+                                $sql = "DELETE FROM parkings WHERE 
+                                user_id = :user_id AND 
+                                parking_id = :parking_id";
+                                $stmt=$db->prepare($sql);
+                                $stmt->bindValue(":user_id", $user_id);
+                                $stmt->bindValue(":parking_id", $parking_data['parking_id']);
+                                $affectedRowsNumber=$stmt->execute();
+                                if($affectedRowsNumber > 0 ){
+
+                                        $response=$this->deleteAllParkingPlacesRequest($parking_data['parking_id']);
+                                        return($response);
+                                }
+                                return(false);
+                        }catch (PDOException $e) {}
+                }
+
 
 
                 //Запросы по парковочным местам

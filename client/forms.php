@@ -257,6 +257,7 @@ class Form extends Input
                 <button id="delete_parking_button"  class="link_button text_negative" type="button">Удалить парковку</button>
             </div>
         </div>
+        <script>deleteParkingButtonHandler("'.$form_data['parking_id'].'");</script>
         ';
         
 
@@ -315,7 +316,7 @@ class Form extends Input
         //Кнопка выйти
         $exit_button='
         <div class="sidebar_button_div">
-            <button id="cancel_button" onclick="cancelButtonHandler()" class="secondary_button sidebar_button" type="button">На главную</button>
+            <button id="cancel_button" class="secondary_button sidebar_button" type="button">На главную</button>
         </div>
         ';
 
@@ -407,6 +408,8 @@ class Form extends Input
 
 
         $form='
+        <script src="scripts/parking_card.js"></script>
+
         <form id="parking_card_form" class="parking_card_form">
 
             <div class="sidebar">
@@ -477,9 +480,8 @@ class Form extends Input
                 '.$parking_place_form.'
                 
             </div>
-
-            <script src="scripts/forms.js"></script>
             <script src="scripts/parking_card.js"></script>
+            <script src="scripts/forms.js"></script>
             
             <script>editButtonHandler("'.$form_data['parking_id'].'");</script>
             <script>cancelEditButtonHandler("'.$form_data['parking_id'].'");</script>
