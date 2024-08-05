@@ -101,7 +101,10 @@ class Validation
         //Проверка единиц измерения стоимости
         $valid_price_units=$this->validatePriceUnits($parking_place["price_units"]);
 
-        if($valid_size && $valid_length && $valid_width && $valid_height && $valid_price && $valid_price_units)
+        //Проверка маркера неограниченной высоты
+        $valid_unlimited_heigth_marker=$this->validateUnlimitedHeightMarker($parking_place["height_not_limited"]);
+
+        if($valid_size && $valid_length && $valid_width && $valid_height && $valid_price && $valid_price_units && $valid_unlimited_heigth_marker)
         {
             $valid=true;
         }
@@ -125,6 +128,15 @@ class Validation
     {
         if($price_units == "hours" ||
         $price_units == "days")
+        {
+            return(true);
+        }
+        return(false);
+    }
+
+    public function validateUnlimitedHeightMarker($height_not_limited)
+    {
+        if(gettype($height_not_limited)=="boolean")
         {
             return(true);
         }
