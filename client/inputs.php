@@ -223,6 +223,36 @@ class Input
 
         return($input);
     }
+
+
+    //Поля формы бронирования парковочного места
+
+    //Поле ввода госномера
+    public function transportNumberInput($value="")
+    {
+        $input='
+            <div class="label_div">
+                <label class="input_label">Госномер ТС</label>
+            </div>
+            <input id="transport_number" class="basic_input" type="number" value="'.$value.'">
+        ';
+
+        return($input);
+    }
+
+    //Поля одновременного ввода даты и времени
+    public function dateTimeInput($name,$label,$set_today_date=false,$set_today_time=false)
+    {
+        $input='
+            <div class="label_div">
+                <label class="input_label">'.$label.'</label>
+            </div>
+            <input id="date_'.$name.'" class="datetime_input" type="date"">
+            <input id="time_'.$name.'" class="datetime_input" type="time"">
+        ';
+
+        return($input);
+    }
 }
 
 ?>

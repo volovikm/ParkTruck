@@ -617,14 +617,45 @@ class Form extends Input
     //Форма бронирования парковочного места
     public function parkingPlaceRentForm($form_data)
     {
-        $action=$form_data["action"];
+        //Поле ввода госномера
+        $transport_number_input=$this->transportNumberInput();
+
+        //Поле ввода даты, времени начала бронирования
+        $datetime_start=$this->dateTimeInput("start","Дата, время начала бронирования",true);
+
+        //Поле ввода даты окончания бронирования
+        $datetime_end=$this->dateTimeInput("end","Дата, время окончания бронирования",true);
 
         $form='
         <div id="parking_place_rent_form" class="base_form interface_block parking_place_form_div">
             <div class="form_header">Парковочное место</div>
 
+            <div class="parking_place_rent_info">
+                <div>
+                    Внутренний номер: <span id="parking_place_name_span"></span>
+                </div>
+                <div>
+                    Стоимость: <span id="price_span"></span>
+                </div>
+            </div>
+
             <div class="input_form_div">
 
+                <div>
+                '.$transport_number_input.'
+                </div>
+
+                <div>
+                '.$datetime_start.'
+                </div>
+
+                <div>
+                '.$datetime_end.'
+                </div>
+
+                <div class="result_price_div">
+                Итоговая стоимость: <span id="result_price_span"></span>
+                </div>
                 
             </div>
 
@@ -644,7 +675,6 @@ class Form extends Input
 
         return($form);
     }
-
 
 }
 

@@ -350,8 +350,9 @@ function rentParkingPlaceButtonHandler() //Обработчик кнопки б�
         var parking_place_rent_form=document.getElementById("parking_place_rent_form");
         parking_place_rent_form.style.display="block";
 
-        console.log(parking_place_array);
-        
+        var parking_place_name_span=document.getElementById("parking_place_name_span");
+        parking_place_name_span.innerHTML="";
+        parking_place_name_span.innerText=parking_place_array['parking_place_name'];
     });
 }
 rentParkingPlaceButtonHandler();

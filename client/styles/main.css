@@ -68,6 +68,18 @@
     text-decoration-color: rgb(23, 99, 191);
 }
 
+.datetime_input{
+    border-radius: 10px;
+    width: 48%;
+    border: 1px solid rgb(23, 99, 191);
+    text-decoration-color: rgb(23, 99, 191);
+    box-sizing: border-box;
+    display: inline-block;
+    height: 35px;
+    padding-left: 10px;
+    margin: 8px 0;
+}
+
 .invisible_input{
     display: none;
 }
@@ -124,6 +136,10 @@
 }
 
 .label_div{
+    text-align: left;
+}
+
+.text_to_left{
     text-align: left;
 }
 
