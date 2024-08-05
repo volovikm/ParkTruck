@@ -179,10 +179,26 @@ class Form extends Input
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
         $account = new Account();
 
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/rights_check.php");
+        $rights = new Rights();
+
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/redirect.php");
+        $redirect = new Redirect();
+
         $user_data=$account->checkAuth();
         $role=$account->getRole($user_data);
 
         $action=$form_data['action'];
+
+        //Проверки прав на действия
+        $show_rights=$rights->showParkingRights($form_data,$user_data,$role);;
+        $create_new_rights=$rights->createNewParkingRights($user_data,$role);
+        $edit_rights=$rights->editParkingRights($form_data,$user_data,$role);
+
+        if($action=="watch" && !$show_rights ||
+        $action=="create_new" && !$create_new_rights ||
+        $action=="edit" && !$edit_rights)
+        {$redirect->redirectTo($redirect->index);}
  
         //Элементы интерфейса
         $name_display='
@@ -332,7 +348,7 @@ class Form extends Input
         if($role=="parking_owner" && $action=="watch")
         {
             if($draft){$buttons=$buttons.$save_draft_parking_card_button;} //Кнопка сохранить черновик
-            $buttons=$buttons.$edit_parking_card_button; //Кнопка редактировать карточку парковки
+            if($edit_rights){$buttons=$buttons.$edit_parking_card_button;} //Кнопка редактировать карточку парковки
             //$buttons=$buttons.$change_parking_place_button; //Кнопка действий с парковочным местом (редактировать,указать занятым, освободить, запретить занимать) (зависима от выбора места - только одиночный выбор)
             $buttons=$buttons.$exit_button; //Кнопка выйти
         }

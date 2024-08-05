@@ -89,6 +89,8 @@ function createMap(map_data) //Функция создания карты
 
 function parkingsMarks(myMap,parkings_data) //Вывод меток парковок
 {
+    parkings_data=objectToArray(parkings_data);
+
     for (let i = 0; i < parkings_data.length; i++) {
 
         var latitude=parkings_data[i]['latitude'];

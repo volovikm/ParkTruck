@@ -204,7 +204,7 @@
                         return($array);
                 }
 
-                //Запрос данных всех активных парковок
+                //Запрос данных всех активных парковок LEGACY
                 public function allActiveParkingsDataRequest() 
                 {
                         $db=$this->connectDataBase();

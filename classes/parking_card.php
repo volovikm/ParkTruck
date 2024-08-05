@@ -40,14 +40,10 @@ class ParkingCard extends DataBaseRequests
 
         $parking_data=$parking_data[0];
 
-        $form_data['parking_id']=$parking_id;
-        $form_data['name']=$parking_data['name'];
-        $form_data['latitude']=$parking_data['latitude'];
-        $form_data['longitude']=$parking_data['longitude'];
-        $form_data['adress']=$parking_data['adress'];
-        $form_data['user_id']=$parking_data['user_id'];
-        $form_data['draft']=$parking_data['draft'];
+        $form_data=$parking_data;
 
+        $form_data['parking_id']=$parking_id;
+        
         $form_data['action']="watch";
 
         return($form_data);
@@ -61,11 +57,16 @@ class ParkingCard extends DataBaseRequests
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/redirect.php");
         $redirect = new Redirect();
 
-        //Проверка роли
-        $allowed_roles=["parking_owner"];
-        $allowed_add_parking=$account->allowActionByRole($user_data,$allowed_roles);
-        if(!$allowed_add_parking)
-        {$redirect->redirectTo($redirect->index);}
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/rights_check.php");
+        $rights = new Rights();
+
+        //Проверка прав
+        $role=$account->getRole($user_data);
+        $create_new_rights=$rights->createNewParkingRights($user_data,$role);
+        if(!$create_new_rights)
+        {
+            $redirect->redirectTo($redirect->index);
+        }
 
         $form_data['parking_id']="";
         $form_data['name']="";
@@ -95,14 +96,9 @@ class ParkingCard extends DataBaseRequests
 
         $parking_data=$parking_data[0];
 
-        $form_data['parking_id']=$parking_id;
-        $form_data['name']=$parking_data['name'];
-        $form_data['latitude']=$parking_data['latitude'];
-        $form_data['longitude']=$parking_data['longitude'];
-        $form_data['user_id']=$parking_data['user_id'];
-        $form_data['adress']=$parking_data['adress'];
-        $form_data['draft']=$parking_data['draft'];
+        $form_data=$parking_data;
 
+        $form_data['parking_id']=$parking_id;
         $form_data['action']="edit";
 
         return($form_data);

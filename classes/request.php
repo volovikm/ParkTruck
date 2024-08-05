@@ -126,38 +126,33 @@ class Request extends DataBaseRequests
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/session.php");
         $session = new Session();
 
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/rights_check.php");
+        $rights = new Rights();
+
         $user_data=$account->checkAuth();
         $role=$account->getRole($user_data);
 
-        $filter=$request_content['filter'];
+        //Получение данных всех парковок из базы
+        $data=$this->allParkingsDataRequest();
 
-        //Вывод всех активных меток
-        if($role=="driver" || $role=="unauthorized" || ($role=="parking_owner" && $filter=="all"))
-        {
-            $data=$this->allActiveParkingsDataRequest();
-        }
-
-        //Вывод всех меток
-        if($role=="parking_owner" && $filter=="all")
-        {
-            $data=$this->allParkingsDataRequest();
-        }
-
-        //Вывод меток данного пользователя
-        if($role=="parking_owner" && $filter=="only_user")
-        {
-            $data=$this->userParkingsDataRequest($user_data['id']);
-        }
-
-        //Добавление id текущего пользователя в массивы парковок
+        $result_data=$data;
         for($i=0;$i<count($data);$i++)
         {
-            $data[$i]['current_user_id']="unauthorized";
+            $show_rights=$rights->showParkingRights($data[$i],$user_data,$role,$request_content['filter']);
+            if(!$show_rights)
+            {
+                unset($result_data[$i]);
+            }
+
+            //Добавление id текущего пользователя в массивы парковок
+            $result_data[$i]['current_user_id']="unauthorized";
             if($user_data!==false)
-            {$data[$i]['current_user_id']=$user_data['id'];}
+            {
+                $result_data[$i]['current_user_id']=$user_data['id'];
+            }
         }
 
-        $response=$data;
+        $response=$result_data;
 
         return($response);
     }
@@ -332,7 +327,14 @@ class Request extends DataBaseRequests
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/random.php");
         $random=new Random();
 
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/rights_check.php");
+        $rights = new Rights();
+
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/redirect.php");
+        $redirect = new Redirect();
+
         $user_data=$account->checkAuth();
+        $role=$account->getRole($user_data);
         
         $parking_data=$request_content;
 
@@ -380,6 +382,14 @@ class Request extends DataBaseRequests
             $parking_places[$i]["parking_place_id"]=$random->randomString(20);
         }
 
+        //Проверка прав
+        $create_new_rights=$rights->createNewParkingRights($user_data,$role);
+        if(!$create_new_rights)
+        {
+            $response='{"response":"request_error"}';
+            return($response);
+        }
+
         //Внесение данных новой парковки в базу
         $response=$this->addNewParkingRequest($parking_data);
         if(!$response)
@@ -408,7 +418,14 @@ class Request extends DataBaseRequests
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/random.php");
         $random=new Random();
 
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/rights_check.php");
+        $rights = new Rights();
+
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/redirect.php");
+        $redirect = new Redirect();
+
         $user_data=$account->checkAuth();
+        $role=$account->getRole($user_data);
 
         $parking_data=$request_content;
 
@@ -432,6 +449,14 @@ class Request extends DataBaseRequests
             return($response);
         }
 
+        //Проверка прав
+        $edit_rights=$rights->editParkingRights($parking_data,$user_data,$role);
+        if(!$edit_rights)
+        {
+            $response='{"response":"request_error"}';
+            return($response);
+        }
+
         //Редактирование данных парковочных мест в базе
         $parking_places=$request_content['parking_places'];
         for($i=0;$i<count($parking_places);$i++)
@@ -450,10 +475,27 @@ class Request extends DataBaseRequests
     {
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
         $account = new Account();
+
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/rights_check.php");
+        $rights = new Rights();
+
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/redirect.php");
+        $redirect = new Redirect();
+
         $user_data=$account->checkAuth();
+        $role=$account->getRole($user_data);
 
         $parking_data=$request_content;
+
+        //Проверка прав
+        $edit_rights=$rights->editParkingRights($parking_data,$user_data,$role);
+        if(!$edit_rights)
+        {
+            $response='{"response":"request_error"}';
+            return($response);
+        }
         
+        //Изменение статуса черновика
         $response=$this->removeDraftStatusRequest($user_data['id'],$parking_data);
         if(!$response)
         {
@@ -470,10 +512,27 @@ class Request extends DataBaseRequests
     {
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
         $account = new Account();
+
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/rights_check.php");
+        $rights = new Rights();
+
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/redirect.php");
+        $redirect = new Redirect();
+
         $user_data=$account->checkAuth();
+        $role=$account->getRole($user_data);
 
         $parking_data=$request_content;
 
+        //Проверка прав
+        $edit_rights=$rights->editParkingRights($parking_data,$user_data,$role);
+        if(!$edit_rights)
+        {
+            $response='{"response":"request_error"}';
+            return($response);
+        }
+
+        //Удаление парковки
         $response=$this->deleteParkingCardRequest($user_data['id'],$parking_data);
         if(!$response)
         {
