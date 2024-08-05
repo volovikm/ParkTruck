@@ -347,6 +347,8 @@ function rentParkingPlaceButtonHandler() //Обработчик кнопки б�
         }
 
         //Вызов формы бронирования
+        var parking_place_rent_form=document.getElementById("parking_place_rent_form");
+        parking_place_rent_form.style.display="block";
 
         console.log(parking_place_array);
         
@@ -389,6 +391,21 @@ function cancelParkingPlaceButtonHandler() //Обработчик кнопки �
     });
 }
 cancelParkingPlaceButtonHandler();
+
+function cancelParkingPlaceRentButtonHandler() //Обработчик кнопки выхода из формы бронирования парковочного места
+{
+    let cancel_parking_place_rent_button=document.getElementById("cancel_parking_place_rent_button");
+    if(cancel_parking_place_rent_button===null)
+    {return(false);}
+
+    //click listener на кнопку
+    cancel_parking_place_rent_button.addEventListener("click", (event) => {
+    
+        let parking_place_rent_form=document.getElementById("parking_place_rent_form");
+        parking_place_rent_form.style.display="none";
+    });
+}
+cancelParkingPlaceRentButtonHandler();
 
 
 //Функция сброса данных парковочных мест в куки

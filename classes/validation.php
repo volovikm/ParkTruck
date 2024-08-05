@@ -136,7 +136,7 @@ class Validation
 
     public function validateUnlimitedHeightMarker($height_not_limited)
     {
-        if(gettype($height_not_limited)=="boolean")
+        if($height_not_limited=="1" || $height_not_limited=="0" || gettype($height_not_limited)=="boolean")
         {
             return(true);
         }

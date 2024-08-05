@@ -210,6 +210,7 @@ class Form extends Input
         $buttons='';
 
         $parking_place_form="";
+        $parking_place_rent_form="";
 
         $button_scripts="";
         $other_scripts="";
@@ -341,6 +342,9 @@ class Form extends Input
         //Разделение интерфейса в зависимости от действий и ролей
         if($role=="unauthorized" || $role=="driver")
         {
+            $form_data['action']="rent";
+            $parking_place_rent_form=$this->parkingPlaceRentForm($form_data);
+
             $buttons=$buttons.$rent_parking_place_button; //Кнопка забронировать (зависима от выбора места - возможен множественный выбор)
             $buttons=$buttons.$exit_button; //Кнопка выйти
         }
@@ -494,6 +498,7 @@ class Form extends Input
                 </div>
 
                 '.$parking_place_form.'
+                '.$parking_place_rent_form.'
                 
             </div>
             <script src="scripts/parking_card.js"></script>
@@ -601,6 +606,37 @@ class Form extends Input
             <div class="button_div">
                 <button id="save_parking_place_button" onclick="parkingPlaceFormHandler(`'.$action.'`)" class="main_button" type="button">Сохранить</button>
                 <button id="cancel_parking_place_button" class="secondary_button" type="button">Отменить</button>
+            </div>
+
+        </div>
+        ';
+
+        return($form);
+    }
+
+    //Форма бронирования парковочного места
+    public function parkingPlaceRentForm($form_data)
+    {
+        $action=$form_data["action"];
+
+        $form='
+        <div id="parking_place_rent_form" class="base_form interface_block parking_place_form_div">
+            <div class="form_header">Парковочное место</div>
+
+            <div class="input_form_div">
+
+                
+            </div>
+
+            <div class="error_message_div">
+                <div id="error_message_parking_place" class="error_message">
+
+                </div>
+            </div>
+
+            <div class="button_div">
+                <button id="save_parking_place_rent_button" onclick="parkingPlaceRentFormHandler()" class="main_button" type="button">Подтвердить</button>
+                <button id="cancel_parking_place_rent_button" class="secondary_button" type="button">Отменить</button>
             </div>
 
         </div>

@@ -429,6 +429,14 @@ class Request extends DataBaseRequests
 
         $parking_data=$request_content;
 
+        //Проверка прав
+        $edit_rights=$rights->editParkingRights($parking_data,$user_data,$role);
+        if(!$edit_rights)
+        {
+            $response='{"response":"request_error"}';
+            return($response);
+        }
+
         //Валидация данных парковочных мест
         $parking_places=$request_content['parking_places'];
         for($i=0;$i<count($parking_places);$i++)
@@ -444,14 +452,6 @@ class Request extends DataBaseRequests
         //Редактирование данных парковки в базе
         $response=$this->editParkingRequest($user_data["id"],$parking_data);
         if(!$response)
-        {
-            $response='{"response":"request_error"}';
-            return($response);
-        }
-
-        //Проверка прав
-        $edit_rights=$rights->editParkingRights($parking_data,$user_data,$role);
-        if(!$edit_rights)
         {
             $response='{"response":"request_error"}';
             return($response);
