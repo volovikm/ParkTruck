@@ -495,6 +495,8 @@ function parkingPlaceRentFormHandler(parking_place_id)
     let time_end="";
     let result_price="";
 
+    let action="rent_start";
+
     for (let i = 0; i < inputs.length; i++) 
     {
         let input=inputs[i];
@@ -566,15 +568,16 @@ function parkingPlaceRentFormHandler(parking_place_id)
 
     //Отправка данных формы
     var data = {
-        parking_card_action: action,
-        parking_id: parking_id,
-        name: name_,
-        latitude: latitude,
-        longitude: longitude,
-        adress: adress,
-        draft: draft,
-        parking_places: parking_places
+        rent: "true",
+        action: action,
+        transport_number: transport_number,
+        transport_id: transport_id,
+        date_start: date_start,
+        time_start: time_start,
+        date_end: date_end,
+        time_end: time_end,
+        result_price: result_price
     };
     var data_json = JSON.stringify(data);
-    requestTo(parkingCardDataHandler,data_json,url);
+    requestTo(rentDataHandler,data_json,url);
 }

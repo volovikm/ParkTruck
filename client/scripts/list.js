@@ -65,8 +65,6 @@ function listDisplay(list_array)
         
         row.style.display="block";
         list_rows.append(row);
-
-        console.log(row);
     }
     if(list_array.length==0) //Заголовок для пустой таблицы
     {

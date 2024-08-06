@@ -642,3 +642,12 @@ function parkingCardDataHandler(parking_card_data_json)
         window.location.reload();
     }
 }
+
+function rentDataHandler(rent_data_json)
+{
+    rent_data_json=rent_data_json.replace("/", '');
+    let rent_data = JSON.parse(rent_data_json);
+    rent_data = JSON.parse(rent_data);
+    let response=rent_data['response'];
+    let error_message=document.getElementById("error_message_rent_parking_place");
+}
