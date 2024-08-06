@@ -650,4 +650,24 @@ function rentDataHandler(rent_data_json)
     rent_data = JSON.parse(rent_data);
     let response=rent_data['response'];
     let error_message=document.getElementById("error_message_rent_parking_place");
+
+    //Ошибка сервера
+    if(response==="request_error")
+    {
+        error_message.innerHTML="Ошибка сервера";
+        return(false);
+    }
+
+    //Неверные данные бронирования
+    if(response==="invalid_rent_data")
+    {
+        error_message.innerHTML="Неверные данные бронирования";
+        return(false);
+    }
+
+    //Успешное бронирование места
+    if(response==="rent_complete")
+    {
+        window.location.reload();
+    }
 }

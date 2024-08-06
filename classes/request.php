@@ -13,6 +13,7 @@
     Метод editParkingCard - принимает запрос на редактирование существующей карточки парковки, проверяет данные, запускает редактирование
     Метод saveDraftParkingCard - принимает запрос на сохранение черновика, запускает запрос в базу на сохранение черновика
     Метод deleteParkingCard - принимает запрос на удаление существующей парковки, запускает запрос в базу
+    Метод startRent - принимает запрос на начало бронирования парковочного места, запускает бронирование
 
     Метод getListData - принимает запрос на вывод данных списка, возвращает массив списка
 */
@@ -96,6 +97,17 @@ class Request extends DataBaseRequests
                     $response=$this->deleteParkingCard($request_content);
                 }
                 
+                $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
+            }
+
+            //Запрос на дейтсвия с бронированием
+            if(isset($request_content['rent_action']))
+            {
+                if($request_content['rent_action']=="rent_start")
+                {
+                    $response=$this->startRent($request_content);
+                }
+
                 $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
             }
 
@@ -540,8 +552,59 @@ class Request extends DataBaseRequests
             return($response);
         }
 
-        //Успешная отметка черновика
+        //Успешное удаление парковки
         $response='{"response":"delete_complete"}';
+        return($response);
+    }
+
+    public function startRent($request_content) //Метод бронирования парковки
+    {
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
+        $account = new Account();
+
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/rights_check.php");
+        $rights = new Rights();
+
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/validation.php");
+        $validation = new Validation();
+
+        $user_data=$account->checkAuth();
+        $role=$account->getRole($user_data);
+
+        $rent_data=$request_content;
+
+        //Валидация данных бронирования
+        /*
+        $valid_rent_data=$validation->validateRentData($rent_data);
+        if(!$valid_parking_place)
+        {
+            $response='{"response":"invalid_rent_data"}';
+            return($response);
+        }
+            */
+
+        //Проверка прав
+        /*
+        $rent_rights=$rights->rentRights($rent_data,$user_data,$role);
+        if(!$rent_rights)
+        {
+            $response='{"response":"request_error"}';
+            return($response);
+        }
+        */
+
+        //Бронирование парковки
+        /*
+        $response=$this->rentParkingRequest($user_data,$rent_data);
+        if(!$response)
+        {
+            $response='{"response":"request_error"}';
+            return($response);
+        }
+        */
+
+        //Успешное бронирование парковки
+        $response='{"response":"rent_complete"}';
         return($response);
     }
 

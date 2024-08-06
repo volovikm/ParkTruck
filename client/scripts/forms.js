@@ -483,6 +483,8 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
 //Обработчик формы бронирования парковочного места
 function parkingPlaceRentFormHandler(parking_place_id)
 {
+    let url="../request_handler.php";
+
     var parking_place_rent_form = document.getElementById("parking_place_rent_form");
     let inputs = parking_place_rent_form.querySelectorAll('input');
     let selects = parking_place_rent_form.querySelectorAll('select');
@@ -495,7 +497,7 @@ function parkingPlaceRentFormHandler(parking_place_id)
     let time_end="";
     let result_price="";
 
-    let action="rent_start";
+    let rent_action="rent_start";
 
     for (let i = 0; i < inputs.length; i++) 
     {
@@ -568,8 +570,8 @@ function parkingPlaceRentFormHandler(parking_place_id)
 
     //Отправка данных формы
     var data = {
-        rent: "true",
-        action: action,
+        rent_action: rent_action,
+        parking_place_id: parking_place_id,
         transport_number: transport_number,
         transport_id: transport_id,
         date_start: date_start,
