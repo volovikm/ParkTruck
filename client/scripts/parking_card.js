@@ -352,6 +352,25 @@ function rentParkingPlaceButtonHandler() //Обработчик кнопки б�
         var parking_place_name_span=document.getElementById("parking_place_name_span");
         parking_place_name_span.innerHTML="";
         parking_place_name_span.innerText=parking_place_array['parking_place_name'];
+
+        var price_span=document.getElementById("price_span");
+        var price_units_span=document.getElementById("price_units_span");
+        if(parking_place_array['price_units']=="hours")
+        {var price_units="руб/час";}
+        if(parking_place_array['price_units']=="days")
+        {var price_units="руб/сутки";}
+        price_span.innerHTML="";
+        price_units_span.innerHTML="";
+        price_span.innerText=parking_place_array['price']+" "+price_units;
+        price_units_span.innerText=parking_place_array['price_units'];
+
+        var result_price_span=document.getElementById("result_price_span");
+        result_price_span.innerHTML="";
+
+        var time_start_input=document.getElementById("time_start");
+        var time_end_input=document.getElementById("time_end");
+        time_start_input.value="";
+        time_start_input.time_end_input="";
     });
 }
 rentParkingPlaceButtonHandler();
@@ -381,6 +400,9 @@ function SetDateStart() //Функции определения дат брон�
 {
 	var date_start_input=document.getElementById("date_start");
 
+    if(date_start_input===null)
+    {return(false);}
+
     var today=new Date();
     
     //Год клиента
@@ -402,10 +424,13 @@ function SetDateStart() //Функции определения дат брон�
     date_start_input.setAttribute('min',today_date);
 }
 
-function SetPeriodTo()
+function SetDateEnd()
 {
 	var date_start_input=document.getElementById("date_start");
 	var date_end_input=document.getElementById("date_end");
+
+    if(date_start_input===null || date_end_input===null)
+    {return(false);}
 
     var today=new Date();
     
@@ -438,7 +463,71 @@ function SetPeriodTo()
     });
 }
 SetDateStart();
-SetPeriodTo();
+SetDateEnd();
+
+function defineResultPrice() //Функция определения итоговой стоимости бронирования
+{
+    var result_price_span=document.getElementById("result_price_span");
+
+    var date_start_input=document.getElementById("date_start");
+    var date_end_input=document.getElementById("date_end");
+    var time_start_input=document.getElementById("time_start");
+    var time_end_input=document.getElementById("time_end");
+
+    if(date_start_input===null || date_end_input===null)
+    {return(false);}
+
+    date_start_input.addEventListener('change', () => {
+        countResultPrice(date_start_input,date_end_input,time_start_input,time_end_input,result_price_span);
+    });
+
+    date_end_input.addEventListener('change', () => {
+        countResultPrice(date_start_input,date_end_input,time_start_input,time_end_input,result_price_span);
+    });
+
+    time_start_input.addEventListener('change', () => {
+        countResultPrice(date_start_input,date_end_input,time_start_input,time_end_input,result_price_span);
+    });
+
+    time_end_input.addEventListener('change', () => {
+        countResultPrice(date_start_input,date_end_input,time_start_input,time_end_input,result_price_span);
+    });
+
+    function countResultPrice(date_start_input,date_end_input,time_start_input,time_end_input,result_price_span) //Функция счёта итоговой стоимости по дням
+    {
+        var price_span=document.getElementById("price_span");
+        var price_units_span=document.getElementById("price_units_span");
+
+        var price=price_span.textContent;
+        var price_units=price_units_span.textContent;
+
+        var date_start = date_start_input.value;
+        var date_end = date_end_input.value;
+        var time_start = time_start_input.value;
+        var time_end = time_end_input.value;
+
+        if(price_units=="days")
+        {
+            var days_diff=moment(date_end+" "+time_end).diff(moment(date_start+" "+time_start), 'days');
+            result_price=days_diff * parseInt(price);
+        }
+        if(price_units=="hours")
+        {
+            var hours_diff=moment(date_end+" "+time_end).diff(moment(date_start+" "+time_start), 'hours');
+            result_price=hours_diff * parseInt(price);
+        }
+
+        if(result_price>0)
+        {
+            result_price_span.innerText=result_price+" руб";
+        }
+        else
+        {
+            result_price_span.innerText="";
+        }
+    }
+}
+defineResultPrice();
 
 
 //Обработчики кнопок формы парковочного места

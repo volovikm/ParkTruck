@@ -627,6 +627,8 @@ class Form extends Input
         $datetime_end=$this->dateTimeInput("end","Дата, время окончания бронирования",true);
 
         $form='
+        <script src="scripts/moment.js"></script>
+
         <div id="parking_place_rent_form" class="base_form interface_block parking_place_form_div">
             <div class="form_header">Парковочное место</div>
 
@@ -635,7 +637,7 @@ class Form extends Input
                     Внутренний номер: <span id="parking_place_name_span"></span>
                 </div>
                 <div>
-                    Стоимость: <span id="price_span"></span>
+                    Стоимость: <span id="price_span"></span> <span id="price_units_span" class="invisible_input"></span>
                 </div>
             </div>
 
