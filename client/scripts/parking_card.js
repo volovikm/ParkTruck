@@ -24,7 +24,6 @@ function saveParkingPlacesDataToCookie() //Функция сохранения �
 saveParkingPlacesDataToCookie();
 
 
-
 //Обработчики кнопок сайдбара
 function cancelButtonHandler() //Обработчик кнопки возврата на главную
 {
@@ -375,6 +374,71 @@ function deleteParkingFunction(parking_id) //Функция отправки з�
 {
     parkingCardFormHandler("delete",false,parking_id);
 }
+
+
+//Функции формы бронирования парковочного места
+function SetDateStart() //Функции определения дат бронирования
+{
+	var date_start_input=document.getElementById("date_start");
+
+    var today=new Date();
+    
+    //Год клиента
+    var today_year=today.getFullYear();
+    
+    //Месяц клиента
+    var today_month=today.getMonth();
+    if (today.getMonth()+1 < 10) {today_month='0' + (today.getMonth()+1);}
+       
+    //День клиента      
+    var today_day=today.getDate();
+    if (today.getDate()+1 < 10) {today_day='0' + today.getDate();}
+    
+    //Полная дата
+    var today_date=today_year+'-'+today_month+'-'+today_day;
+    date_start_input.valueAsDate = new Date(today_date);
+    
+    //Минимальная дата начала бронирования - сегодня
+    date_start_input.setAttribute('min',today_date);
+}
+
+function SetPeriodTo()
+{
+	var date_start_input=document.getElementById("date_start");
+	var date_end_input=document.getElementById("date_end");
+
+    var today=new Date();
+    
+    //Год клиента
+    var today_year=today.getFullYear();
+    
+    //Месяц клиента
+    var today_month=today.getMonth();
+    if (today.getMonth()+1 < 10) {today_month='0' + (today.getMonth()+1);}
+       
+    //День клиента      
+    var today_day=today.getDate();
+    if (today.getDate()+1 < 10) {today_day='0' + today.getDate();}
+    
+    //Полная дата
+    var today_date=today_year+'-'+today_month+'-'+today_day;
+    date_end_input.valueAsDate = new Date(today_date);
+    
+    date_start_input.addEventListener('change', () => {
+        date_end_input.setAttribute('min',date_start_input.value);
+        
+        var max_date = new Date(date_start_input.value);
+        max_date.setDate(max_date.getDate() + 30);
+        var max_period=max_date.getFullYear()+"-"+(max_date.getMonth()+1)+"-"+max_date.getDate();
+        var day=max_date.getDate().toString().padStart(2, "0");
+        var month=(max_date.getMonth()+1).toString().padStart(2, "0");
+        var year=max_date.getFullYear();
+        max_period=year+"-"+month+"-"+day;
+        date_end_input.setAttribute('max',max_period); 
+    });
+}
+SetDateStart();
+SetPeriodTo();
 
 
 //Обработчики кнопок формы парковочного места
