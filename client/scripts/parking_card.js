@@ -374,6 +374,9 @@ function rentParkingPlaceButtonHandler() //Обработчик кнопки б�
 
         var save_parking_place_rent_button=document.getElementById("save_parking_place_rent_button");
         save_parking_place_rent_button.setAttribute('onclick','parkingPlaceRentFormHandler(`'+parking_place_id+'`)');
+
+        var transport_number_input=document.getElementById("transport_number");
+        transport_number_input.value="";
     });
 }
 rentParkingPlaceButtonHandler();
@@ -536,6 +539,33 @@ function defineResultPrice() //Функция определения итого�
 }
 defineResultPrice();
 
+//Функция вызова модального окна с номером (информацией) брони
+function RentInfoModalWindow(){
+
+    function ModalDisplay()
+    {
+        var modal_window_div = document.createElement("div");
+        modal_window_div.id="modal_window_div";
+        modal_window_div.innerHTML="\
+        <div class='modal_window_div interface_block'>\
+            <h3 class='modal_window_h3'>Номер бронирования:</h3>\
+            <div>\
+            ИНФОРМАЦИЯ О БРОНИРОВАНИИ    \
+            </div>\
+            <div class='modal_window_buttons_block'>\
+                <button class='secondary_button modal_window_button' onclick='document.getElementById(`modal_window_div`).remove()'>Выйти</button>\
+            </div>\
+        </div>\
+        ";
+        
+        //Выводим модальное окно
+        var body = document.querySelector("body");
+        body.appendChild(modal_window_div);
+    }
+    
+    ModalDisplay();
+}
+
 
 //Обработчики кнопок формы парковочного места
 function cancelParkingPlaceButtonHandler() //Обработчик кнопки выхода из парковочного места
@@ -672,6 +702,17 @@ function rentDataHandler(rent_data_json)
     //Успешное бронирование места
     if(response==="rent_complete")
     {
-        window.location.reload();
+        let response_content=rent_data['response_content'];
+
+        let rent_number=response_content["rent_number"];
+        console.log(rent_number);
+
+        var parking_place_rent_form=document.getElementById("parking_place_rent_form");
+        parking_place_rent_form.style.display="none";
+
+        RentInfoModalWindow();
+
+
+        //window.location.reload();
     }
 }

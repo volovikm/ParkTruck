@@ -610,9 +610,13 @@ class Request extends DataBaseRequests
             return($response);
         }
 
-
         //Успешное бронирование парковки
-        $response='{"response":"rent_complete"}';
+        $response='{
+            "response":"rent_complete",
+            "response_content": {
+                "rent_number": "'.$rent_data["rent_number"].'"
+                }
+        }';
         return($response);
     }
 
