@@ -143,6 +143,19 @@ function listDisplay(list_array)
                     value_style=additional_info["style"];
                     column_block.classList.add("text_"+value_style);
                 }
+
+                //Кнопка в форме ссылки
+                if(Object.keys(additional_info).indexOf("link_button")!=-1)
+                {
+                    var link_button=document.createElement("button");
+                    link_button.classList.add("link_button");
+                    link_button.innerText=additional_info["link_button"]["text"];
+                    link_button.setAttribute("onclick","location.href=`"+additional_info["link_button"]["link"]+"`;");
+                    link_button.setAttribute("type","button");
+                    link_button.setAttribute("target","_blank");
+
+                    column_block.append(link_button);
+                }
             }
 
             column.append(column_block);

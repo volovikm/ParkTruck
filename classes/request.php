@@ -678,14 +678,24 @@ class Request extends DataBaseRequests
                 if($rent=="1")
                 {
                     $list_data[$i]["rent"]["content"]="Забронировано";
+
                     $list_data[$i]["rent"]["additional_info"]["style"]="negative";
+
                     $list_data[$i]["rent"]["additional_info"]["block_choice"]=true;
+
+                    $list_data[$i]["rent"]["additional_info"]["link_button"]["text"]="Интервалы бронирования";
+                    $list_data[$i]["rent"]["additional_info"]["link_button"]["link"]="rent_info.php?parking_place_id=".$list_data[$i]["parking_place_id"];
                 }
                 else
                 {
                     $list_data[$i]["rent"]["content"]="Свободно";
+
                     $list_data[$i]["rent"]["additional_info"]["style"]="positive";
+
                     $list_data[$i]["rent"]["additional_info"]["block_choice"]=false;
+
+                    $list_data[$i]["rent"]["additional_info"]["link_button"]["text"]="Интервалы бронирования";
+                    $list_data[$i]["rent"]["additional_info"]["link_button"]["link"]="rent_info.php?parking_place_id=".$list_data[$i]["parking_place_id"];
                 }
             }
         }
