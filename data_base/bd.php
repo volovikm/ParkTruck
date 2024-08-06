@@ -473,5 +473,90 @@
                         }catch (PDOException $e) {}
                 }
 
+                public function getParkingPlaceDataByIdRequest($id) //Запрос данных конкретного места по id
+                {
+                        $db=$this->connectDataBase();
+
+                        $array=false;
+                        try 
+                        {
+                                $sql="SELECT * FROM `parking_places` 
+                                WHERE
+                                id = :id";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":id", $id);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        }catch (PDOException $e) {}
+                        return($array);
+                }
+
+
+                //Запросы по бронированию
+                public function rentParkingPlaceRequest($user_data,$rent_data)
+                {
+                        $db=$this->connectDataBase();
+
+                        try {
+                                $sql = "INSERT INTO rent (
+                                rent_number, 
+                                parking_place_id,
+                                rent_start_date,
+                                rent_start_time,
+                                rent_end_date,
+                                rent_end_time,
+                                result_price,
+                                transport_id,
+                                transport_number
+                                ) VALUES (
+                                :rent_number, 
+                                :parking_place_id,
+                                :rent_start_date,
+                                :rent_start_time,
+                                :rent_end_date,
+                                :rent_end_time,
+                                :result_price,
+                                :transport_id,
+                                :transport_number
+                                )";
+                                $stmt=$db->prepare($sql);
+                                $stmt->bindValue(":rent_number", $rent_data['rent_number']);
+                                $stmt->bindValue(":parking_place_id", $rent_data['parking_place_id']);
+                                $stmt->bindValue(":rent_start_date", $rent_data['date_start']);
+                                $stmt->bindValue(":rent_start_time", $rent_data['time_start']);
+                                $stmt->bindValue(":rent_end_date", $rent_data['date_end']);
+                                $stmt->bindValue(":rent_end_time", $rent_data['time_end']);
+                                $stmt->bindValue(":result_price", $rent_data['result_price']);
+                                $stmt->bindValue(":transport_id", $rent_data['transport_id']);
+                                $stmt->bindValue(":transport_number", $rent_data['transport_number']);
+                                $affectedRowsNumber=$stmt->execute();
+                                if($affectedRowsNumber > 0 ){
+                                        return(true);
+                                }
+                                return(false);
+                        }catch (PDOException $e) {}
+                }
+
+                public function setParkingPlaceRentRequest($parking_place_id) //Запрос на отметку места занятым
+                {
+                        $db=$this->connectDataBase();
+
+                        try 
+                        {
+                                $sql = "UPDATE parking_places SET
+                                rent='1'
+                                WHERE 
+                                parking_place_id=:parking_place_id";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":parking_place_id", $parking_place_id);
+                                $stmt->execute();
+                                $affectedRowsNumber=$stmt->execute(); 
+                                if($affectedRowsNumber > 0 ){
+                                        return(true);
+                                }
+                        }catch (PDOException $e) {}
+                        return(false);
+                }
+
         }
 ?>

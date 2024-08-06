@@ -545,8 +545,8 @@ function parkingPlaceRentFormHandler(parking_place_id)
         }
     }
 
-    var result_price_span=document.getElementById("result_price_span");
-    result_price=result_price_span.textContent;
+    var result_price_value=document.getElementById("result_price_value");
+    result_price=result_price_value.textContent;
 
     //Проверки формы
     let error_message=document.getElementById("error_message_rent_parking_place");
@@ -564,7 +564,7 @@ function parkingPlaceRentFormHandler(parking_place_id)
     }
     if(result_price==="")
     {
-        error_message.innerHTML="Дата и время окончания бронирования должны быть больше даты и времени начала бронирования";
+        error_message.innerHTML="Дата и время окончания бронирования должны быть позже даты и времени начала бронирования";
         return(false);
     }
 

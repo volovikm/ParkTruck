@@ -13,7 +13,7 @@ class Random
         return $code;
     }
 
-    public function randomNumbnerString($length) 
+    public function randomNumberString($length) 
     {
         $chars = "0123456789";
         $code = "";

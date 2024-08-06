@@ -501,6 +501,8 @@ function defineResultPrice() //Функция определения итого�
         var price_span=document.getElementById("price_span");
         var price_units_span=document.getElementById("price_units_span");
 
+        var result_price_value=document.getElementById("result_price_value");
+
         var price=price_span.textContent;
         var price_units=price_units_span.textContent;
 
@@ -523,10 +525,12 @@ function defineResultPrice() //Функция определения итого�
         if(result_price>0)
         {
             result_price_span.innerText=result_price+" руб";
+            result_price_value.innerText=result_price;
         }
         else
         {
             result_price_span.innerText="";
+            result_price_value.innerText="";
         }
     }
 }

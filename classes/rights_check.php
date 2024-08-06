@@ -85,5 +85,23 @@ class Rights extends DataBaseRequests
 
         return($rights);
     }
+
+    public function rentRights($rent_data,$user_data,$role) //Проверка прав на бронирование парковочного места
+    {
+        //$user_data: array | false
+
+        //Проверки прав
+        $rights=false;
+
+        if($user_data===false || $role== "driver")
+        {
+            
+            //Проверка интервалов бронирования
+            $rights=true;
+
+        }
+
+        return($rights);
+    }
 }
 ?>

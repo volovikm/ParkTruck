@@ -216,7 +216,7 @@ class Request extends DataBaseRequests
 
         $reg_data=$request_content;
         $reg_data['password_hash']=password_hash($reg_data['password'],PASSWORD_DEFAULT);
-        $reg_data['reg_confirm_code']=$random->randomNumbnerString(6);
+        $reg_data['reg_confirm_code']=$random->randomNumberString(6);
 
         //Валидация полученных данных
         $valid=$validation->validateTelephone($reg_data['telephone']);
@@ -568,40 +568,48 @@ class Request extends DataBaseRequests
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/validation.php");
         $validation = new Validation();
 
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/random.php");
+        $random=new Random();
+
         $user_data=$account->checkAuth();
         $role=$account->getRole($user_data);
 
         $rent_data=$request_content;
 
         //Валидация данных бронирования
-        /*
         $valid_rent_data=$validation->validateRentData($rent_data);
-        if(!$valid_parking_place)
+        if(!$valid_rent_data)
         {
             $response='{"response":"invalid_rent_data"}';
             return($response);
         }
-            */
 
         //Проверка прав
-        /*
         $rent_rights=$rights->rentRights($rent_data,$user_data,$role);
         if(!$rent_rights)
         {
             $response='{"response":"request_error"}';
             return($response);
         }
-        */
 
         //Бронирование парковки
-        /*
-        $response=$this->rentParkingRequest($user_data,$rent_data);
+        $rent_data["rent_number"]=$random->randomNumberString(8);
+        $parking_place_data=($this->getParkingPlaceDataByIdRequest($rent_data["parking_place_id"]))[0];
+        $rent_data["parking_place_id"]=$parking_place_data["parking_place_id"];
+
+        $response=$this->rentParkingPlaceRequest($user_data,$rent_data);
         if(!$response)
         {
             $response='{"response":"request_error"}';
             return($response);
         }
-        */
+        $response=$this->setParkingPlaceRentRequest($rent_data["parking_place_id"]);
+        if(!$response)
+        {
+            $response='{"response":"request_error"}';
+            return($response);
+        }
+
 
         //Успешное бронирование парковки
         $response='{"response":"rent_complete"}';
