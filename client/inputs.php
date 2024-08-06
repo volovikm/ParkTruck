@@ -234,7 +234,7 @@ class Input
             <div class="label_div">
                 <label class="input_label">Госномер ТС</label>
             </div>
-            <input id="transport_number" class="basic_input" type="number" value="'.$value.'">
+            <input id="transport_number" class="basic_input" value="'.$value.'">
         ';
 
         return($input);

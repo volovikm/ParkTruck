@@ -479,3 +479,102 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
     for(i=0; i<parking_place_form_inputs.length;i++)
     {parking_place_form_inputs[i].value="";}
 }
+
+//Обработчик формы бронирования парковочного места
+function parkingPlaceRentFormHandler(parking_place_id)
+{
+    var parking_place_rent_form = document.getElementById("parking_place_rent_form");
+    let inputs = parking_place_rent_form.querySelectorAll('input');
+    let selects = parking_place_rent_form.querySelectorAll('select');
+
+    let transport_number="";
+    let transport_id="";
+    let date_start="";
+    let time_start="";
+    let date_end="";
+    let time_end="";
+    let result_price="";
+
+    for (let i = 0; i < inputs.length; i++) 
+    {
+        let input=inputs[i];
+
+        //Поле ввода госномера
+        if(input.id=="transport_number")
+        {
+            transport_number=input.value;
+        }
+
+        //Поле ввода даты начала бронирования
+        if(input.id=="date_start")
+        {
+            date_start=input.value;
+        }
+
+        //Поле ввода времени начала бронирования
+        if(input.id=="time_start")
+        {
+            time_start=input.value;
+        }
+
+        //Поле ввода даты окончания бронирования
+        if(input.id=="date_end")
+        {
+            date_end=input.value;
+        }
+
+        //Поле ввода времени окончания бронирования
+        if(input.id=="time_end")
+        {
+            time_end=input.value;
+        }
+    }
+
+    for (let i = 0; i < selects.length; i++) 
+    {
+        let select=selects[i];
+
+        //Поле ввода ТС
+        if(select.id=="transport_id")
+        {
+            transport_id=select.value;
+        }
+    }
+
+    var result_price_span=document.getElementById("result_price_span");
+    result_price=result_price_span.textContent;
+
+    //Проверки формы
+    let error_message=document.getElementById("error_message_rent_parking_place");
+
+    //Проверка пустой формы
+    if(transport_number==="" && transport_id==="")
+    {
+        error_message.innerHTML="Заполните данные ТС";
+        return(false);
+    }
+    if(time_start==="" || time_end==="")
+    {
+        error_message.innerHTML="Заполните время начала и окончания бронирования";
+        return(false);
+    }
+    if(result_price==="")
+    {
+        error_message.innerHTML="Дата и время окончания бронирования должны быть больше даты и времени начала бронирования";
+        return(false);
+    }
+
+    //Отправка данных формы
+    var data = {
+        parking_card_action: action,
+        parking_id: parking_id,
+        name: name_,
+        latitude: latitude,
+        longitude: longitude,
+        adress: adress,
+        draft: draft,
+        parking_places: parking_places
+    };
+    var data_json = JSON.stringify(data);
+    requestTo(parkingCardDataHandler,data_json,url);
+}

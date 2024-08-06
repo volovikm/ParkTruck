@@ -111,6 +111,10 @@
 }
 
 .error_message{
+    text-align: center;
+    white-space: normal;
+    padding-left: 20px;
+    padding-right: 20px;
     color: #c41104;
 }
 
@@ -156,6 +160,10 @@
 .list_row{
     height: 40px;
     width: 100%;
+}
+
+.list_row_first{
+    margin-top: 40px;
 }
 
 .list_row_1{

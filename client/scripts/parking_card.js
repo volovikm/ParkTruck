@@ -370,7 +370,10 @@ function rentParkingPlaceButtonHandler() //Обработчик кнопки б�
         var time_start_input=document.getElementById("time_start");
         var time_end_input=document.getElementById("time_end");
         time_start_input.value="";
-        time_start_input.time_end_input="";
+        time_end_input.value="";
+
+        var save_parking_place_rent_button=document.getElementById("save_parking_place_rent_button");
+        save_parking_place_rent_button.setAttribute('onclick','parkingPlaceRentFormHandler(`'+parking_place_id+'`)');
     });
 }
 rentParkingPlaceButtonHandler();

@@ -24,8 +24,6 @@ function listResponse(list_data_json)
 //Обработчик отображения списков
 function listDisplay(list_array) 
 {   
-    //console.log(list_array);
-
     //Сохранение массива списка в куки
     var list_data=arrayToObject(list_array);
     var list_data_json = JSON.stringify(list_data);
@@ -55,12 +53,20 @@ function listDisplay(list_array)
     var list_row_pattern_1=document.getElementById("list_row_pattern_1");
     for(let i=0; i<list_array.length; i++)
     {
-        if(i % 2 === 0)
-        {row=list_row_pattern_1.cloneNode(false);}
-        else
+        if(Math.floor(i / 2) == (i / 2))
         {row=list_row_pattern_2.cloneNode(false);}
+        else
+        {row=list_row_pattern_1.cloneNode(false);}
+
+        if(i==0)
+        {
+            row.classList.add("list_row_first"); 
+        }
+        
         row.style.display="block";
         list_rows.append(row);
+
+        console.log(row);
     }
     if(list_array.length==0) //Заголовок для пустой таблицы
     {

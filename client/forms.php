@@ -662,13 +662,13 @@ class Form extends Input
             </div>
 
             <div class="error_message_div">
-                <div id="error_message_parking_place" class="error_message">
+                <div id="error_message_rent_parking_place" class="error_message">
 
                 </div>
             </div>
 
             <div class="button_div">
-                <button id="save_parking_place_rent_button" onclick="parkingPlaceRentFormHandler()" class="main_button" type="button">Подтвердить</button>
+                <button id="save_parking_place_rent_button" class="main_button" type="button">Подтвердить</button>
                 <button id="cancel_parking_place_rent_button" class="secondary_button" type="button">Отменить</button>
             </div>
 
