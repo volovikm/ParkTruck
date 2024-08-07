@@ -571,6 +571,9 @@ class Request extends DataBaseRequests
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/random.php");
         $random=new Random();
 
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/date_conversion.php");
+        $date_conversion=new DateConversion();
+
         $user_data=$account->checkAuth();
         $role=$account->getRole($user_data);
 
@@ -593,7 +596,7 @@ class Request extends DataBaseRequests
         }
 
         //Бронирование парковки
-        $rent_data["rent_number"]=$random->randomNumberString(8);
+        $rent_data["rent_number"]=($random->randomLetterString(1)).($random->randomNumberString(3));
         $parking_place_data=($this->getParkingPlaceDataByIdRequest($rent_data["parking_place_id"]))[0];
         $rent_data["parking_place_id"]=$parking_place_data["parking_place_id"];
 
@@ -603,19 +606,28 @@ class Request extends DataBaseRequests
             $response='{"response":"request_error"}';
             return($response);
         }
+
+        /*
         $response=$this->setParkingPlaceRentRequest($rent_data["parking_place_id"]);
         if(!$response)
         {
             $response='{"response":"request_error"}';
             return($response);
         }
+            */
 
         //Успешное бронирование парковки
         $response='{
             "response":"rent_complete",
             "response_content": {
-                "rent_number": "'.$rent_data["rent_number"].'"
-                }
+                "rent_number": "'.$rent_data["rent_number"].'",
+                "rent_start_date": "'.$date_conversion->convertDate($rent_data["date_start"]).'",
+                "rent_end_date": "'.$date_conversion->convertDate($rent_data["date_end"]).'",
+                "rent_start_time": "'.$rent_data["time_start"].'",
+                "rent_end_time": "'.$rent_data["time_end"].'",
+                "result_price": "'.$rent_data["result_price"].'",
+                "transport_number": "'.$rent_data["transport_number"].'"
+            }
         }';
         return($response);
     }

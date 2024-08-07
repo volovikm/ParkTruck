@@ -459,7 +459,7 @@ function SetDateEnd()
         date_end_input.setAttribute('min',date_start_input.value);
         
         var max_date = new Date(date_start_input.value);
-        max_date.setDate(max_date.getDate() + 30);
+        max_date.setDate(max_date.getDate() + 7);
         var max_period=max_date.getFullYear()+"-"+(max_date.getMonth()+1)+"-"+max_date.getDate();
         var day=max_date.getDate().toString().padStart(2, "0");
         var month=(max_date.getMonth()+1).toString().padStart(2, "0");
@@ -540,20 +540,27 @@ function defineResultPrice() //Функция определения итого�
 defineResultPrice();
 
 //Функция вызова модального окна с номером (информацией) брони
-function RentInfoModalWindow(){
+function rentInfoModalWindow(rent_data){
 
-    function ModalDisplay()
+    function ModalDisplay(rent_data)
     {
         var modal_window_div = document.createElement("div");
         modal_window_div.id="modal_window_div";
         modal_window_div.innerHTML="\
         <div class='modal_window_div interface_block'>\
-            <h3 class='modal_window_h3'>Номер бронирования:</h3>\
-            <div>\
-            ИНФОРМАЦИЯ О БРОНИРОВАНИИ    \
+            <h3 class='modal_window_h3'>Бронирование №: "+rent_data["rent_number"]+"</h3>\
+            <div class='modal_window_info_div'>\
+                Срок бронирования: "+rent_data["rent_start_date"]+" "+rent_data["rent_start_time"]+" - "+rent_data["rent_end_date"]+" "+rent_data["rent_end_time"]+"   \
+            </div>\
+            <div class='modal_window_info_div'>\
+                Госномер ТС: "+rent_data["transport_number"]+"   \
+            </div>\
+            <div class='modal_window_info_div'>\
+                Итоговая стоимость: "+rent_data["result_price"]+"   \
             </div>\
             <div class='modal_window_buttons_block'>\
-                <button class='secondary_button modal_window_button' onclick='document.getElementById(`modal_window_div`).remove()'>Выйти</button>\
+                <button class='main_button modal_window_button' onclick=''>Построить маршрут</button>\
+                <button class='secondary_button modal_window_button' onclick='document.getElementById(`modal_window_div`).remove()'>Завершить</button>\
             </div>\
         </div>\
         ";
@@ -563,7 +570,7 @@ function RentInfoModalWindow(){
         body.appendChild(modal_window_div);
     }
     
-    ModalDisplay();
+    ModalDisplay(rent_data);
 }
 
 
@@ -705,12 +712,11 @@ function rentDataHandler(rent_data_json)
         let response_content=rent_data['response_content'];
 
         let rent_number=response_content["rent_number"];
-        console.log(rent_number);
 
         var parking_place_rent_form=document.getElementById("parking_place_rent_form");
         parking_place_rent_form.style.display="none";
 
-        RentInfoModalWindow();
+        rentInfoModalWindow(response_content);
 
 
         //window.location.reload();
