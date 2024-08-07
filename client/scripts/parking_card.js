@@ -149,26 +149,21 @@ function copyParkingPlaceButtonHandler() //Обработчик кнопки к�
         var parking_place_data=list_array[parking_place_id];
         var parking_place_array=objectToArray(parking_place_data);
         parking_place_array["rent"]="";
-        if(existing_par)
-        {
-            parking_place_array["id"]=list_array.length+1;
-            parking_place_data=arrayToObject(parking_place_array);
-        }
+        parking_place_array["parking_place_name"]=""; //Обнуление имени парковочного места для уникальности
+        if(existing_par){parking_place_array["id"]=list_array.length+1;} //Указание id места, скопированного с нового
+        parking_place_data=arrayToObject(parking_place_array);
         list_array.push(parking_place_data);
         listDisplay(list_array);
 
         //Добавление парковочного места в массив отправки на сервер
         var parking_place_server_data=list_server_array[parking_place_id];
-        if(existing_par)
-        {
-            var parking_place_server_array=objectToArray(parking_place_server_data);
-            parking_place_server_array["id"]=list_server_array.length+1;
-            parking_place_server_data=arrayToObject(parking_place_server_array);
-        }
+        var parking_place_server_array=objectToArray(parking_place_server_data);
+        parking_place_server_array["parking_place_name"]=""; //Обнуление имени парковочного места для уникальности
+        if(existing_par){parking_place_server_array["id"]=list_server_array.length+1;} //Указание id места, скопированного с нового
+        parking_place_server_data=arrayToObject(parking_place_server_array);
         list_server_array.push(parking_place_server_data);
         var parking_places_server_data = JSON.stringify(list_server_array);
         writeCookie("parking_places_data", parking_places_server_data, 30);
-
     });
 }
 copyParkingPlaceButtonHandler();
@@ -212,9 +207,7 @@ function editParkingPlaceButtonHandler() //Обработчик кнопки р�
                 {parking_place_server_data=list_server_array[i];}
             }
         }
-
-        console.log(parking_place_server_data);
-
+        
         //Вызов формы парковочного места
         var parking_place_form=document.getElementById("parking_place_form");
         var save_parking_place_button=document.getElementById("save_parking_place_button");

@@ -111,7 +111,7 @@ class Validation
     }
 
     //Функции валидации данных парковочных мест
-    public function validateParkingPlace($parking_place)
+    public function validateParkingPlace($parking_place,$parking_places_array)
     {
         $valid=false;
 
@@ -133,7 +133,7 @@ class Validation
         $valid_unlimited_heigth_marker=$this->validateUnlimitedHeightMarker($parking_place["height_not_limited"]);
 
         //Проверка уникальности внутреннего номера парковочного места
-        $valid_parking_place_name=$this->validateUniqueParkingPlaceName($parking_place["parking_place_name"]);
+        $valid_parking_place_name=$this->validateUniqueParkingPlaceName($parking_place["parking_place_name"],$parking_places_array);
 
         if($valid_size && $valid_length && $valid_width && $valid_height && $valid_price && $valid_price_units && $valid_unlimited_heigth_marker && $valid_parking_place_name)
         {
@@ -174,13 +174,24 @@ class Validation
         return(false);
     }
 
-    public function validateUniqueParkingPlaceName($parking_place_name)
+    public function validateUniqueParkingPlaceName($parking_place_name,$parking_places)
     {
         if($parking_place_name=="")
         {return(true);}
 
-        return(true);
+        $j=0;
+        for($i=0;$i<count($parking_places);$i++)
+        {
+            if($parking_places[$i]["parking_place_name"]==$parking_place_name)
+            {
+                $j++;
+            }
+        }
 
+        if($j<=1)
+        {
+            return(true);
+        }
         return(false);
     }
 

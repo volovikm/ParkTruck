@@ -378,7 +378,7 @@ class Request extends DataBaseRequests
         //Валидация данных парковочных мест
         for($i=0;$i<count($parking_places);$i++)
         {
-            $valid_parking_place=$validation->validateParkingPlace($parking_places[$i]);
+            $valid_parking_place=$validation->validateParkingPlace($parking_places[$i],$parking_places);
             if(!$valid_parking_place)
             {
                 $response='{"response":"invalid_parking_places"}';
@@ -453,7 +453,7 @@ class Request extends DataBaseRequests
         $parking_places=$request_content['parking_places'];
         for($i=0;$i<count($parking_places);$i++)
         {
-            $valid_parking_place=$validation->validateParkingPlace($parking_places[$i]);
+            $valid_parking_place=$validation->validateParkingPlace($parking_places[$i],$parking_places);
             if(!$valid_parking_place)
             {
                 $response='{"response":"invalid_parking_places"}';
