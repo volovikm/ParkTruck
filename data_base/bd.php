@@ -558,5 +558,26 @@
                         return(false);
                 }
 
+                public function setParkingPlaceFreeRequest($parking_place_id) //Запрос на отметку места свободным
+                {
+                        $db=$this->connectDataBase();
+
+                        try 
+                        {
+                                $sql = "UPDATE parking_places SET
+                                rent='0'
+                                WHERE 
+                                parking_place_id=:parking_place_id";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":parking_place_id", $parking_place_id);
+                                $stmt->execute();
+                                $affectedRowsNumber=$stmt->execute(); 
+                                if($affectedRowsNumber > 0 ){
+                                        return(true);
+                                }
+                        }catch (PDOException $e) {}
+                        return(false);
+                }
+
         }
 ?>
