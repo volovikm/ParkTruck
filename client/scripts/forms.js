@@ -303,6 +303,15 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
     let price_units="";
     let rent="";
 
+    //Получение данных парковки для отправки на сервер
+    var parking_places_json=readCookie("parking_places_data");
+    if(parking_places_json !== undefined)
+    {
+        var parking_places_data = JSON.parse(parking_places_json);
+        var parking_places_array=objectToArray(parking_places_data);
+    }
+    else{parking_places_array=[];}
+
     for (let i = 0; i < inputs.length; i++) 
     {
         let input=inputs[i];
@@ -371,6 +380,16 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
         return(false);
     }
 
+    //Проверка уникальности внутрененнего номера
+    for (let i = 0; i < parking_places_array.length; i++) 
+    {
+        if(parking_places_array[i]["parking_place_name"]==parking_place_name && parking_place_name!="")
+        {
+            error_message.innerHTML="Внутренний номер должен быть уникальным";
+            return(false);
+        }
+    }
+
     //Сбор общего массива с данными формы, преобразование для отображения в списке
     var parking_place_clear_data = {  //Массив с чистыми данными для дальнейшей отправки на сервер
         "parking_place_name": parking_place_name,
@@ -381,16 +400,6 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
         "height_not_limited": height_not_limited,
         "price": price,
         "price_units": price_units,
-    }
-    var parking_places_json=readCookie("parking_places_data");
-    if(parking_places_json !== undefined)
-    {
-        var parking_places_data = JSON.parse(parking_places_json);
-        var parking_places_array=objectToArray(parking_places_data);
-    }
-    else
-    {
-        parking_places_array=[];
     }
 
     //Преобразование данных для вывода в список
@@ -546,7 +555,7 @@ function parkingPlaceRentFormHandler(parking_place_id)
     }
 
     var result_price_value=document.getElementById("result_price_value");
-    result_price=result_price_value.textContent;
+    result_price=result_price_span.textContent;
 
     //Проверки формы
     let error_message=document.getElementById("error_message_rent_parking_place");

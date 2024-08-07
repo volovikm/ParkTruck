@@ -7,7 +7,7 @@ function requestTo(responseHandler,data,url)
             request_content: data,
         },
         success: function(response){
-            console.log(response);
+            //console.log(response);
             
             //Функция-обработчик ответа
             if(responseHandler!==null){

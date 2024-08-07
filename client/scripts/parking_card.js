@@ -101,6 +101,9 @@ function copyParkingPlaceButtonHandler() //Обработчик кнопки к�
         var choice_input = document.getElementById("choice_input");
         var choice_arr=choice_input.value.split(["_"]);
         choice_arr.splice(0, 1);
+
+        //Обнуление выбора
+        dropChoice();
     
         var parking_place_id=choice_arr[0];
 
@@ -165,6 +168,7 @@ function copyParkingPlaceButtonHandler() //Обработчик кнопки к�
         list_server_array.push(parking_place_server_data);
         var parking_places_server_data = JSON.stringify(list_server_array);
         writeCookie("parking_places_data", parking_places_server_data, 30);
+
     });
 }
 copyParkingPlaceButtonHandler();
@@ -181,6 +185,9 @@ function editParkingPlaceButtonHandler() //Обработчик кнопки р�
         var choice_input = document.getElementById("choice_input");
         var choice_arr=choice_input.value.split(["_"]);
         choice_arr.splice(0, 1);
+
+        //Обнуление выбора
+        dropChoice();
 
         var parking_place_id=choice_arr[0];
 
@@ -205,6 +212,8 @@ function editParkingPlaceButtonHandler() //Обработчик кнопки р�
                 {parking_place_server_data=list_server_array[i];}
             }
         }
+
+        console.log(parking_place_server_data);
 
         //Вызов формы парковочного места
         var parking_place_form=document.getElementById("parking_place_form");
@@ -250,6 +259,9 @@ function deleteParkingPlaceButtonHandler() //Обработчик кнопки �
         var choice_input = document.getElementById("choice_input");
         var choice_arr=choice_input.value.split(["_"]);
         choice_arr.splice(0, 1);
+
+        //Обнуление выбора
+        dropChoice();
 
         var parking_place_id="";
         var list_data="";
@@ -559,7 +571,7 @@ function rentInfoModalWindow(rent_data){
                 Итоговая стоимость: "+rent_data["result_price"]+"   \
             </div>\
             <div class='modal_window_buttons_block'>\
-                <button class='main_button modal_window_button' onclick=''>Построить маршрут</button>\
+                <button class='main_button modal_window_button' onclick='createRouteByParkingId(`"+rent_data["parking_id"]+"`)'>Построить маршрут</button>\
                 <button class='secondary_button modal_window_button' onclick='document.getElementById(`modal_window_div`).remove()'>Завершить</button>\
             </div>\
         </div>\
@@ -610,6 +622,7 @@ cancelParkingPlaceRentButtonHandler();
 function dropParkingPlacesData()
 {
     deleteCookie("parking_places_data");
+    deleteCookie("list_data");
 }
 
 

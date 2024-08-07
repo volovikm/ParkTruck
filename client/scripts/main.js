@@ -90,6 +90,21 @@ function choiceCheckbox(id)
 	}
 }
 
+//Функция сброса выбора в списке
+function dropChoice()
+{
+	var choice_input = document.getElementById("choice_input");
+	choice_input.value="";
+    choice_input.click();
+
+	var list_content=document.getElementById("list_content");
+    var choice_checkbox_array = list_content.querySelectorAll("input[type='checkbox']");
+	for(let i=0;i<choice_checkbox_array.length;i++)
+	{
+		choice_checkbox_array[i].checked=false;
+	}
+}
+
 //Обработчик включения/выключения зависимых кнопок в списках
 function enableListButtons(button_id,class_name,choice_amount)
 {

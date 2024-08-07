@@ -132,7 +132,10 @@ class Validation
         //Проверка маркера неограниченной высоты
         $valid_unlimited_heigth_marker=$this->validateUnlimitedHeightMarker($parking_place["height_not_limited"]);
 
-        if($valid_size && $valid_length && $valid_width && $valid_height && $valid_price && $valid_price_units && $valid_unlimited_heigth_marker)
+        //Проверка уникальности внутреннего номера парковочного места
+        $valid_parking_place_name=$this->validateUniqueParkingPlaceName($parking_place["parking_place_name"]);
+
+        if($valid_size && $valid_length && $valid_width && $valid_height && $valid_price && $valid_price_units && $valid_unlimited_heigth_marker && $valid_parking_place_name)
         {
             $valid=true;
         }
@@ -168,6 +171,16 @@ class Validation
         {
             return(true);
         }
+        return(false);
+    }
+
+    public function validateUniqueParkingPlaceName($parking_place_name)
+    {
+        if($parking_place_name=="")
+        {return(true);}
+
+        return(true);
+
         return(false);
     }
 

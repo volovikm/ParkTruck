@@ -52,7 +52,11 @@ class Rights extends DataBaseRequests
         //$user_data: array | false
 
         //Получение данных парковки
-        $parking_data=($this->parkingCardDataRequest($parking_data['parking_id']))[0];
+        $parking_data=$this->parkingCardDataRequest($parking_data['parking_id']);
+        if(!isset($parking_data[0]))
+        {return(false);}
+
+        $parking_data=$parking_data[0];
 
         //Проверки прав
         $rights=false;
