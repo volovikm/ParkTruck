@@ -383,7 +383,7 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
     //Проверка уникальности внутрененнего номера
     for (let i = 0; i < parking_places_array.length; i++) 
     {
-        if(parking_places_array[i]["parking_place_name"]==parking_place_name && parking_place_name!="")
+        if(parking_places_array[i]["parking_place_name"]==parking_place_name && parking_place_name!="" && parking_places_array[i]["id"]!=parking_place_id)
         {
             error_message.innerHTML="Внутренний номер должен быть уникальным";
             return(false);
