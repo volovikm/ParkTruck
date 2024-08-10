@@ -124,10 +124,8 @@ class Validation
         $valid_height=$this->validateNumbers($parking_place["height"]);
 
         //Проверка стоимости
-        $valid_price=$this->validateNumbers($parking_place["price"]);
-
-        //Проверка единиц измерения стоимости
-        $valid_price_units=$this->validatePriceUnits($parking_place["price_units"]);
+        $valid_price_days=$this->validateNumbers($parking_place["price_days"]);
+        $valid_price_hours=$this->validateNumbers($parking_place["price_hours"]);
 
         //Проверка маркера неограниченной высоты
         $valid_unlimited_heigth_marker=$this->validateUnlimitedHeightMarker($parking_place["height_not_limited"]);
@@ -135,7 +133,7 @@ class Validation
         //Проверка уникальности внутреннего номера парковочного места
         $valid_parking_place_name=$this->validateUniqueParkingPlaceName($parking_place["parking_place_name"],$parking_places_array);
 
-        if($valid_size && $valid_length && $valid_width && $valid_height && $valid_price && $valid_price_units && $valid_unlimited_heigth_marker && $valid_parking_place_name)
+        if($valid_size && $valid_length && $valid_width && $valid_height && $valid_price_days && $valid_price_hours && $valid_unlimited_heigth_marker && $valid_parking_place_name)
         {
             $valid=true;
         }

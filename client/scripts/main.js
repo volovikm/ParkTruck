@@ -34,6 +34,8 @@ function writeCookie(name, val, expires) {
   var date = new Date;
   date.setDate(date.getDate() + expires);
   document.cookie = name+"="+val+"; path=/; expires=" + date.toUTCString();
+
+  console.log("Write "+name);
 }
 
 //Функция чтения куки
@@ -41,6 +43,9 @@ function readCookie(name) {
 	var matches = document.cookie.match(new RegExp(
 	  "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
 	));
+
+	console.log("Read "+name);
+
 	return matches ? decodeURIComponent(matches[1]) : undefined;
 }
 
@@ -49,6 +54,8 @@ function deleteCookie(name) {
 	var date = new Date;
 	date.setDate(date.getDate() + -1);
 	document.cookie = name+"="+1+"; path=/; expires=" + date.toUTCString();
+
+	console.log("Delete "+name);
 }
 
 //Функция преобразования объекта в массив

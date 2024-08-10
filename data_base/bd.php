@@ -422,8 +422,8 @@
                                         parking_place_id,
                                         parking_place_name,
                                         size, 
-                                        price,
-                                        price_units,
+                                        price_days,
+                                        price_hours,
                                         length_,
                                         width,
                                         height,
@@ -433,8 +433,8 @@
                                         :parking_place_id,
                                         :parking_place_name,
                                         :size, 
-                                        :price,
-                                        :price_units,
+                                        :price_days,
+                                        :price_hours,
                                         :length_,
                                         :width,
                                         :height,
@@ -445,8 +445,8 @@
                                         $stmt->bindValue(":parking_place_id", $parking_place['parking_place_id']);
                                         $stmt->bindValue(":parking_place_name", $parking_place['parking_place_name']);
                                         $stmt->bindValue(":size", $parking_place['size']);
-                                        $stmt->bindValue(":price", $parking_place['price']);
-                                        $stmt->bindValue(":price_units", $parking_place['price_units']);
+                                        $stmt->bindValue(":price_days", $parking_place['price_days']);
+                                        $stmt->bindValue(":price_hours", $parking_place['price_hours']);
                                         $stmt->bindValue(":length_", $parking_place['length_']);
                                         $stmt->bindValue(":width", $parking_place['width']);
                                         $stmt->bindValue(":height", $parking_place['height']);

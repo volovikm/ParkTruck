@@ -273,9 +273,8 @@ class Form extends Input
             <div class="center_text">
                 <button id="delete_parking_button"  class="link_button text_negative" type="button">Удалить парковку</button>
             </div>
-        </div>
-        <script>deleteParkingButtonHandler("'.$form_data['parking_id'].'");</script>
-        ';
+        </div>';
+        $button_scripts=$button_scripts.'<script>deleteParkingButtonHandler("'.$form_data['parking_id'].'");</script>';
         
 
         //Кнопки действия по парковочному месту
@@ -420,7 +419,7 @@ class Form extends Input
 
 
         //Скрипт сброса серверных данных в куки
-        if($action=="create_new")
+        if($action=="create_new" || true)
         {
             $other_scripts=$other_scripts."<script>dropParkingPlacesData();</script>";
         }
@@ -428,7 +427,6 @@ class Form extends Input
 
 
         $form='
-        <script src="scripts/parking_card.js"></script>
 
         <form id="parking_card_form" class="parking_card_form">
 
@@ -494,23 +492,26 @@ class Form extends Input
                     <input id="choice_checkbox_pattern" class="choice_checkbox choice_checkbox_pattern" type="checkbox">
                     <input id="choice_input" class="choice_input">
                     
-                    <script src="scripts/list.js"></script>
-                    <script>listRequest("parking_places","'.$form_data['parking_id'].'");</script>
                 </div>
 
                 '.$parking_place_form.'
                 '.$parking_place_rent_form.'
                 
-            </div>
-            <script src="scripts/parking_card.js"></script>
+            </div>\
+
+            <script src="scripts/list.js"></script>
+            <script>listRequest("parking_places","'.$form_data['parking_id'].'");</script>
+
             <script src="scripts/forms.js"></script>
-            
-            <script>editButtonHandler("'.$form_data['parking_id'].'");</script>
-            <script>cancelEditButtonHandler("'.$form_data['parking_id'].'");</script>
-            <script>setAdressFromCookie("'.$action.'");</script>
+
+            <script src="scripts/parking_card.js"></script>
             
             '.$button_scripts.'
             '.$other_scripts.'
+
+            <script>editButtonHandler("'.$form_data['parking_id'].'");</script>
+            <script>cancelEditButtonHandler("'.$form_data['parking_id'].'");</script>
+            <script>setAdressFromCookie("'.$action.'");</script>
 
         </form>
         ';
@@ -526,8 +527,8 @@ class Form extends Input
         $parking_place_lenght_input="";
         $parking_place_width_input="";
         $parking_place_height_input="";
-        $parking_place_price_input="";
-        $parking_place_price_units_select="";
+        $parking_place_price_days_input="";
+        $parking_place_price_hours_input="";
         $parking_place_height_checkbox="";
         $parking_place_size_select="";
 
@@ -549,11 +550,11 @@ class Form extends Input
         //Чекбокс отсутствия ограничения высоты парковочного места
         $parking_place_height_checkbox=$this->checkBox("height_not_limited",true);
 
-        //Поле ввода стоимости парковочного места
-        $parking_place_price_input=$this->priceInput();
+        //Поле ввода стоимости (в днях) парковочного места
+        $parking_place_price_days_input=$this->priceInput("days");
 
-        //Поле выбора единиц измерения стоимости парковочного места
-        $parking_place_price_units_select=$this->priceUnitsSelect();
+        //Поле ввода стоимости (в часах) парковочного места
+        $parking_place_price_hours_input=$this->priceInput("hours");
 
         $form='
         <div id="parking_place_form" class="base_form interface_block parking_place_form_div">
@@ -589,11 +590,11 @@ class Form extends Input
                 </div>
 
                 <div class="price_div">
-                '.$parking_place_price_input.'
+                '.$parking_place_price_days_input.'
                 </div>
 
-                <div class="price_units_div">
-                '.$parking_place_price_units_select.'
+                <div class="price_div">
+                '.$parking_place_price_hours_input.'
                 </div>
 
             </div>
@@ -638,7 +639,10 @@ class Form extends Input
                     Внутренний номер: <span id="parking_place_name_span"></span>
                 </div>
                 <div>
-                    Стоимость: <span id="price_span"></span> <span id="price_units_span" class="invisible_input"></span>
+                    Стоимость за час: <span id="price_days_span"></span> <span> руб</span> 
+                </div>
+                <div>
+                    Стоимость за сутки: <span id="price_hours_span"></span> <span> руб</span> 
                 </div>
             </div>
 

@@ -183,29 +183,17 @@ class Input
     }
 
     //Поле ввода стоимости парковочного места 
-    public function priceInput($value="")
+    public function priceInput($units,$value="")
     {
+        $units_base=$units;
+        if($units=="days"){$units="руб/сутки";}
+        if($units=="hours"){$units="руб/час";}
+
         $input='
             <div class="label_div">
-                <label class="input_label">Стоимость, руб</label>
+                <label class="input_label">Тариф, '.$units.'</label>
             </div>
-            <input id="price" class="basic_input" type="number" placeholder="" value="'.$value.'">
-        ';
-
-        return($input);
-    }
-
-    //Поле выбора единиц стоимости парковочного места 
-    public function priceUnitsSelect()
-    {
-        $input='
-            <div class="label_div">
-                <label class="input_label">За</label>
-            </div>
-            <select id="price_units" name="price_units" class="basic_input">
-                <option value="hours">Час</option>
-                <option value="days">Сутки</option>
-            </select>
+            <input id="price_'.$units_base.'" class="basic_input" type="number" placeholder="" value="'.$value.'">
         ';
 
         return($input);

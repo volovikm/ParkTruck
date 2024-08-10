@@ -91,13 +91,7 @@
 }
 
 .price_div{
-    width: 70%;
-    display: inline-block;
-    vertical-align: top;
-}
-
-.price_units_div{
-    width: 29%;
+    width: 48%;
     display: inline-block;
     vertical-align: top;
 }

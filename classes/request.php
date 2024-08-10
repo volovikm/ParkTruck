@@ -654,7 +654,8 @@ class Request extends DataBaseRequests
                 "choice_checkbox"=>"",
                 "parking_place_name"=>"Внутренний номер",
                 "size"=>"Размер",
-                "price"=>"Стоимость",
+                "price_days"=>"Тариф:  руб\\сутки, ",
+                "price_hours"=>" руб\\час ",
                 "length_"=>"Длина, м",
                 "width"=>"Ширина, м",
                 "height"=>"Высота, м",
@@ -669,12 +670,6 @@ class Request extends DataBaseRequests
             {
                 if(!isset($list_data[$i]))
                 {continue;}
-
-                //Единицы измерения стоимости
-                if($list_data[$i]["price_units"]=="days")
-                {$list_data[$i]["price"]=$list_data[$i]["price"]." руб\сутки";}
-                if($list_data[$i]["price_units"]=="hours")
-                {$list_data[$i]["price"]=$list_data[$i]["price"]." руб\час";}
 
                 //Органичение высоты
                 if($list_data[$i]["height_not_limited"]=='1')
@@ -702,7 +697,7 @@ class Request extends DataBaseRequests
                     $list_data[$i]["rent"]["additional_info"]["block_choice"]=true;
 
                     $list_data[$i]["rent"]["additional_info"]["link_button"]["text"]="Интервалы бронирования";
-                    $list_data[$i]["rent"]["additional_info"]["link_button"]["link"]="rent_info.php?parking_place_id=".$list_data[$i]["parking_place_id"];
+                    $list_data[$i]["rent"]["additional_info"]["link_button"]["link"]="";
                 }
                 else
                 {
@@ -713,7 +708,7 @@ class Request extends DataBaseRequests
                     $list_data[$i]["rent"]["additional_info"]["block_choice"]=false;
 
                     $list_data[$i]["rent"]["additional_info"]["link_button"]["text"]="Интервалы бронирования";
-                    $list_data[$i]["rent"]["additional_info"]["link_button"]["link"]="rent_info.php?parking_place_id=".$list_data[$i]["parking_place_id"];
+                    $list_data[$i]["rent"]["additional_info"]["link_button"]["link"]="";
                 }
             }
         }

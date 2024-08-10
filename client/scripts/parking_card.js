@@ -1,5 +1,5 @@
 
-function setAdressFromCookie(action) //Функция определния адреса выбранной парковки
+function setAdressFromCookie(action) //Функция определения адреса выбранной парковки
 {
     if(action=="create_new")
     {
@@ -12,19 +12,38 @@ function setAdressFromCookie(action) //Функция определния ад�
     }
 }
 
-function saveParkingPlacesDataToCookie() //Функция сохранения в куки данных парковочных мест
+function saveParkingPlacesData() //Функция сохранения данных парковочных мест в localstorage
 {
-    var list_data_json=readCookie("list_data");
-    var list_data = JSON.parse(list_data_json);
-    var list_array=objectToArray(list_data);
-    var clear_list_array=list_array["clear_data"];
-    var parking_places_data = JSON.stringify(clear_list_array); //Вывод на отправку на сервер
-    writeCookie("parking_places_data", parking_places_data, 30); 
+    const intervalId =setInterval(() => {
+
+        if(localStorage.getItem("list_data")!==undefined)
+        {
+
+            var list_data_json=localStorage.getItem("list_data");
+            var list_data = JSON.parse(list_data_json);
+            var list_array=objectToArray(list_data);
+            var clear_list_array=list_array["clear_data"];
+            var parking_places_data = JSON.stringify(clear_list_array); //Вывод на отправку на сервер
+
+            localStorage.setItem("parking_places_data",parking_places_data);
+
+            clearInterval(intervalId);
+        }
+    }, 1000);
+
 }
-saveParkingPlacesDataToCookie();
+saveParkingPlacesData();
+
+function dropParkingPlacesData() //Функция сброса данных парковочных мест в localstorage
+{
+    localStorage.removeItem("list_data")
+    localStorage.removeItem("parking_places_data")
+}
 
 
 //Обработчики кнопок сайдбара
+
+//Для всех режимов
 function cancelButtonHandler() //Обработчик кнопки возврата на главную
 {
     let cancel_button=document.getElementById("cancel_button");
@@ -39,6 +58,8 @@ function cancelButtonHandler() //Обработчик кнопки возвра�
 }
 cancelButtonHandler();
 
+
+//Режим создания новой
 function addParkingPlaceButtonHandler() //Обработчик кнопки добавления нового парковочного места
 {
     let add_parking_place_button=document.getElementById("add_parking_place_button");
@@ -63,6 +84,8 @@ function addParkingPlaceButtonHandler() //Обработчик кнопки до
 }
 addParkingPlaceButtonHandler();
 
+
+//Режим редактирования - действия по парковке
 function editButtonHandler(parking_id) //Обработчик кнопки редактирования
 {
     let edit_button=document.getElementById("edit_button");
@@ -89,6 +112,25 @@ function cancelEditButtonHandler(parking_id) //Обработчик кнопки
     });
 }
 
+function deleteParkingButtonHandler(parking_id) //Обработчик кнопки удаления парковки
+{
+    let delete_parking_button=document.getElementById("delete_parking_button");
+    if(delete_parking_button===null)
+    {return(false);}
+
+    //click listener на кнопку
+    delete_parking_button.addEventListener("click", (event) => {
+
+        var script="deleteParkingFunction(`"+parking_id+"`);";
+
+        ConfirmDelete(script);
+    });
+}
+function deleteParkingFunction(parking_id) //Функция отправки запроса на удаление парковки
+{parkingCardFormHandler("delete",false,parking_id);}
+
+
+//Режим редактирования - действия по парковочным местам
 function copyParkingPlaceButtonHandler() //Обработчик кнопки копирования парковочного места
 {
     let copy_parking_place_button=document.getElementById("copy_parking_place_button");
@@ -108,12 +150,12 @@ function copyParkingPlaceButtonHandler() //Обработчик кнопки к�
         var parking_place_id=choice_arr[0];
 
         //Массив отображения
-        var list_data_json=readCookie("list_data");
+        var list_data_json=localStorage.getItem("list_data");
         var list_data = JSON.parse(list_data_json);
         var list_array=objectToArray(list_data);
 
         //Массив отправки на сервер
-        var list_server_data_json=readCookie("parking_places_data");
+        var list_server_data_json=localStorage.getItem("parking_places_data");
         var list_server_data = JSON.parse(list_server_data_json);
         var list_server_array=objectToArray(list_server_data);
 
@@ -163,7 +205,7 @@ function copyParkingPlaceButtonHandler() //Обработчик кнопки к�
         parking_place_server_data=arrayToObject(parking_place_server_array);
         list_server_array.push(parking_place_server_data);
         var parking_places_server_data = JSON.stringify(list_server_array);
-        writeCookie("parking_places_data", parking_places_server_data, 30);
+        localStorage.setItem("parking_places_data",parking_places_server_data);
     });
 }
 copyParkingPlaceButtonHandler();
@@ -187,12 +229,12 @@ function editParkingPlaceButtonHandler() //Обработчик кнопки р�
         var parking_place_id=choice_arr[0];
 
         //Массив отображения
-        var list_data_json=readCookie("list_data");
+        var list_data_json=localStorage.getItem("list_data");
         var list_data = JSON.parse(list_data_json);
         var list_array=objectToArray(list_data);
 
         //Массив отправки
-        var list_server_data_json=readCookie("parking_places_data");
+        var list_server_data_json=localStorage.getItem("parking_places_data");
         var list_server_data = JSON.parse(list_server_data_json);
         var list_server_array=objectToArray(list_server_data);
 
@@ -264,12 +306,12 @@ function deleteParkingPlaceButtonHandler() //Обработчик кнопки �
         var parking_places_server_data="";
 
         //Массив отображения
-        var list_data_json=readCookie("list_data");
+        var list_data_json=localStorage.getItem("list_data");
         list_data = JSON.parse(list_data_json);
         list_array=objectToArray(list_data);
 
         //Массив отправки
-        var list_server_data_json=readCookie("parking_places_data");
+        var list_server_data_json=localStorage.getItem("parking_places_data");
         list_server_data = JSON.parse(list_server_data_json);
         list_server_array=objectToArray(list_server_data);
 
@@ -307,11 +349,30 @@ function deleteParkingPlaceButtonHandler() //Обработчик кнопки �
 
         listDisplay(list_array); //Вывод на отображение 
         parking_places_server_data = JSON.stringify(list_server_array); //Вывод на отправку 
-        writeCookie("parking_places_data", parking_places_server_data, 30); 
+        localStorage.setItem("parking_places_data",parking_places_server_data);
     });
 }
 deleteParkingPlaceButtonHandler();
 
+
+//Режим редактирования - редактирование парковочных мест
+function cancelParkingPlaceButtonHandler() //Обработчик кнопки выхода из парковочного места
+{
+    let cancel_parking_place_button=document.getElementById("cancel_parking_place_button");
+    if(cancel_parking_place_button===null)
+    {return(false);}
+
+    //click listener на кнопку
+    cancel_parking_place_button.addEventListener("click", (event) => {
+    
+        let parking_place_form=document.getElementById("parking_place_form");
+        parking_place_form.style.display="none";
+    });
+}
+cancelParkingPlaceButtonHandler();
+
+
+//Режим бронирования
 function rentParkingPlaceButtonHandler() //Обработчик кнопки бронирования парковочного места
 {
     let rent_parking_place_button=document.getElementById("rent_parking_place_button");
@@ -324,6 +385,9 @@ function rentParkingPlaceButtonHandler() //Обработчик кнопки б�
         var choice_input = document.getElementById("choice_input");
         var choice_arr=choice_input.value.split(["_"]);
         choice_arr.splice(0, 1);
+
+        //Обнуление выбора
+        dropChoice();
 
         let error_message=document.getElementById("error_message");
 
@@ -338,7 +402,7 @@ function rentParkingPlaceButtonHandler() //Обработчик кнопки б�
         //Определение записи о парковочном месте
         var parking_place_id="";
         parking_place_id=choice_arr[0];
-        var parking_places_json=readCookie("parking_places_data");
+        var parking_places_json=localStorage.getItem("parking_places_data");
         var parking_places_data = JSON.parse(parking_places_json);
         var parking_places_array=objectToArray(parking_places_data);
         var parking_place_array=[];
@@ -351,62 +415,44 @@ function rentParkingPlaceButtonHandler() //Обработчик кнопки б�
         }
 
         //Вызов формы бронирования
-        var parking_place_rent_form=document.getElementById("parking_place_rent_form");
-        parking_place_rent_form.style.display="block";
-
-        var parking_place_name_span=document.getElementById("parking_place_name_span");
-        parking_place_name_span.innerHTML="";
-        parking_place_name_span.innerText=parking_place_array['parking_place_name'];
-
-        var price_span=document.getElementById("price_span");
-        var price_units_span=document.getElementById("price_units_span");
-        if(parking_place_array['price_units']=="hours")
-        {var price_units="руб/час";}
-        if(parking_place_array['price_units']=="days")
-        {var price_units="руб/сутки";}
-        price_span.innerHTML="";
-        price_units_span.innerHTML="";
-        price_span.innerText=parking_place_array['price']+" "+price_units;
-        price_units_span.innerText=parking_place_array['price_units'];
-
-        var result_price_span=document.getElementById("result_price_span");
-        result_price_span.innerHTML="";
-
-        var time_start_input=document.getElementById("time_start");
-        var time_end_input=document.getElementById("time_end");
-        time_start_input.value="";
-        time_end_input.value="";
-
-        var save_parking_place_rent_button=document.getElementById("save_parking_place_rent_button");
-        save_parking_place_rent_button.setAttribute('onclick','parkingPlaceRentFormHandler(`'+parking_place_id+'`)');
-
-        var transport_number_input=document.getElementById("transport_number");
-        transport_number_input.value="";
+        rentFormCall(parking_place_id,parking_place_array);
     });
 }
 rentParkingPlaceButtonHandler();
 
-function deleteParkingButtonHandler(parking_id) //Обработчик кнопки удаления парковки
+function rentFormCall(parking_place_id,parking_place_array) //Функция вызова и обнуления формы бронирования 
 {
-    let delete_parking_button=document.getElementById("delete_parking_button");
-    if(delete_parking_button===null)
-    {return(false);}
+    var parking_place_rent_form=document.getElementById("parking_place_rent_form");
+    parking_place_rent_form.style.display="block";
 
-    //click listener на кнопку
-    delete_parking_button.addEventListener("click", (event) => {
+    var parking_place_name_span=document.getElementById("parking_place_name_span");
+    parking_place_name_span.innerHTML="";
+    parking_place_name_span.innerText=parking_place_array['parking_place_name'];
 
-        var script="deleteParkingFunction(`"+parking_id+"`);";
+    var price_days_span=document.getElementById("price_days_span");
+    var price_hours_span=document.getElementById("price_hours_span");
+    price_days_span.innerHTML="";
+    price_days_span.innerText=parking_place_array['price_days']+" руб";
+    price_hours_span.innerHTML="";
+    price_hours_span.innerText=parking_place_array['price_hours']+" руб";
 
-        ConfirmDelete(script);
-    });
+    var result_price_span=document.getElementById("result_price_span");
+    result_price_span.innerHTML="";
+
+    var time_start_input=document.getElementById("time_start");
+    var time_end_input=document.getElementById("time_end");
+    time_start_input.value="";
+    time_end_input.value="";
+
+    var save_parking_place_rent_button=document.getElementById("save_parking_place_rent_button");
+    save_parking_place_rent_button.setAttribute('onclick','parkingPlaceRentFormHandler(`'+parking_place_id+'`)');
+
+    var transport_number_input=document.getElementById("transport_number");
+    transport_number_input.value="";
 }
-function deleteParkingFunction(parking_id) //Функция отправки запроса на удаление парковки
-{
-    parkingCardFormHandler("delete",false,parking_id);
-}
 
 
-//Функции формы бронирования парковочного места
+//Режим бронирования - функции формы бронирования парковочного места
 function SetDateStart() //Функции определения дат бронирования
 {
 	var date_start_input=document.getElementById("date_start");
@@ -506,28 +552,29 @@ function defineResultPrice() //Функция определения итого�
 
     function countResultPrice(date_start_input,date_end_input,time_start_input,time_end_input,result_price_span) //Функция счёта итоговой стоимости по дням
     {
-        var price_span=document.getElementById("price_span");
-        var price_units_span=document.getElementById("price_units_span");
+        var price_days_span=document.getElementById("price_days_span");
+        var price_hours_span=document.getElementById("price_hours_span");
 
         var result_price_value=document.getElementById("result_price_value");
 
-        var price=price_span.textContent;
-        var price_units=price_units_span.textContent;
+        var price_days=price_days_span.textContent;
+        var price_hours=price_hours_span.textContent;
 
         var date_start = date_start_input.value;
         var date_end = date_end_input.value;
         var time_start = time_start_input.value;
         var time_end = time_end_input.value;
 
-        if(price_units=="days")
+        //Расчёт в часах
+        var hours_diff=moment(date_end+" "+time_end).diff(moment(date_start+" "+time_start), 'hours');
+
+        if(hours_diff<24) //Расчёт по часовому тарифу
         {
-            var days_diff=moment(date_end+" "+time_end).diff(moment(date_start+" "+time_start), 'days');
-            result_price=days_diff * parseInt(price);
+            result_price=hours_diff * parseInt(price_hours);
         }
-        if(price_units=="hours")
+        else //Расчёт по суточному тарифу
         {
-            var hours_diff=moment(date_end+" "+time_end).diff(moment(date_start+" "+time_start), 'hours');
-            result_price=hours_diff * parseInt(price);
+            result_price=parseInt((hours_diff/24)) * parseInt(price_days);
         }
 
         if(result_price>0)
@@ -544,8 +591,8 @@ function defineResultPrice() //Функция определения итого�
 }
 defineResultPrice();
 
-//Функция вызова модального окна с номером (информацией) брони
-function rentInfoModalWindow(rent_data){
+function rentInfoModalWindow(rent_data) //Функция вызова модального окна с номером (информацией) брони
+{
 
     function ModalDisplay(rent_data)
     {
@@ -578,23 +625,6 @@ function rentInfoModalWindow(rent_data){
     ModalDisplay(rent_data);
 }
 
-
-//Обработчики кнопок формы парковочного места
-function cancelParkingPlaceButtonHandler() //Обработчик кнопки выхода из парковочного места
-{
-    let cancel_parking_place_button=document.getElementById("cancel_parking_place_button");
-    if(cancel_parking_place_button===null)
-    {return(false);}
-
-    //click listener на кнопку
-    cancel_parking_place_button.addEventListener("click", (event) => {
-    
-        let parking_place_form=document.getElementById("parking_place_form");
-        parking_place_form.style.display="none";
-    });
-}
-cancelParkingPlaceButtonHandler();
-
 function cancelParkingPlaceRentButtonHandler() //Обработчик кнопки выхода из формы бронирования парковочного места
 {
     let cancel_parking_place_rent_button=document.getElementById("cancel_parking_place_rent_button");
@@ -611,12 +641,6 @@ function cancelParkingPlaceRentButtonHandler() //Обработчик кнопк
 cancelParkingPlaceRentButtonHandler();
 
 
-//Функция сброса данных парковочных мест в куки
-function dropParkingPlacesData()
-{
-    deleteCookie("parking_places_data");
-    deleteCookie("list_data");
-}
 
 
 //Обработчик ответов сервера

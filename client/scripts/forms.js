@@ -214,7 +214,7 @@ function parkingCardFormHandler(action,draft=false,parking_id=false)
     }
 
     //Сбор данных парковочных мест
-    var parking_places_json=readCookie("parking_places_data");
+    var parking_places_json=localStorage.getItem("parking_places_data");
     if(parking_places_json !== undefined)
     {
         var parking_places_data = JSON.parse(parking_places_json);
@@ -299,12 +299,12 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
     let width="";
     let height="";
     let height_not_limited=false;
-    let price="";
-    let price_units="";
+    let price_days="";
+    let price_hours="";
     let rent="";
 
     //Получение данных парковки для отправки на сервер
-    var parking_places_json=readCookie("parking_places_data");
+    var parking_places_json=localStorage.getItem("parking_places_data");
     if(parking_places_json !== undefined)
     {
         var parking_places_data = JSON.parse(parking_places_json);
@@ -346,10 +346,16 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
             height_not_limited=true;
         }
 
-        //Поле ввода стоимости
-        if(input.id=="price")
+        //Поле ввода стоимости в днях
+        if(input.id=="price_days")
         {
-            price=input.value;
+            price_days=input.value;
+        }
+
+        //Поле ввода стоимости в часах
+        if(input.id=="price_hours")
+        {
+            price_hours=input.value;
         }
     }
 
@@ -362,21 +368,15 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
         {
             size=select.value;
         }
-    
-        //Поле ввода единиц измерения стоимости
-        if(select.id=="price_units")
-        {
-            price_units=select.value;
-        }
     }
 
     //Проверки формы
     let error_message=document.getElementById("error_message_parking_place");
 
     //Проверка пустой формы
-    if(price==="")
+    if(price_days==="" && price_hours==="")
     {
-        error_message.innerHTML="Заполните стоимость парковки";
+        error_message.innerHTML="Заполните хотя бы один тариф";
         return(false);
     }
 
@@ -398,16 +398,11 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
         "width": width,
         "height": height,
         "height_not_limited": height_not_limited,
-        "price": price,
-        "price_units": price_units,
+        "price_days": price_days,
+        "price_hours": price_hours,
     }
 
     //Преобразование данных для вывода в список
-    if(price_units=="days")
-    {price=price+" руб\\сутки";}
-    if(price_units=="hours")
-    {price=price+" руб\\час"; }
-
     if(size=='C')
     {size="Грузовой";}
     if(size=='CE')
@@ -441,13 +436,13 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
         "width": width,
         "height": height,
         "height_not_limited": height_not_limited,
-        "price": price,
-        "price_units": price_units,
+        "price_days": price_days,
+        "price_hours": price_hours,
         "rent": rent_array
     }
 
     //Подготовка для отображения списка
-    var list_data_json=readCookie("list_data");
+    var list_data_json=localStorage.getItem("list_data");
     var list_data = JSON.parse(list_data_json);
     var list_array=objectToArray(list_data);
 
@@ -480,7 +475,7 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
     
     listDisplay(list_array); //Вывод на отображение
     parking_places_data = JSON.stringify(parking_places_array); //Вывод на отправку на сервер
-    writeCookie("parking_places_data", parking_places_data, 30); 
+    localStorage.setItem("parking_places_data",parking_places_data);
 
     //Закрытие формы
     parking_place_form.style.display="none";
@@ -555,7 +550,7 @@ function parkingPlaceRentFormHandler(parking_place_id)
     }
 
     var result_price_value=document.getElementById("result_price_value");
-    result_price=result_price_span.textContent;
+    result_price=result_price_value.textContent;
 
     //Проверки формы
     let error_message=document.getElementById("error_message_rent_parking_place");

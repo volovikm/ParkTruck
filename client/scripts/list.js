@@ -27,7 +27,7 @@ function listDisplay(list_array)
     //Сохранение массива списка в куки
     var list_data=arrayToObject(list_array);
     var list_data_json = JSON.stringify(list_data);
-    writeCookie("list_data", list_data_json, 30);
+    localStorage.setItem("list_data",list_data_json);
 
     let list_content=document.getElementById("list_content");
     let list_rows=document.getElementById("list_rows");
