@@ -507,7 +507,8 @@
                                 rent_end_time,
                                 result_price,
                                 transport_id,
-                                transport_number
+                                transport_number,
+                                active
                                 ) VALUES (
                                 :rent_number, 
                                 :parking_place_id,
@@ -517,7 +518,8 @@
                                 :rent_end_time,
                                 :result_price,
                                 :transport_id,
-                                :transport_number
+                                :transport_number,
+                                :active
                                 )";
                                 $stmt=$db->prepare($sql);
                                 $stmt->bindValue(":rent_number", $rent_data['rent_number']);
@@ -529,6 +531,7 @@
                                 $stmt->bindValue(":result_price", $rent_data['result_price']);
                                 $stmt->bindValue(":transport_id", $rent_data['transport_id']);
                                 $stmt->bindValue(":transport_number", $rent_data['transport_number']);
+                                $stmt->bindValue(":active", '1');
                                 $affectedRowsNumber=$stmt->execute();
                                 if($affectedRowsNumber > 0 ){
                                         return(true);
@@ -578,6 +581,47 @@
                         }catch (PDOException $e) {}
                         return(false);
                 }
+
+                public function setRentInactive($rent_id) //Запрос на отметку бронирования завершённым
+                {
+                        $db=$this->connectDataBase();
+
+                        try 
+                        {
+                                $sql = "UPDATE rent SET
+                                active='0'
+                                WHERE 
+                                id=:rent_id";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":rent_id", $rent_id);
+                                $stmt->execute();
+                                $affectedRowsNumber=$stmt->execute(); 
+                                if($affectedRowsNumber > 0 ){
+                                        return(true);
+                                }
+                        }catch (PDOException $e) {}
+                        return(false);
+                }
+
+                public function getActiveRentData($parking_place_id) //Запрос на получение актуальных данных бронирования по парковочному месту
+                {
+                        $db=$this->connectDataBase();
+
+                        $array=false;
+                        try 
+                        {
+                                $sql="SELECT * FROM `rent` 
+                                WHERE
+                                parking_place_id = :parking_place_id AND
+                                active = :active";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":parking_place_id", $parking_place_id);
+                                $stmt->bindValue(":active", "1");
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        }catch (PDOException $e) {}
+                        return($array);
+                }  
 
         }
 ?>

@@ -571,6 +571,9 @@ class Request extends DataBaseRequests
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/random.php");
         $random=new Random();
 
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/rent.php");
+        $rent=new Rent();
+
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/date_conversion.php");
         $date_conversion=new DateConversion();
 
@@ -608,14 +611,16 @@ class Request extends DataBaseRequests
             return($response);
         }
 
-        /*
-        $response=$this->setParkingPlaceRentRequest($rent_data["parking_place_id"]);
-        if(!$response)
+        //Отметка забронированным в данный момент
+        if($rent->checkRentStatus($rent_data["parking_place_id"]))
         {
-            $response='{"response":"request_error"}';
-            return($response);
+            $response=$this->setParkingPlaceRentRequest($rent_data["parking_place_id"]);
+            if(!$response)
+            {
+                $response='{"response":"request_error"}';
+                return($response);
+            }
         }
-            */
 
         //Успешное бронирование парковки
         $response='{

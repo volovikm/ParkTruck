@@ -40,7 +40,6 @@ function dropParkingPlacesData() //Функция сброса данных па
     localStorage.removeItem("parking_places_data")
 }
 
-
 //Обработчики кнопок сайдбара
 
 //Для всех режимов
