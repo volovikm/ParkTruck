@@ -491,6 +491,24 @@
                         return($array);
                 }
 
+                public function getParkingPlaceDataByIdentifierRequest($parking_place_id) //Запрос данных конкретного места по parking_place_id
+                {
+                        $db=$this->connectDataBase();
+
+                        $array=false;
+                        try 
+                        {
+                                $sql="SELECT * FROM `parking_places` 
+                                WHERE
+                                parking_place_id = :parking_place_id";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":parking_place_id", $parking_place_id);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        }catch (PDOException $e) {}
+                        return($array);
+                }
+
 
                 //Запросы по бронированию
                 public function rentParkingPlaceRequest($user_data,$rent_data)

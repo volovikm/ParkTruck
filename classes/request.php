@@ -14,6 +14,7 @@
     Метод saveDraftParkingCard - принимает запрос на сохранение черновика, запускает запрос в базу на сохранение черновика
     Метод deleteParkingCard - принимает запрос на удаление существующей парковки, запускает запрос в базу
     Метод startRent - принимает запрос на начало бронирования парковочного места, запускает бронирование
+    Метод getRentIntervals- принимает запрос на вывод данных об интервалах бронирования за период, выводит данные массивом в ответ
 
     Метод getListData - принимает запрос на вывод данных списка, возвращает массив списка
 */
@@ -100,13 +101,21 @@ class Request extends DataBaseRequests
                 $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
             }
 
-            //Запрос на дейтсвия с бронированием
+            //Запрос на действия с бронированием
             if(isset($request_content['rent_action']))
             {
                 if($request_content['rent_action']=="rent_start")
                 {
                     $response=$this->startRent($request_content);
                 }
+
+                $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
+            }
+
+            //Запрос на вывод данных интервалов бронирования
+            if(isset($request_content['get_rent_intervals']))
+            {
+                $response=$this->getRentIntervals($request_content);
 
                 $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
             }
@@ -636,6 +645,37 @@ class Request extends DataBaseRequests
         return($response);
     }
 
+    public function getRentIntervals($request_content) //Метод получения данных об интервалах бронирования за период
+    {
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/rent.php");
+        $rent=new Rent();
+
+        $parking_place_data=($this->getParkingPlaceDataByIdentifierRequest($request_content["parking_place_id"]))[0];
+
+        $date_from=$request_content["date_from"];
+        $date_to = date('Y-m-d', strtotime('+7 days', strtotime($date_from)));
+
+        $rent_intervals=$rent->getRentIntervals($parking_place_data["id"],strtotime($date_from),strtotime($date_to));
+
+        $dates_array=[];
+        for($i=0;$i<7;$i++)
+        {
+            array_push($dates_array,(date('Y-m-d', strtotime('+'.$i.' days', strtotime($date_from)))));
+        }
+
+        //Вывод данных интервалов
+        $response='{
+            "response": "intervals_complete",
+            "response_content": {
+                "parking_place_id": "'.$parking_place_data["parking_place_id"].'",
+                "parking_place_name": "'.$parking_place_data["parking_place_name"].'",
+                "rent_intervals": '.json_encode($rent_intervals).',
+                "dates": '.json_encode($dates_array).'
+            }
+        }';
+        return($response);
+    }
+
 
 
     //Методы работы со списками
@@ -693,7 +733,9 @@ class Request extends DataBaseRequests
                 $list_data[$i]["rent"]["content"]="";
 
                 $list_data[$i]["rent"]["additional_info"]["link_button"]["text"]="Интервалы бронирования";
-                $list_data[$i]["rent"]["additional_info"]["link_button"]["action"]="showModalWindowFromList('parking_place_intervals_form','".$list_data[$i]["parking_place_id"]."')";
+                $list_data[$i]["rent"]["additional_info"]["link_button"]["action"]="show_modal_window";
+                $list_data[$i]["rent"]["additional_info"]["link_button"]["action_info"]["item_id"]=$list_data[$i]["parking_place_id"];
+                $list_data[$i]["rent"]["additional_info"]["link_button"]["action_info"]["block_id"]="parking_place_intervals_form";
             }
         }
 

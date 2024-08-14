@@ -668,10 +668,94 @@ function cancelParkingPlaceIntervalsButtonHandler() //Обработчик кн�
 }
 cancelParkingPlaceIntervalsButtonHandler();
 
-function getIntervalsData() //Функция запроса данных об интервалах бронирования
+function intervalsFormCall() //Функция вызова формы визуализации интервалов
 {
+    var parking_place_intervals_form=document.getElementById("parking_place_intervals_form");
+    
+    //observer за изменением атрибута
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
 
+            var parking_place_id=parking_place_intervals_form.getAttribute("modal_window_info");
+            var date_from=document.getElementById("date_from").value;
+            getIntervalsData(parking_place_id,date_from);
+
+        });    
+    });
+    var config = { attributes: true, childList: false, characterData: false };
+    observer.observe(parking_place_intervals_form, config);
+}
+intervalsFormCall();
+
+function intervalInputChangeHandler() //Функция обновления интервалов по изменению даты в поле ввода
+{
+    var date_from_input=document.getElementById("date_from");
+    var parking_place_intervals_form=document.getElementById("parking_place_intervals_form");
+    
+    //change listener на кнопку
+    date_from_input.addEventListener("change", (event) => {
+    
+        var parking_place_id=parking_place_intervals_form.getAttribute("modal_window_info");
+        var date_from=date_from_input.value;
+        getIntervalsData(parking_place_id,date_from);
+        
+    });
+}
+intervalInputChangeHandler();
+
+function getIntervalsData(parking_place_id,date_from) //Функция запроса данных об интервалах бронирования
+{
+    let url="../request_handler.php";
+
+    var data = {
+        get_rent_intervals: true,
+        parking_place_id: parking_place_id,
+        date_from: date_from,
+    };
+    var data_json = JSON.stringify(data);
+    requestTo(intervalsDataHandler,data_json,url);
 } 
+
+function intervalsDataHandler(intervals_data_json)
+{
+    intervals_data_json=intervals_data_json.replace("/", '');
+    let intervals_data = JSON.parse(intervals_data_json);
+    intervals_data = JSON.parse(intervals_data);
+    var intervals_array=objectToArray(intervals_data);
+
+    let response_content=intervals_array['response_content'];
+
+    //Указание названия парковочного места
+    var parking_place_name_span=document.getElementById("parking_place_intervals_name_span");
+    parking_place_name_span.innerHTML="";
+    parking_place_name_span.innerText=response_content['parking_place_name'];
+
+    //Распеределение дат по блокам
+    var date_block="";
+    var date="";
+    for(let i=0;i<response_content['dates'].length;i++)
+    {
+        date_block=document.getElementById("intervals_days_column_"+i);
+    
+        date=new Date(response_content['dates'][i]);
+
+        //Месяц
+        var month=date.getMonth();
+        if (date.getMonth()+1 < 10) {month='0' + (date.getMonth()+1);}
+       
+        //День      
+        var day=date.getDate();
+        if (date.getDate()+1 < 10) {day='0' + date.getDate();}
+
+        date=day+"."+month;
+
+        date_block.innerHTML=date;
+    }
+
+    //Указание интервалов
+    
+    
+}
 
 
 

@@ -694,18 +694,70 @@ class Form extends Input
     //Форма визуализации интервалов бронирования парковочного места
     public function parkingPlaceIntervalsForm($form_data)
     {
+        //Инфографика отображения интервалов
+        $intervals_display="";
+        for($i=0;$i<7;$i++)
+        {
+            $intervals_display=$intervals_display.'
+            <div id="intervals_display_row_'.$i.'" class="intervals_display_row">
+
+                <div id="intervals_days_column_'.$i.'" class="intervals_days_column">
+                
+                </div>
+
+                <div id="intervals_display_column_'.$i.'" class="intervals_display_column">
+                        
+                </div>
+                        
+            </div>
+
+            <div id="intervals_time_row_'.$i.'" class="intervals_time_row">
+
+                <div class="timeline_div">
+                    00:00
+                    23:59
+                </div>
+                
+            </div>
+        ';
+        }
+        /*
+        $intervals_display=$intervals_display.'
+            <div class="main_timeline_div">
+                <div class="timeline_div_start inline_div">
+                    00:00
+                </div>
+                <div class="timeline_div_end inline_div">
+                    23:59
+                </div>
+            </div>
+        ';
+        */
+
+        //Поле ввода даты "от"
+        $date_from=$this->dateInput("from","Период: 7 дней с ",true);
+
         $form='
-        <div id="parking_place_intervals_form" class="base_form interface_block parking_place_form_div">
+        <div id="parking_place_intervals_form" class="interface_block parking_place_form_div intervals_form_div">
             <div class="form_header">Парковочное место</div>
 
             <div class="parking_place_intervals_info">
-                <div>
-                    Внутренний номер: <span id="parking_place_name_span"></span>
+                <div class="parking_place_name_div">
+                    Внутренний номер: <span id="parking_place_intervals_name_span"></span>
                 </div>
             </div>
 
             <div class="input_form_div">
 
+            <div>
+                '.$date_from.'
+            </div>
+
+            <div class="intervals_info_display_div">
+
+                '.$intervals_display.'
+                
+            </div>
                 
             </div>
 

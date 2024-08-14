@@ -80,6 +80,18 @@
     margin: 8px 0;
 }
 
+.date_input{
+    border-radius: 10px;
+    width: 100%;
+    border: 1px solid rgb(23, 99, 191);
+    text-decoration-color: rgb(23, 99, 191);
+    box-sizing: border-box;
+    display: inline-block;
+    height: 35px;
+    padding-left: 10px;
+    margin: 8px 0;
+}
+
 .invisible_input{
     display: none;
 }
@@ -128,6 +140,11 @@
 
 .input_form_div{
     padding: 16px;
+}
+
+.inline_div{
+    display: inline-block;
+    vertical-align: top;
 }
 
 .account_input{

@@ -153,8 +153,12 @@ function listDisplay(list_array)
                     link_button.setAttribute("type","button");
 
                     link_button.innerText=additional_info["link_button"]["text"];
-                    link_button.setAttribute("onclick",additional_info["link_button"]["action"]);
 
+                    if(additional_info["link_button"]["action"]=="show_modal_window") //Открытие модального окна по кнопке
+                    {
+                        link_button.setAttribute("onclick","showModalWindowFromList('"+additional_info["link_button"]["action_info"]["block_id"]+"','"+additional_info["link_button"]["action_info"]["item_id"]+"')");
+                    }
+                    
                     column_block.append(link_button);
                 }
             }
@@ -162,7 +166,5 @@ function listDisplay(list_array)
             column.append(column_block);
         }
     }
-
-    //console.log(list_array);
 }
 

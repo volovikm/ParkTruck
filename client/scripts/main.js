@@ -149,8 +149,7 @@ function showModalWindowFromList(modal_window_id,modal_window_info)
 {
 	var modal_window=document.getElementById(modal_window_id);
 	modal_window.style.display="block";
-
-	console.log(modal_window_info);
+	modal_window.setAttribute("modal_window_info",modal_window_info);
 }
 
 
@@ -178,6 +177,35 @@ function ConfirmDelete(action){
 		}
 		
 		ModalDisplay(action);
+}
+
+
+//Функция определения текущей даты
+function setTodayDate(date_input_id=null,set_today_min=null)
+{
+	var today=new Date();
+
+	//Год клиента
+    var today_year=today.getFullYear();
+    
+    //Месяц клиента
+    var today_month=today.getMonth();
+    if (today.getMonth()+1 < 10) {today_month='0' + (today.getMonth()+1);}
+       
+    //День клиента      
+    var today_day=today.getDate();
+    if (today.getDate()+1 < 10) {today_day='0' + today.getDate();}
+    
+    //Полная дата
+    var today_date=today_year+'-'+today_month+'-'+today_day;
+
+	if(date_input_id!==null)
+	{
+		var date_input=document.getElementById(date_input_id);
+		date_input.valueAsDate = new Date(today_date);
+	}
+
+	return(today_date);
 }
 
 
