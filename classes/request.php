@@ -598,10 +598,18 @@ class Request extends DataBaseRequests
             return($response);
         }
 
+        //Проверка занятых интервалов
+        $rent_interval_allowed=$rent->checkRentInterval($rent_data);
+        if(!$rent_interval_allowed)
+        {
+            $response='{"response":"time_already_rent"}';
+            return($response);
+        }
+
         //Бронирование парковки
         $rent_data["rent_number"]=($random->randomLetterString(1)).($random->randomNumberString(3));
         $parking_place_data=($this->getParkingPlaceDataByIdRequest($rent_data["parking_place_id"]))[0];
-        $rent_data["parking_place_id"]=$parking_place_data["parking_place_id"];
+        $rent_data["parking_place_id"]=$parking_place_data["id"];
         $rent_data["parking_id"]=$parking_place_data["parking_id"];
 
         $response=$this->rentParkingPlaceRequest($user_data,$rent_data);
@@ -609,17 +617,6 @@ class Request extends DataBaseRequests
         {
             $response='{"response":"request_error"}';
             return($response);
-        }
-
-        //Отметка забронированным в данный момент
-        if($rent->checkRentStatus($rent_data["parking_place_id"]))
-        {
-            $response=$this->setParkingPlaceRentRequest($rent_data["parking_place_id"]);
-            if(!$response)
-            {
-                $response='{"response":"request_error"}';
-                return($response);
-            }
         }
 
         //Успешное бронирование парковки
@@ -695,22 +692,14 @@ class Request extends DataBaseRequests
                 $list_data[$i]["rent"]=[];
                 if($rent=="1")
                 {
-                    $list_data[$i]["rent"]["content"]="Забронировано";
-
-                    $list_data[$i]["rent"]["additional_info"]["style"]="negative";
-
-                    $list_data[$i]["rent"]["additional_info"]["block_choice"]=true;
+                    $list_data[$i]["rent"]["content"]="";
 
                     $list_data[$i]["rent"]["additional_info"]["link_button"]["text"]="Интервалы бронирования";
                     $list_data[$i]["rent"]["additional_info"]["link_button"]["link"]="";
                 }
                 else
                 {
-                    $list_data[$i]["rent"]["content"]="Свободно";
-
-                    $list_data[$i]["rent"]["additional_info"]["style"]="positive";
-
-                    $list_data[$i]["rent"]["additional_info"]["block_choice"]=false;
+                    $list_data[$i]["rent"]["content"]="";
 
                     $list_data[$i]["rent"]["additional_info"]["link_button"]["text"]="Интервалы бронирования";
                     $list_data[$i]["rent"]["additional_info"]["link_button"]["link"]="";

@@ -612,7 +612,8 @@
                         {
                                 $sql="SELECT * FROM `rent` 
                                 WHERE
-                                parking_place_id = :parking_place_id AND
+                                (parking_place_id = :parking_place_id OR
+                                id=:parking_place_id) AND
                                 active = :active";
                                 $stmt = $db->prepare($sql);
                                 $stmt->bindValue(":parking_place_id", $parking_place_id);

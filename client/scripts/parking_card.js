@@ -735,6 +735,13 @@ function rentDataHandler(rent_data_json)
         return(false);
     }
 
+    //Указанное время уже занято
+    if(response==="time_already_rent")
+    {
+        error_message.innerHTML="Указанное время уже занято";
+        return(false);
+    }
+
     //Успешное бронирование места
     if(response==="rent_complete")
     {
