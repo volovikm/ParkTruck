@@ -611,7 +611,7 @@ function rentInfoModalWindow(rent_data) //Функция вызова модал
             </div>\
             <div class='modal_window_buttons_block'>\
                 <button class='main_button modal_window_button' onclick='createRouteByParkingId(`"+rent_data["parking_id"]+"`)'>Построить маршрут</button>\
-                <button class='secondary_button modal_window_button' onclick='document.getElementById(`modal_window_div`).remove()'>Завершить</button>\
+                <button class='secondary_button modal_window_button' onclick='endRentButtonHandler()'>Завершить</button>\
             </div>\
         </div>\
         ";
@@ -638,6 +638,17 @@ function cancelParkingPlaceRentButtonHandler() //Обработчик кнопк
     });
 }
 cancelParkingPlaceRentButtonHandler();
+
+function endRentButtonHandler() //Обработчик кнопки завершения бронирования в форме бронирования парковочного места
+{
+    document.getElementById(`modal_window_div`).remove()
+    location.reload();
+}
+
+function createRouteByParkingId(parking_id) //Обработчик кнопки построения маршрута в форме бронирования парковочного места
+{
+    location.reload();
+}
 
 
 
