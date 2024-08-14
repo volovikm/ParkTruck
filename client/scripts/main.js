@@ -77,6 +77,10 @@ function arrayToObject(arr)
 	return(obj);
 }
 
+
+
+//Функции списков
+
 //Функция обработки чекбокса выбора в списке
 function choiceCheckbox(id)
 {
@@ -140,6 +144,17 @@ function enableListButtons(button_id,class_name,choice_amount)
 	});
 }
 
+//Функция вызова окна из кнопки в списке
+function showModalWindowFromList(modal_window_id,modal_window_info)
+{
+	var modal_window=document.getElementById(modal_window_id);
+	modal_window.style.display="block";
+
+	console.log(modal_window_info);
+}
+
+
+
 //Функция вызова модального окна с подтверждением удаления
 function ConfirmDelete(action){
 
@@ -164,6 +179,8 @@ function ConfirmDelete(action){
 		
 		ModalDisplay(action);
 }
+
+
 
 
 

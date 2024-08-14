@@ -211,6 +211,7 @@ class Form extends Input
 
         $parking_place_form="";
         $parking_place_rent_form="";
+        $parking_place_intervals_form="";
 
         $button_scripts="";
         $other_scripts="";
@@ -338,6 +339,11 @@ class Form extends Input
 
 
 
+        //Форма визуализации интервалов бронирования
+        $parking_place_intervals_form=$this->parkingPlaceIntervalsForm($form_data);
+
+
+
         //Разделение интерфейса в зависимости от действий и ролей
         if($role=="unauthorized" || $role=="driver")
         {
@@ -418,7 +424,7 @@ class Form extends Input
 
 
 
-        //Скрипт сброса серверных данных в куки
+        //Скрипт сброса серверных данных в localstorage
         if($action=="create_new" || true)
         {
             $other_scripts=$other_scripts."<script>dropParkingPlacesData();</script>";
@@ -496,6 +502,7 @@ class Form extends Input
 
                 '.$parking_place_form.'
                 '.$parking_place_rent_form.'
+                '.$parking_place_intervals_form.'
                 
             </div>\
 
@@ -676,6 +683,34 @@ class Form extends Input
             <div class="button_div">
                 <button id="save_parking_place_rent_button" class="main_button" type="button">Подтвердить</button>
                 <button id="cancel_parking_place_rent_button" class="secondary_button" type="button">Отменить</button>
+            </div>
+
+        </div>
+        ';
+
+        return($form);
+    }
+
+    //Форма визуализации интервалов бронирования парковочного места
+    public function parkingPlaceIntervalsForm($form_data)
+    {
+        $form='
+        <div id="parking_place_intervals_form" class="base_form interface_block parking_place_form_div">
+            <div class="form_header">Парковочное место</div>
+
+            <div class="parking_place_intervals_info">
+                <div>
+                    Внутренний номер: <span id="parking_place_name_span"></span>
+                </div>
+            </div>
+
+            <div class="input_form_div">
+
+                
+            </div>
+
+            <div class="button_div">
+                <button id="cancel_parking_place_intervals_button" class="secondary_button" type="button">Закрыть</button>
             </div>
 
         </div>

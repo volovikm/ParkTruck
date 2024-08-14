@@ -688,22 +688,12 @@ class Request extends DataBaseRequests
                 {$list_data[$i]["size"]="Легковой";}
 
                 //Данные бронирования
-                $rent=$list_data[$i]["rent"];
                 $list_data[$i]["rent"]=[];
-                if($rent=="1")
-                {
-                    $list_data[$i]["rent"]["content"]="";
 
-                    $list_data[$i]["rent"]["additional_info"]["link_button"]["text"]="Интервалы бронирования";
-                    $list_data[$i]["rent"]["additional_info"]["link_button"]["link"]="";
-                }
-                else
-                {
-                    $list_data[$i]["rent"]["content"]="";
+                $list_data[$i]["rent"]["content"]="";
 
-                    $list_data[$i]["rent"]["additional_info"]["link_button"]["text"]="Интервалы бронирования";
-                    $list_data[$i]["rent"]["additional_info"]["link_button"]["link"]="";
-                }
+                $list_data[$i]["rent"]["additional_info"]["link_button"]["text"]="Интервалы бронирования";
+                $list_data[$i]["rent"]["additional_info"]["link_button"]["action"]="showModalWindowFromList('parking_place_intervals_form','".$list_data[$i]["parking_place_id"]."')";
             }
         }
 

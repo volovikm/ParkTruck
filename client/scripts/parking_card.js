@@ -652,6 +652,29 @@ function createRouteByParkingId(parking_id) //Обработчик кнопки 
 
 
 
+//Функции формы визуализации интервалов
+function cancelParkingPlaceIntervalsButtonHandler() //Обработчик кнопки выхода из формы визуализации интервалов
+{
+    let cancel_parking_place_intervals_button=document.getElementById("cancel_parking_place_intervals_button");
+    if(cancel_parking_place_intervals_button===null)
+    {return(false);}
+
+    //click listener на кнопку
+    cancel_parking_place_intervals_button.addEventListener("click", (event) => {
+    
+        let parking_place_intervals_form=document.getElementById("parking_place_intervals_form");
+        parking_place_intervals_form.style.display="none";
+    });
+}
+cancelParkingPlaceIntervalsButtonHandler();
+
+function getIntervalsData() //Функция запроса данных об интервалах бронирования
+{
+
+} 
+
+
+
 
 //Обработчик ответов сервера
 function parkingCardDataHandler(parking_card_data_json)
