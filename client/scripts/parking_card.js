@@ -731,11 +731,10 @@ function intervalsDataHandler(intervals_data_json)
     parking_place_name_span.innerText=response_content['parking_place_name'];
 
     //Распеределение дат по блокам
-    var date_block="";
-    var date="";
     for(let i=0;i<response_content['dates'].length;i++)
     {
         date_block=document.getElementById("intervals_days_column_"+i);
+        interval_line=document.getElementById("intervals_display_column_"+i);
     
         date=new Date(response_content['dates'][i]);
 
@@ -747,14 +746,61 @@ function intervalsDataHandler(intervals_data_json)
         var day=date.getDate();
         if (date.getDate()+1 < 10) {day='0' + date.getDate();}
 
+        //Год      
+        var year=date.getFullYear();
+
         date=day+"."+month;
-
         date_block.innerHTML=date;
-    }
 
-    //Указание интервалов
-    
-    
+        date=year+"-"+month+"-"+day;
+
+        //Указание интервалов
+        for(let j=0;j<response_content['rent_intervals']["start"].length;j++)
+        {
+            start_datetime=response_content['rent_intervals']["start"][j];
+            end_datetime=response_content['rent_intervals']["end"][j];
+
+            start_date=start_datetime.split(" ")[0];
+            end_date=end_datetime.split(" ")[0];
+
+            start_time=start_datetime.split(" ")[1];
+            end_time=end_datetime.split(" ")[1];
+
+            if(date===start_date) //Определение интервала, принадлежащего данной дате
+            {
+                interval_span = document.createElement("span");
+                interval_span.classList.add("rent_interval");
+
+                interval_line_width=parseInt(window.getComputedStyle(interval_line).getPropertyValue("width"));
+                minute_units=interval_line_width / (24*60); //Единицы ширины на минуту
+
+                start_time_hours=start_time.split(":")[0]; //Часы начала интервала
+                start_time_minutes=start_time.split(":")[1]; //Минуты начала интервала
+                end_time_hours=end_time.split(":")[0]; //Часы конца интервала
+                end_time_minutes=end_time.split(":")[1]; //Минуты конца интервала
+
+                start_time_full_minutes=parseInt(start_time_hours*60)+parseInt(start_time_minutes); //Количество минут до начала интервала
+                end_time_full_minutes=parseInt(end_time_hours*60)+parseInt(end_time_minutes); //Количество минут до конца интервала
+                //minutes_diff=parseInt(parseInt(end_time_full_minutes)-parseInt(start_time_full_minutes));
+
+                minutes_diff=parseInt(parseInt(end_time_full_minutes - start_time_full_minutes));
+                
+                console.log(minutes_diff);
+
+                interval_span.style.width=minutes_diff*minute_units;
+
+                interval_span.innerHTML="";
+                interval_line.append(interval_span);
+            }
+            //response_content['rent_intervals']["start"][j];
+           // response_content['rent_intervals']["end"][j];
+        
+            //console.log(response_content['rent_intervals']["start"][j]);
+
+            
+        }
+
+    }
 }
 
 

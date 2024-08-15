@@ -165,6 +165,16 @@
     margin-top: 10px;
 }
 
+.rent_interval
+{
+    margin-top: -10px;
+    padding-top: 10px;
+    display: inline-block;
+    vertical-align: top;
+    height: 100%;
+    background-color: rgb(211, 72, 72);
+}
+
 
 
 
