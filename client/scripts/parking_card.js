@@ -404,7 +404,7 @@ function rentParkingPlaceButtonHandler() //Обработчик кнопки б�
         var parking_places_json=localStorage.getItem("parking_places_data");
         var parking_places_data = JSON.parse(parking_places_json);
         var parking_places_array=objectToArray(parking_places_data);
-        var parking_place_array=[];
+        var parking_place_array=[]; 
         for(let i=0;i<parking_places_array.length;i++)
         {
             if(parking_places_array[i]["id"]==parking_place_id)
@@ -431,9 +431,9 @@ function rentFormCall(parking_place_id,parking_place_array) //Функция в�
     var price_days_span=document.getElementById("price_days_span");
     var price_hours_span=document.getElementById("price_hours_span");
     price_days_span.innerHTML="";
-    price_days_span.innerText=parking_place_array['price_days']+" руб";
-    price_hours_span.innerHTML="";
-    price_hours_span.innerText=parking_place_array['price_hours']+" руб";
+    price_days_span.innerText=parking_place_array['price_days'];
+    price_hours_span.innerHTML=""; 
+    price_hours_span.innerText=parking_place_array['price_hours'];
 
     var result_price_span=document.getElementById("result_price_span");
     result_price_span.innerHTML="";

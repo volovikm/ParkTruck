@@ -646,10 +646,10 @@ class Form extends Input
                     Внутренний номер: <span id="parking_place_name_span"></span>
                 </div>
                 <div>
-                    Стоимость за час: <span id="price_days_span"></span> <span> руб</span> 
+                    Стоимость за сутки: <span id="price_days_span"></span> <span> руб</span> 
                 </div>
                 <div>
-                    Стоимость за сутки: <span id="price_hours_span"></span> <span> руб</span> 
+                    Стоимость за час: <span id="price_hours_span"></span> <span> руб</span> 
                 </div>
             </div>
 
