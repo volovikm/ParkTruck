@@ -620,6 +620,7 @@ class Request extends DataBaseRequests
         $parking_place_data=($this->getParkingPlaceDataByIdRequest($rent_data["parking_place_id"]))[0];
         $rent_data["parking_place_id"]=$parking_place_data["id"];
         $rent_data["parking_id"]=$parking_place_data["parking_id"];
+        $rent_data["rent_id"]=$random->randomString(20);
 
         $response=$this->rentParkingPlaceRequest($user_data,$rent_data);
         if(!$response)
@@ -633,6 +634,7 @@ class Request extends DataBaseRequests
             "response":"rent_complete",
             "response_content": {
                 "rent_number": "'.$rent_data["rent_number"].'",
+                "rent_id": "'.$rent_data["rent_id"].'",
                 "parking_id": "'.$rent_data["parking_id"].'",
                 "rent_start_date": "'.$date_conversion->convertDate($rent_data["date_start"]).'",
                 "rent_end_date": "'.$date_conversion->convertDate($rent_data["date_end"]).'",

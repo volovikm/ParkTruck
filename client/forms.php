@@ -713,9 +713,8 @@ class Form extends Input
 
             <div id="intervals_time_row_'.$i.'" class="intervals_time_row">
 
-                <div class="timeline_div">
-                    00:00
-                    23:59
+                <div id="timeline_div_'.$i.'" class="timeline_div">
+
                 </div>
                 
             </div>

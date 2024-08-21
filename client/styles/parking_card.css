@@ -86,7 +86,7 @@
 }
 
 .intervals_form_div{
-    width: 600px;
+    width: 700px;
 }
 
 .button_div{
@@ -152,6 +152,7 @@
     margin-left: -5px;
     border-left: 2px solid black;
     border-right: 2px solid black;
+    text-align: left;
 }
 
 .intervals_time_row{
@@ -165,6 +166,10 @@
     margin-top: 10px;
 }
 
+.timeline_span{
+    position: relative;
+}
+
 .rent_interval
 {
     margin-top: -10px;
@@ -173,6 +178,8 @@
     vertical-align: top;
     height: 100%;
     background-color: rgb(211, 72, 72);
+    position: relative;
+    cursor: pointer;
 }
 
 

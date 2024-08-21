@@ -518,6 +518,7 @@
                         try {
                                 $sql = "INSERT INTO rent (
                                 rent_number, 
+                                rent_id,
                                 parking_place_id,
                                 rent_start_date,
                                 rent_start_time,
@@ -529,6 +530,7 @@
                                 active
                                 ) VALUES (
                                 :rent_number, 
+                                :rent_id,
                                 :parking_place_id,
                                 :rent_start_date,
                                 :rent_start_time,
@@ -541,6 +543,7 @@
                                 )";
                                 $stmt=$db->prepare($sql);
                                 $stmt->bindValue(":rent_number", $rent_data['rent_number']);
+                                $stmt->bindValue(":rent_id", $rent_data['rent_id']);
                                 $stmt->bindValue(":parking_place_id", $rent_data['parking_place_id']);
                                 $stmt->bindValue(":rent_start_date", $rent_data['date_start']);
                                 $stmt->bindValue(":rent_start_time", $rent_data['time_start']);
@@ -641,6 +644,5 @@
                         }catch (PDOException $e) {}
                         return($array);
                 }  
-
         }
 ?>
