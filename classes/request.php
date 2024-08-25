@@ -15,6 +15,7 @@
     Метод deleteParkingCard - принимает запрос на удаление существующей парковки, запускает запрос в базу
     Метод startRent - принимает запрос на начало бронирования парковочного места, запускает бронирование
     Метод getRentIntervals- принимает запрос на вывод данных об интервалах бронирования за период, выводит данные массивом в ответ
+    Метод getRentIntervalData - принимает запрос на вывод данных о конкретном интервале бронирования, выводит данные массивом в ответ
 
     Метод getListData - принимает запрос на вывод данных списка, возвращает массив списка
 */
@@ -116,6 +117,14 @@ class Request extends DataBaseRequests
             if(isset($request_content['get_rent_intervals']))
             {
                 $response=$this->getRentIntervals($request_content);
+
+                $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
+            }
+
+            //Запрос на вывод данных конкретного интервала
+            if(isset($request_content['get_rent_data'])) 
+            {
+                $response=$this->getRentIntervalData($request_content);
 
                 $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
             }
@@ -673,6 +682,20 @@ class Request extends DataBaseRequests
                 "parking_place_name": "'.$parking_place_data["parking_place_name"].'",
                 "rent_intervals": '.json_encode($rent_intervals).',
                 "dates": '.json_encode($dates_array).'
+            }
+        }';
+        return($response);
+    }
+
+    public function getRentIntervalData($request_content) //Метод получения данных о конкретном интервале
+    {
+        $rent_interval_data=($this->getRentDataById($request_content["rent_id"]))[0];
+
+        //Вывод данных интервалов
+        $response='{
+            "response": "interval_data_complete",
+            "response_content": {
+                "rent_data": '.json_encode($rent_interval_data).'
             }
         }';
         return($response);

@@ -644,5 +644,24 @@
                         }catch (PDOException $e) {}
                         return($array);
                 }  
+
+                public function getRentDataById($rent_id) 
+                {
+                        $db=$this->connectDataBase();
+
+                        $array=false;
+                        try 
+                        {
+                                $sql="SELECT * FROM `rent` 
+                                WHERE
+                                (rent_id = :rent_id OR
+                                id=:rent_id)";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":rent_id", $rent_id);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        }catch (PDOException $e) {}
+                        return($array);
+                }
         }
 ?>

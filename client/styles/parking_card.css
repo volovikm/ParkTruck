@@ -182,6 +182,11 @@
     cursor: pointer;
 }
 
+.interval_div{
+    text-align: left;
+    display: none;
+}
+
 
 
 

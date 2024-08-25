@@ -208,6 +208,15 @@ function setTodayDate(date_input_id=null,set_today_min=null)
 	return(today_date);
 }
 
+//Функция преобразования даты по формату
+function convertDate(date)
+{
+	date=moment(date); 
+	var string = date.format("DD.MM.YYYY");
+
+	return(string);
+}
+
 
 
 

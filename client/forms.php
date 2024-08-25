@@ -720,21 +720,9 @@ class Form extends Input
             </div>
         ';
         }
-        /*
-        $intervals_display=$intervals_display.'
-            <div class="main_timeline_div">
-                <div class="timeline_div_start inline_div">
-                    00:00
-                </div>
-                <div class="timeline_div_end inline_div">
-                    23:59
-                </div>
-            </div>
-        ';
-        */
 
         //Поле ввода даты "от"
-        $date_from=$this->dateInput("from","Период: 7 дней с ",true);
+        $date_from_input=$this->dateInput("from","Период: 7 дней с ",true);
 
         $form='
         <div id="parking_place_intervals_form" class="interface_block parking_place_form_div intervals_form_div">
@@ -749,7 +737,11 @@ class Form extends Input
             <div class="input_form_div">
 
             <div>
-                '.$date_from.'
+                '.$date_from_input.'
+            </div>
+
+            <div id="interval_div" class="interval_div">
+                Занятый интервал: <span id="interval_time_span"></span>
             </div>
 
             <div class="intervals_info_display_div">

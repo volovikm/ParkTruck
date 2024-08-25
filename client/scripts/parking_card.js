@@ -820,7 +820,15 @@ function intervalsDataHandler(intervals_data_json) //Обработчик виз
 
 function intervalClickHandler(rent_id) //Обработчик нажатия на интервал
 {
-   console.log(rent_id);
+    let url="../request_handler.php";
+
+    //Отправка данных формы
+    var data = {
+        get_rent_data: true,
+        rent_id: rent_id,
+    };
+    var data_json = JSON.stringify(data);
+    requestTo(intervalDataHandler,data_json,url);
 }
 
 
@@ -941,4 +949,27 @@ function rentDataHandler(rent_data_json)
 
         //window.location.reload();
     }
+}
+
+function intervalDataHandler(interval_data_json)
+{
+    console.log(interval_data_json);
+
+    interval_data_json=interval_data_json.replace("/", '');
+    let interval_data = JSON.parse(interval_data_json);
+    interval_data = JSON.parse(interval_data);
+    let response_content=interval_data['response_content'];
+    let rent_data=response_content["rent_data"];
+    
+    rent_data=objectToArray(rent_data);
+
+    var interval_div=document.getElementById("interval_div");
+    var interval_time_span=document.getElementById("interval_time_span");
+
+    //Очистка формы
+    interval_time_span.innerHTML="";
+
+    //Заполнение формы
+    interval_div.style.display="block";
+    interval_time_span.innerHTML=convertDate(rent_data["rent_start_date"])+" "+rent_data["rent_start_time"]+" - "+convertDate(rent_data["rent_end_date"])+" "+rent_data["rent_end_time"];
 }
