@@ -603,7 +603,7 @@
                         return(false);
                 }
 
-                public function setRentInactive($rent_id) //Запрос на отметку бронирования завершённым
+                public function setRentInactiveRequest($rent_id) //Запрос на отметку бронирования завершённым
                 {
                         $db=$this->connectDataBase();
 
@@ -645,7 +645,7 @@
                         return($array);
                 }  
 
-                public function getRentDataById($rent_id) 
+                public function getRentDataById($rent_id) //Запрос на получение данных бронирования по rent_id
                 {
                         $db=$this->connectDataBase();
 
@@ -663,5 +663,29 @@
                         }catch (PDOException $e) {}
                         return($array);
                 }
+
+                public function stopRentRequest($rent_id) //Запрос на отмену бронирования
+                {
+                        $db=$this->connectDataBase();
+
+                        try 
+                        {
+                                $sql = "UPDATE rent SET
+                                active='0',
+                                canceled='1'
+                                WHERE 
+                                rent_id=:rent_id";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":rent_id", $rent_id);
+                                $stmt->execute();
+                                $affectedRowsNumber=$stmt->execute(); 
+                                if($affectedRowsNumber > 0 ){
+                                        return(true);
+                                }
+                        }catch (PDOException $e) {}
+                        return(false);
+                }
+
+
         }
 ?>

@@ -205,6 +205,12 @@ function setTodayDate(date_input_id=null,set_today_min=null)
 		date_input.valueAsDate = new Date(today_date);
 	}
 
+	if(set_today_min!==null)
+	{
+		var date_input=document.getElementById(date_input_id);
+		date_input.setAttribute("min",today_date);
+	}
+
 	return(today_date);
 }
 

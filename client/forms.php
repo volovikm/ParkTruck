@@ -191,7 +191,7 @@ class Form extends Input
         $action=$form_data['action'];
 
         //Проверки прав на действия
-        $show_rights=$rights->showParkingRights($form_data,$user_data,$role);;
+        $show_rights=$rights->showParkingRights($form_data,$user_data,$role);
         $create_new_rights=$rights->createNewParkingRights($user_data,$role);
         $edit_rights=$rights->editParkingRights($form_data,$user_data,$role);
 
@@ -636,7 +636,6 @@ class Form extends Input
         $datetime_end=$this->dateTimeInput("end","Дата, время окончания бронирования",true);
 
         $form='
-        <script src="scripts/moment.js"></script>
 
         <div id="parking_place_rent_form" class="base_form interface_block parking_place_form_div">
             <div class="form_header">Парковочное место</div>
@@ -694,6 +693,18 @@ class Form extends Input
     //Форма визуализации интервалов бронирования парковочного места
     public function parkingPlaceIntervalsForm($form_data)
     {
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
+        $account = new Account();
+
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/rights_check.php");
+        $rights = new Rights();
+
+        $user_data=$account->checkAuth();
+        $role=$account->getRole($user_data);
+
+        //Проверки прав на действия
+        $edit_rights=$rights->editParkingRights($form_data,$user_data,$role);
+
         //Инфографика отображения интервалов
         $intervals_display="";
         for($i=0;$i<7;$i++)
@@ -721,6 +732,40 @@ class Form extends Input
         ';
         }
 
+        //Форма с информацией о конкретном интервале
+        $interval_form="";
+
+        //Разделение интерфейса в зависимости от прав
+        if($edit_rights)
+        {
+            $interval_form=$interval_form.'
+            <div id="interval_div" class="interval_div">
+                <div>
+                    Выбранный интервал: <span id="interval_time_span"></span>
+                </div>
+                <div>
+                    Номер бронирования: <span id="interval_rent_number_span"></span>
+                </div>
+                <div>
+                    Номер ТС: <span id="interval_transport_number_span"></span>
+                </div>
+                <div class="center_text">
+                    <button id="stop_rent_button" class="secondary_button" type="button">Отменить бронирование</button>
+                </div>
+            </div>
+            ';
+        }
+
+        if(!$edit_rights)
+        {
+            $interval_form=$interval_form.'
+            <div id="interval_div" class="interval_div">
+                Выбранный интервал: <span id="interval_time_span"></span>
+            </div>
+            ';
+        }
+        
+
         //Поле ввода даты "от"
         $date_from_input=$this->dateInput("from","Период: 7 дней с ",true);
 
@@ -740,9 +785,7 @@ class Form extends Input
                 '.$date_from_input.'
             </div>
 
-            <div id="interval_div" class="interval_div">
-                Занятый интервал: <span id="interval_time_span"></span>
-            </div>
+            '.$interval_form.'
 
             <div class="intervals_info_display_div">
 

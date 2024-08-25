@@ -16,6 +16,7 @@
     Метод startRent - принимает запрос на начало бронирования парковочного места, запускает бронирование
     Метод getRentIntervals- принимает запрос на вывод данных об интервалах бронирования за период, выводит данные массивом в ответ
     Метод getRentIntervalData - принимает запрос на вывод данных о конкретном интервале бронирования, выводит данные массивом в ответ
+    Метод stopRent - принимает запрос на отмену бронирования, запускает отмену
 
     Метод getListData - принимает запрос на вывод данных списка, возвращает массив списка
 */
@@ -125,6 +126,14 @@ class Request extends DataBaseRequests
             if(isset($request_content['get_rent_data'])) 
             {
                 $response=$this->getRentIntervalData($request_content);
+
+                $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
+            }
+
+            //Запрос на отмену бронирования
+            if(isset($request_content['stop_rent'])) 
+            {
+                $response=$this->stopRent($request_content);
 
                 $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
             }
@@ -698,6 +707,44 @@ class Request extends DataBaseRequests
                 "rent_data": '.json_encode($rent_interval_data).'
             }
         }';
+        return($response);
+    }
+
+    public function stopRent($request_content) //Метод отмены бронирования
+    {
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
+        $account = new Account();
+
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/rights_check.php");
+        $rights = new Rights();
+
+        $user_data=$account->checkAuth();
+        $role=$account->getRole($user_data);
+
+        $rent_id=$request_content["rent_id"];  
+
+        $rent_data=($this->getRentDataById($rent_id))[0];
+        $parking_place_data=($this->getParkingPlaceDataByIdRequest($rent_data["parking_place_id"]))[0];
+        $parking_data=($this->parkingCardDataRequest($parking_place_data["parking_id"]))[0];
+
+        //Проверка прав
+        $edit_rights=$rights->editParkingRights($parking_data,$user_data,$role);
+        if(!$edit_rights)
+        {
+            $response='{"response":"request_error"}';
+            return($response);
+        }
+
+        //Отмена бронирования
+        $response=$this->stopRentRequest($rent_id);
+        if(!$response)
+        {
+            $response='{"response":"request_error"}';
+            return($response);
+        }
+
+        //Успешная отмена бронирования
+        $response='{"response":"stop_rent_complete"}';
         return($response);
     }
 

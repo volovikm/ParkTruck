@@ -107,5 +107,41 @@ class Rights extends DataBaseRequests
 
         return($rights);
     }
+
+    /*
+    public function showRentIntervalRights($user_data,$role) //Проверка прав на демонстрацию информации о бронировании
+    {
+        //$user_data: array | false
+
+        //Проверки прав
+        $rights=false;
+
+        $rights=true;
+
+        return($rights);
+    }
+        */
+
+    /*
+    public function editRentIntervalRights($form_data,$user_data,$role) //Проверка прав на редактирование информации о бронировании
+    {
+        //$user_data: array | false
+
+        //Проверки прав
+        $rights=false;
+
+        $rent_data["driver_id"]="sdfghjk";
+
+        if(($role=="parking_owner" && $form_data["user_id"]==$user_data["id"]) ||
+        ($role=="driver" && $rent_data["driver_id"]==$user_data["id"]))
+        {
+
+            $rights=true;
+
+        }
+
+        return($rights);
+    }
+        */
 }
 ?>

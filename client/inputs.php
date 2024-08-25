@@ -108,18 +108,18 @@ class Input
     }
 
     //Поле ввода даты
-    public function dateInput($name,$label,$set_today_date=false)
+    public function dateInput($name,$label,$set_today_date=false,$set_min_today=false)
     {
         $input='
             <div class="label_div">
                 <label class="input_label">'.$label.'</label>
             </div>
-            <input id="date_'.$name.'" class="date_input" type="date"">
+            <input id="date_'.$name.'" class="date_input" type="date">
         ';
 
         if($set_today_date)
         {
-            $input=$input."<script>setTodayDate('date_".$name."')</script>";
+            $input=$input."<script>setTodayDate('date_".$name."','".$set_min_today."')</script>";
         }
 
         return($input);

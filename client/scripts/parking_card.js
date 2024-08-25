@@ -831,6 +831,18 @@ function intervalClickHandler(rent_id) //Обработчик нажатия н�
     requestTo(intervalDataHandler,data_json,url);
 }
 
+function stopRentButtonHandler(rent_id) //Обработчик нажатия на кнопку отмены интервала
+{
+    let url="../request_handler.php";
+
+    //Отправка данных формы
+    var data = {
+        stop_rent: true,
+        rent_id: rent_id,
+    };
+    var data_json = JSON.stringify(data);
+    requestTo(parkingCardDataHandler,data_json,url);
+}
 
 
 
@@ -903,6 +915,12 @@ function parkingCardDataHandler(parking_card_data_json)
     {
         window.location.reload();
     }
+
+    //Успешное удаление бронирования
+    if(response==="stop_rent_complete")
+    {
+        window.location.reload();
+    }
 }
 
 function rentDataHandler(rent_data_json)
@@ -953,8 +971,6 @@ function rentDataHandler(rent_data_json)
 
 function intervalDataHandler(interval_data_json)
 {
-    console.log(interval_data_json);
-
     interval_data_json=interval_data_json.replace("/", '');
     let interval_data = JSON.parse(interval_data_json);
     interval_data = JSON.parse(interval_data);
@@ -965,11 +981,17 @@ function intervalDataHandler(interval_data_json)
 
     var interval_div=document.getElementById("interval_div");
     var interval_time_span=document.getElementById("interval_time_span");
-
-    //Очистка формы
-    interval_time_span.innerHTML="";
+    var interval_rent_number_span=document.getElementById("interval_rent_number_span");
+    var interval_transport_number_span=document.getElementById("interval_transport_number_span");
+    var stop_rent_button=document.getElementById("stop_rent_button");
 
     //Заполнение формы
     interval_div.style.display="block";
     interval_time_span.innerHTML=convertDate(rent_data["rent_start_date"])+" "+rent_data["rent_start_time"]+" - "+convertDate(rent_data["rent_end_date"])+" "+rent_data["rent_end_time"];
+    if(interval_rent_number_span!==null)
+    {
+        interval_rent_number_span.innerHTML=rent_data["rent_number"];
+        interval_transport_number_span.innerHTML=rent_data["transport_number"];
+        stop_rent_button.setAttribute("onclick","stopRentButtonHandler('"+rent_data["rent_id"]+"')");
+    }
 }

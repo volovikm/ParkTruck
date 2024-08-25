@@ -47,6 +47,7 @@ $form=$form->parkingCardForm($form_data);
         <script src="scripts/jquery_ajax.js"></script>
         <script src="scripts/request.js"></script>
         <script src="scripts/main.js"></script>
+        <script src="scripts/moment.js"></script>
 
         <link rel="stylesheet" href="styles/parking_card.css">
         <link rel="stylesheet" href="styles/main.css">
