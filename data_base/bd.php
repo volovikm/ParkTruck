@@ -664,7 +664,7 @@
                         return($array);
                 }
 
-                public function stopRentRequest($rent_id) //Запрос на отмену бронирования
+                public function stopRentRequest($rent_id,$user_data) //Запрос на отмену бронирования владельцем парковки
                 {
                         $db=$this->connectDataBase();
 
@@ -672,11 +672,13 @@
                         {
                                 $sql = "UPDATE rent SET
                                 active='0',
-                                canceled='1'
+                                canceled='1',
+                                canceled_by= :user_id
                                 WHERE 
                                 rent_id=:rent_id";
                                 $stmt = $db->prepare($sql);
                                 $stmt->bindValue(":rent_id", $rent_id);
+                                $stmt->bindValue(":user_id", $user_data["id"]);
                                 $stmt->execute();
                                 $affectedRowsNumber=$stmt->execute(); 
                                 if($affectedRowsNumber > 0 ){
@@ -684,6 +686,26 @@
                                 }
                         }catch (PDOException $e) {}
                         return(false);
+                }
+
+
+                //Запросы по ТС
+                public function getUserTransportDataRequest($user_data) //Запрос на получение массива ТС пользователя
+                {
+                        $db=$this->connectDataBase();
+
+                        $array=false;
+                        try 
+                        {
+                                $sql="SELECT * FROM `transport` 
+                                WHERE
+                                user_id = :user_id";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":user_id", $user_data["id"]);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        }catch (PDOException $e) {}
+                        return($array);
                 }
 
 

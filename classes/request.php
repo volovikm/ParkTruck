@@ -736,7 +736,7 @@ class Request extends DataBaseRequests
         }
 
         //Отмена бронирования
-        $response=$this->stopRentRequest($rent_id);
+        $response=$this->stopRentRequest($rent_id,$user_data);
         if(!$response)
         {
             $response='{"response":"request_error"}';
@@ -808,6 +808,64 @@ class Request extends DataBaseRequests
                 $list_data[$i]["rent"]["additional_info"]["link_button"]["action"]="show_modal_window";
                 $list_data[$i]["rent"]["additional_info"]["link_button"]["action_info"]["item_id"]=$list_data[$i]["parking_place_id"];
                 $list_data[$i]["rent"]["additional_info"]["link_button"]["action_info"]["block_id"]="parking_place_intervals_form";
+            }
+        }
+
+        //Список ТС
+        if($list_type=="transport")
+        {
+            require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
+            $account = new Account();
+
+            $user_data=$account->checkAuth();
+            $list_data=$this->getUserTransportDataRequest($user_data);
+            $list_clear_data=$list_data;
+
+            //Разделы заголовка
+            $list_data["header"]=[
+                "choice_checkbox"=>"",
+                "transport_number"=>"Госномер",
+                "mark"=>"Марка",
+                "model"=>"Модель",
+                "size"=>"Типовой размер",
+            ];
+
+            //Данные без изменений
+            $list_data["clear_data"]=$list_clear_data;
+
+            //Подготовка данных для вывода
+            for($i=0;$i<count($list_data);$i++)
+            {
+                if(!isset($list_data[$i]))
+                {continue;}
+
+                /*
+
+                //Органичение высоты
+                if($list_data[$i]["height_not_limited"]=='1')
+                {$list_data[$i]["height"]="Не ограничена";}
+
+                //Размер
+                if($list_data[$i]["size"]=='C')
+                {$list_data[$i]["size"]="Грузовой";}
+                if($list_data[$i]["size"]=='CE')
+                {$list_data[$i]["size"]="Грузовой с прицепом";}
+                if($list_data[$i]["size"]=='C1')
+                {$list_data[$i]["size"]="Малый грузовой";}
+                if($list_data[$i]["size"]=='B')
+                {$list_data[$i]["size"]="Легковой";}
+
+                //Данные бронирования
+                $list_data[$i]["rent"]=[];
+
+                $list_data[$i]["rent"]["content"]="";
+
+                $list_data[$i]["rent"]["additional_info"]["link_button"]["text"]="Интервалы бронирования";
+                $list_data[$i]["rent"]["additional_info"]["link_button"]["action"]="show_modal_window";
+                $list_data[$i]["rent"]["additional_info"]["link_button"]["action_info"]["item_id"]=$list_data[$i]["parking_place_id"];
+                $list_data[$i]["rent"]["additional_info"]["link_button"]["action_info"]["block_id"]="parking_place_intervals_form";
+
+                */
             }
         }
 

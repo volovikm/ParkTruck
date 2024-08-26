@@ -626,6 +626,23 @@ class Form extends Input
     //Форма бронирования парковочного места
     public function parkingPlaceRentForm($form_data)
     {
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
+        $account = new Account();
+
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/data_base/bd.php");
+        $sql = new DataBaseRequests();
+
+        $user_data=$account->checkAuth();
+        $role=$account->getRole($user_data);
+
+        //Поле выбора ТС
+        $transport_select="";
+        if($role=="driver")
+        {
+            $transport_array=$sql->getUserTransportDataRequest($user_data);
+            $transport_select=$this->transportSelect($transport_array);
+        }
+
         //Поле ввода госномера
         $transport_number_input=$this->transportNumberInput();
 
@@ -653,6 +670,10 @@ class Form extends Input
             </div>
 
             <div class="input_form_div">
+
+                <div>
+                '.$transport_select.'
+                </div>
 
                 <div>
                 '.$transport_number_input.'
@@ -801,6 +822,150 @@ class Form extends Input
 
         </div>
         ';
+
+        return($form);
+    }
+
+    //Форма списка ТС
+    public function transportForm($form_data)
+    {
+        $buttons="";
+
+        //Кнопка добавить ТС
+        $add_transport_button='
+        <div class="sidebar_button_div">
+            <button id="add_transport_button" class="main_button sidebar_button" type="button">Добавить ТС</button>
+        </div>
+        ';
+
+        //Кнопка редактировать ТС
+        $edit_transport_button='
+        <div class="sidebar_button_div">
+            <button id="edit_button" class="disabled_button sidebar_button" type="button">Редактировать</button>
+        </div>
+        ';
+
+        //Кнопка выйти
+        $exit_button='
+        <div class="sidebar_button_div">
+            <button id="cancel_button" class="secondary_button sidebar_button" type="button">На главную</button>
+        </div>
+        ';
+
+        $buttons=$buttons.$add_transport_button;
+        $buttons=$buttons.$edit_transport_button;
+        $buttons=$buttons.$exit_button;
+
+        //Форма отдельного ТС
+        $edit_transport_form=$this->editTransportForm($form_data);
+
+        $form='
+
+        <form id="transport_form" class="transport_form">
+
+            <div class="sidebar">
+
+                <div class="error_message_div">
+                    <div id="error_message" class="error_message">
+
+                    </div>
+                </div>
+
+                <div class="buttons_block">
+                    '.$buttons.'
+                </div>
+
+            </div>
+
+            <div class="main_space">
+
+                <div class="info_note_main_header_div">
+                    Транспортные средства
+                </div>
+
+                <div class="list_filter_div">
+
+                </div>
+
+                <div id="list_container" class="list">
+
+                    <div id="list_rows" class="list_rows">
+                    </div>
+
+                    <div id="list_content" class="list_content">
+                    </div>
+
+                    <div class="list_row_1 list_row"></div>
+                    <div id="list_row_pattern_1" class="list_row_1 list_row list_row_pattern"></div>
+                    <div id="list_row_pattern_2" class="list_row_2 list_row list_row_pattern"></div>
+                    <input id="choice_checkbox_pattern" class="choice_checkbox choice_checkbox_pattern" type="checkbox">
+                    <input id="choice_input" class="choice_input">
+                    
+                </div>
+
+                '.$edit_transport_form.'
+                
+            </div>\
+
+            <script src="scripts/list.js"></script>
+            <script>listRequest("transport","'.$form_data['id'].'");</script>
+
+            <script src="scripts/forms.js"></script>
+
+            <script src="scripts/transport.js"></script>
+
+        </form>';
+
+        return($form);
+    }
+
+    //Форма отдельного ТС
+    public function editTransportForm($form_data)
+    {
+        //Поле госномера ТС
+        $transport_number_input=$this->transportNumberInput();
+
+        //Поле госномера ТС
+        $transport_mark_input=$this->transportMarkInput();
+
+        //Поле госномера ТС
+        $transport_model_input=$this->transportModelInput();
+
+        $form='
+        <div id="edit_transport_form" class="base_form interface_block edit_transport_form_div">
+            <div class="form_header">Транспортное средство</div>
+
+            <div class="input_form_div">
+
+                <div>
+                '.$transport_number_input.'
+                </div>
+
+                <div>
+                '.$transport_mark_input.'
+                </div>
+
+                <div>
+                '.$transport_model_input.'
+                </div>
+
+
+            </div>
+
+            <div class="error_message_div">
+                <div id="error_message_parking_place" class="error_message">
+
+                </div>
+            </div>
+
+            <div class="button_div">
+                <button id="save_transport_button" class="main_button" type="button">Сохранить</button>
+                <button id="cancel_transport_button" class="secondary_button" type="button">Отменить</button>
+            </div>
+
+        </div>
+        ';
+        //transportFormHandler()
 
         return($form);
     }

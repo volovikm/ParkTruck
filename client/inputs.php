@@ -233,6 +233,21 @@ class Input
 
     //Поля формы бронирования парковочного места
 
+    //Поле выбора ТС
+    public function transportSelect($transport_array)
+    {
+        $input='
+            <div class="label_div">
+                <label class="input_label">Транспортное средство</label>
+            </div>
+            <select id="transport" name="transport" class="basic_input">
+                
+            </select>
+        ';
+        
+        return($input);
+    }
+
     //Поле ввода госномера
     public function transportNumberInput($value="")
     {
@@ -257,6 +272,35 @@ class Input
             <input id="time_'.$name.'" class="datetime_input" type="time"">
         ';
 
+        return($input);
+    }
+
+
+    //Поля формы добавления ТС
+
+    //Поле ввода марки ТС
+    public function transportMarkInput($value="")
+    {
+        $input='
+            <div class="label_div">
+                <label class="input_label">Марка ТС</label>
+            </div>
+            <input id="transport_mark" class="basic_input" value="'.$value.'">
+        ';
+ 
+        return($input);
+    }
+
+    //Поле ввода модели ТС
+    public function transportModelInput($value="")
+    {
+        $input='
+            <div class="label_div">
+                <label class="input_label">Модель ТС</label>
+            </div>
+            <input id="transport_model" class="basic_input" value="'.$value.'">
+        ';
+ 
         return($input);
     }
 }

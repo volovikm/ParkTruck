@@ -15,6 +15,7 @@ class Header extends Account
             //Данные авторизации с авторизацией
             $telephone=$user_data["telephone"];
             $role=$this->roleToText($user_data["role"]);
+            $this->role=$user_data["role"];
 
             $auth_data='
             <div>
@@ -31,6 +32,14 @@ class Header extends Account
 
             //Список меню с авторизацией
             $menu_list='';
+            if(($this->role) =="driver")
+            {
+                $menu_list=$menu_list.'
+                <div><a href="transport.php" class="menu-item">Транспортные средства</a><div>
+                <div><a href="" class="menu-item">Бронирования</a><div>
+                ';
+            }
+            
         }
         else
         {
