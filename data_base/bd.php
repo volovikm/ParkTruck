@@ -4,8 +4,8 @@
                 //Соединение с базой данных
                 public function connectDataBase() 
                 {
-                        //$db = new PDO('mysql:host=prk4440820.mysql;dbname=prk4440820_base', 'prk4440820_adm', 'kQp3JiE/');
-                        $db = new PDO('mysql:host=127.0.0.1;dbname=prk4440820_base', 'root', '');
+                        $db = new PDO('mysql:host=prk4440820.mysql;dbname=prk4440820_base', 'prk4440820_adm', 'kQp3JiE/');
+                        //$db = new PDO('mysql:host=127.0.0.1;dbname=prk4440820_base', 'root', '');
                         return($db);
                 }
 
