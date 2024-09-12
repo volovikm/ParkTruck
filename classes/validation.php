@@ -154,38 +154,6 @@ class Validation
         return(false);
     }
 
-    /*
-    public function validateUnlimitedHeightMarker($height_not_limited)
-    {
-        if($height_not_limited=="1" || $height_not_limited=="0" || gettype($height_not_limited)=="boolean")
-        {
-            return(true);
-        }
-        return(false);
-    }
-
-    public function validateUniqueParkingPlaceName($parking_place_name,$parking_places)
-    {
-        if($parking_place_name=="")
-        {return(true);}
-
-        $j=0;
-        for($i=0;$i<count($parking_places);$i++)
-        {
-            if($parking_places[$i]["parking_place_name"]==$parking_place_name)
-            {
-                $j++;
-            }
-        }
-
-        if($j<=1)
-        {
-            return(true);
-        }
-        return(false);
-    }
-        */
-
     //Функции валидации данных бронирования
     public function validateRentData($rent_data)
     {

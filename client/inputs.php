@@ -172,38 +172,6 @@ class Input
         return($input);
     }
 
-    /*
-    //Поле ввода длины парковочного места 
-    public function lengthInput($value="")
-    {
-        $input='
-            <input id="length_" class="basic_input" type="number" placeholder="Длина, м" value="'.$value.'">
-        ';
-
-        return($input);
-    }
-
-    //Поле ввода ширины парковочного места 
-    public function widthInput($value="")
-    {
-        $input='
-            <input id="width" class="basic_input" type="number" placeholder="Ширина, м" value="'.$value.'">
-        ';
-
-        return($input);
-    }
-
-    //Поле ввода высоты парковочного места 
-    public function heightInput($value="")
-    {
-        $input='
-            <input id="height" class="basic_input" type="number" placeholder="Высота, м" value="'.$value.'">
-        ';
-
-        return($input);
-    }
-        */
-
     //Поле ввода стоимости парковочного места 
     public function priceInput($units,$value="")
     {
