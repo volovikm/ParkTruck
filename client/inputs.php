@@ -172,6 +172,7 @@ class Input
         return($input);
     }
 
+    /*
     //Поле ввода длины парковочного места 
     public function lengthInput($value="")
     {
@@ -201,6 +202,7 @@ class Input
 
         return($input);
     }
+        */
 
     //Поле ввода стоимости парковочного места 
     public function priceInput($units,$value="")

@@ -912,10 +912,6 @@ class Request extends DataBaseRequests
                 if(!isset($list_data[$i]))
                 {continue;}
 
-                //Органичение высоты
-                if($list_data[$i]["height_not_limited"]=='1')
-                {$list_data[$i]["height"]="Не ограничена";}
-
                 //Размер
                 if($list_data[$i]["size"]=='light_cargo')
                 {$list_data[$i]["size"]="Грузовой малый";}

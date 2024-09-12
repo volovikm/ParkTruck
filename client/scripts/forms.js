@@ -295,10 +295,6 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
 
     let parking_place_name="";
     let size="";
-    let length="";
-    let width="";
-    let height="";
-    let height_not_limited=false;
     let price_days="";
     let price_hours="";
     let rent="";
@@ -320,30 +316,6 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
         if(input.id=="parking_place_name")
         {
             parking_place_name=input.value;
-        }
-
-        //Поле ввода длины
-        if(input.id=="length_")
-        {
-            length=input.value;
-        }
-
-        //Поле ввода ширины
-        if(input.id=="width")
-        {
-            width=input.value;
-        }
-
-        //Поле ввода высоты
-        if(input.id=="height")
-        {
-            height=input.value;
-        }
-
-        //Чекбокс неограниченной высоты
-        if(input.id=="height_not_limited" && input.checked)
-        {
-            height_not_limited=true;
         }
 
         //Поле ввода стоимости в днях
@@ -380,40 +352,27 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
         return(false);
     }
 
-    //Проверка уникальности внутрененнего номера
-    for (let i = 0; i < parking_places_array.length; i++) 
-    {
-        if(parking_places_array[i]["parking_place_name"]==parking_place_name && parking_place_name!="" && parking_places_array[i]["id"]!=parking_place_id)
-        {
-            error_message.innerHTML="Внутренний номер должен быть уникальным";
-            return(false);
-        }
-    }
-
     //Сбор общего массива с данными формы, преобразование для отображения в списке
     var parking_place_clear_data = {  //Массив с чистыми данными для дальнейшей отправки на сервер
         "parking_place_name": parking_place_name,
         "size": size,
-        "length_": length,
-        "width": width,
-        "height": height,
-        "height_not_limited": height_not_limited,
         "price_days": price_days,
         "price_hours": price_hours,
     }
 
     //Преобразование данных для вывода в список
-    if(size=='C')
-    {size="Грузовой";}
-    if(size=='CE')
-    {size="Грузовой с прицепом";}
-    if(size=='C1')
-    {size="Малый грузовой";}
-    if(size=='B')
+    if(size=='light_cargo')
+    {size="Грузовой малый";}
+    if(size=='medium_cargo')
+    {size="Грузовой средний";}
+    if(size=='light_vehicle')
     {size="Легковой";}
-
-    if(height_not_limited)
-    {height="Не ограничена";}
+    if(size=='euro_truck')
+    {size="Еврофура";}
+    if(size=='hood_truck')
+    {size="Капотник";}
+    if(size=='trailer_truck')
+    {size="Сцепка";}
 
     var rent_array=[]
     rent_array["additional_info"]=[];
@@ -432,10 +391,6 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
     var parking_place_data = {  //Массив с преобразованными данными для вывода в список
         "parking_place_name": parking_place_name,
         "size": size,
-        "length_": length,
-        "width": width,
-        "height": height,
-        "height_not_limited": height_not_limited,
         "price_days": price_days,
         "price_hours": price_hours,
         "rent": rent_array

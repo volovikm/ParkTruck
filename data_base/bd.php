@@ -423,22 +423,14 @@
                                         parking_place_name,
                                         size, 
                                         price_days,
-                                        price_hours,
-                                        length_,
-                                        width,
-                                        height,
-                                        height_not_limited
+                                        price_hours
                                         ) VALUES (
                                         :parking_id,
                                         :parking_place_id,
                                         :parking_place_name,
                                         :size, 
                                         :price_days,
-                                        :price_hours,
-                                        :length_,
-                                        :width,
-                                        :height,
-                                        :height_not_limited
+                                        :price_hours
                                         )";
                                         $stmt=$db->prepare($sql);
                                         $stmt->bindValue(":parking_id", $parking_id);
@@ -447,10 +439,6 @@
                                         $stmt->bindValue(":size", $parking_place['size']);
                                         $stmt->bindValue(":price_days", $parking_place['price_days']);
                                         $stmt->bindValue(":price_hours", $parking_place['price_hours']);
-                                        $stmt->bindValue(":length_", $parking_place['length_']);
-                                        $stmt->bindValue(":width", $parking_place['width']);
-                                        $stmt->bindValue(":height", $parking_place['height']);
-                                        $stmt->bindValue(":height_not_limited",(int) $parking_place['height_not_limited']);
                                         $affectedRowsNumber=$stmt->execute();
                                 }catch (PDOException $e) {}
                         }

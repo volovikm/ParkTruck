@@ -545,6 +545,7 @@ class Form extends Input
         //Поле ввода типового размера парковочного места
         $parking_place_size_select=$this->sizeSelect();
 
+        /*
         //Поле ввода длины парковочного места
         $parking_place_lenght_input=$this->lengthInput();
 
@@ -556,6 +557,7 @@ class Form extends Input
 
         //Чекбокс отсутствия ограничения высоты парковочного места
         $parking_place_height_checkbox=$this->checkBox("height_not_limited",true);
+        */
 
         //Поле ввода стоимости (в днях) парковочного места
         $parking_place_price_days_input=$this->priceInput("days");
@@ -575,25 +577,6 @@ class Form extends Input
 
                 <div>
                 '.$parking_place_size_select.'
-                </div>
-
-                <div class="label_div">
-                    <label class="input_label">Или</label>
-                </div>
-
-                <div>
-                '.$parking_place_lenght_input.'
-                </div>
-                <div>
-                '.$parking_place_width_input.'
-                </div>
-                <div>
-                '.$parking_place_height_input.'
-                </div>
-
-                <div class="height_checkbox_div">
-                '.$parking_place_height_checkbox.'
-                <label>Высота не ограничена</label>
                 </div>
 
                 <div class="price_div">
@@ -619,6 +602,23 @@ class Form extends Input
 
         </div>
         ';
+
+        /*
+        <div>
+                '.$parking_place_lenght_input.'
+                </div>
+                <div>
+                '.$parking_place_width_input.'
+                </div>
+                <div>
+                '.$parking_place_height_input.'
+                </div>
+
+                <div class="height_checkbox_div">
+                '.$parking_place_height_checkbox.'
+                <label>Высота не ограничена</label>
+                </div>
+        */
 
         return($form);
     }

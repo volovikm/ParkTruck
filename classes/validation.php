@@ -118,22 +118,11 @@ class Validation
         //Проверка размера
         $valid_size=$this->validateSize($parking_place["size"]);
 
-        //Проверка числовых размеров
-        $valid_length=$this->validateNumbers($parking_place["length_"]);
-        $valid_width=$this->validateNumbers($parking_place["width"]);
-        $valid_height=$this->validateNumbers($parking_place["height"]);
-
         //Проверка стоимости
         $valid_price_days=$this->validateNumbers($parking_place["price_days"]);
         $valid_price_hours=$this->validateNumbers($parking_place["price_hours"]);
 
-        //Проверка маркера неограниченной высоты
-        $valid_unlimited_heigth_marker=$this->validateUnlimitedHeightMarker($parking_place["height_not_limited"]);
-
-        //Проверка уникальности внутреннего номера парковочного места
-        $valid_parking_place_name=$this->validateUniqueParkingPlaceName($parking_place["parking_place_name"],$parking_places_array);
-
-        if($valid_size && $valid_length && $valid_width && $valid_height && $valid_price_days && $valid_price_hours && $valid_unlimited_heigth_marker && $valid_parking_place_name)
+        if($valid_size && $valid_price_days && $valid_price_hours)
         {
             $valid=true;
         }
@@ -143,10 +132,12 @@ class Validation
 
     public function validateSize($size)
     {
-        if($size == "C" ||
-        $size == "CE" ||
-        $size == "C1" ||
-        $size == "B")
+        if($size == "light_cargo" ||
+        $size == "medium_cargo" ||
+        $size == "light_vehicle" ||
+        $size == "euro_truck" ||
+        $size == "hood_truck" ||
+        $size == "trailer_truck")
         {
             return(true);
         }
@@ -163,6 +154,7 @@ class Validation
         return(false);
     }
 
+    /*
     public function validateUnlimitedHeightMarker($height_not_limited)
     {
         if($height_not_limited=="1" || $height_not_limited=="0" || gettype($height_not_limited)=="boolean")
@@ -192,6 +184,7 @@ class Validation
         }
         return(false);
     }
+        */
 
     //Функции валидации данных бронирования
     public function validateRentData($rent_data)
