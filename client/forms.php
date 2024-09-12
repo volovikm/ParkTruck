@@ -531,12 +531,8 @@ class Form extends Input
     {
         $action=$form_data["action"];
         $parking_place_name_input="";
-        $parking_place_lenght_input="";
-        $parking_place_width_input="";
-        $parking_place_height_input="";
         $parking_place_price_days_input="";
         $parking_place_price_hours_input="";
-        $parking_place_height_checkbox="";
         $parking_place_size_select="";
 
         //Поле ввода внутреннего номера парковочного места
@@ -544,20 +540,6 @@ class Form extends Input
 
         //Поле ввода типового размера парковочного места
         $parking_place_size_select=$this->sizeSelect();
-
-        /*
-        //Поле ввода длины парковочного места
-        $parking_place_lenght_input=$this->lengthInput();
-
-        //Поле ввода ширины парковочного места
-        $parking_place_width_input=$this->widthInput();
-
-        //Поле ввода высоты парковочного места
-        $parking_place_height_input=$this->heightInput();
-
-        //Чекбокс отсутствия ограничения высоты парковочного места
-        $parking_place_height_checkbox=$this->checkBox("height_not_limited",true);
-        */
 
         //Поле ввода стоимости (в днях) парковочного места
         $parking_place_price_days_input=$this->priceInput("days");
@@ -635,16 +617,22 @@ class Form extends Input
         $user_data=$account->checkAuth();
         $role=$account->getRole($user_data);
 
+        //Поле ввода госномера
+        $transport_number_input=$this->transportNumberInput();
+
         //Поле выбора ТС
         $transport_select="";
         if($role=="driver")
         {
             $transport_array=$sql->getUserTransportDataRequest($user_data);
-            $transport_select=$this->transportSelect($transport_array);
-        }
+            $transport_select_arr=$this->transportSelect($transport_array);
 
-        //Поле ввода госномера
-        $transport_number_input=$this->transportNumberInput();
+            $transport_select=$transport_select_arr["select"];
+            if($transport_select_arr["transport_par"]) //В списке есть хотя бы одно ТС
+            {
+                $transport_number_input=$this->transportNumberInput(true);
+            }
+        }
 
         //Поле ввода даты, времени начала бронирования
         $datetime_start=$this->dateTimeInput("start","Дата, время начала бронирования",true);

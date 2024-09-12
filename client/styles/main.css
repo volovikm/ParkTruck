@@ -297,3 +297,11 @@
     padding-left: 20px;
     margin-bottom: 10px; 
 }
+
+.text_wrap{
+    white-space: normal;
+}
+
+.margin_bottom_block{
+    margin-bottom: 15px;
+}

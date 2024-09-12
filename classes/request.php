@@ -658,6 +658,13 @@ class Request extends DataBaseRequests
         $rent_data["parking_id"]=$parking_place_data["parking_id"];
         $rent_data["rent_id"]=$random->randomString(20);
 
+        //Определение номера ТС для бронирования с выбором ТС
+        if($rent_data["transport_number"]=="" && $rent_data["transport_id"]!="")
+        {
+            $transport_data=($this->getTransportDataByIdRequest($user_data,$rent_data["transport_id"]))[0];
+            $rent_data["transport_number"]=$transport_data["transport_number"];
+        }
+
         $response=$this->rentParkingPlaceRequest($user_data,$rent_data);
         if(!$response)
         {
@@ -834,23 +841,31 @@ class Request extends DataBaseRequests
             //Список всех ТС пользователя
             $user_transport_data=$this->getUserTransportDataRequest($user_data);
 
-            //Данные конкретного ТС
-            $transport_data=($this->getTransportDataByIdRequest($user_data,$request_content["transport_id"]))[0];
+            $transport_id_array=explode("_",$request_content["transport_id"]);
 
-            //Проверка прав на редактирование ТС
-            $edit_rights=$rights->transportRights($user_data,$role,$action,$user_transport_data,$transport_data);
-            if(!$edit_rights)
+            for($i=0;$i<count($transport_id_array);$i++)
             {
-                $response='{"response":"request_error"}';
-                return($response);
-            }
+                if($transport_id_array[$i]=="")
+                {continue;}
 
-            //Удаление ТС
-            $response=$this->deleteTransportRequest($request_content,$user_data);
-            if(!$response)
-            {
-                $response='{"response":"request_error"}';
-                return($response);
+                //Данные конкретного ТС
+                $transport_data=($this->getTransportDataByIdRequest($user_data,$transport_id_array[$i]))[0];
+
+                //Проверка прав на редактирование ТС
+                $edit_rights=$rights->transportRights($user_data,$role,$action,$user_transport_data,$transport_data);
+                if(!$edit_rights)
+                {
+                    $response='{"response":"request_error"}';
+                    return($response);
+                }
+
+                //Удаление ТС
+                $response=$this->deleteTransportRequest($transport_data,$user_data);
+                if(!$response)
+                {
+                    $response='{"response":"request_error"}';
+                    return($response);
+                }
             }
         }
 

@@ -208,26 +208,67 @@ class Input
     //Поле выбора ТС
     public function transportSelect($transport_array)
     {
-        $input='
+        $return_arr=[];
+
+        $options="";
+        for($i=0;$i<count($transport_array);$i++)
+        {
+            $return_arr["transport_par"]=true;
+
+            $options=$options.'<option value="'.$transport_array[$i]["id"].'">'.$transport_array[$i]["transport_number"].", ".$transport_array[$i]["transport_name"].'</option>';
+        }
+
+        if(count($transport_array)==0)
+        {
+            $return_arr["transport_par"]=false;
+
+            $return_arr["select"]='
+            <div class="label_div">
+                <label class="input_label">Транспортное средство</label>
+            </div>
+            <div class="text_wrap text_to_left margin_bottom_block">
+                <a href="../client/transport.php" target="_blank">Добавьте транспортные средства</a> в учётную запись, чтобы выбирать ТС при бронировании. 
+            </div>
+            ';
+            return($return_arr);
+        }
+
+        $return_arr["select"]='
             <div class="label_div">
                 <label class="input_label">Транспортное средство</label>
             </div>
             <select id="transport" name="transport" class="basic_input">
+
+                '.$options.'
                 
             </select>
         ';
         
-        return($input);
+        return($return_arr);
     }
 
     //Поле ввода госномера
-    public function transportNumberInput($value="")
+    public function transportNumberInput($show_placeholder=false,$value="")
     {
+        $class_placeholder="invisible_input";
+        $class_input="";
+        if($show_placeholder)
+        {
+            $class_placeholder="";
+            $class_input="invisible_input";
+        }
+
         $input='
-            <div class="label_div">
-                <label class="input_label">Госномер ТС</label>
+            <div id="placeholder_div" class="'.$class_placeholder.'">
+                <div onclick="switchVisibility(`show_input_div`,`placeholder_div`);" class="input_label link_button text_to_left margin_bottom_block">Ввести госномер вручную</div>
             </div>
-            <input id="transport_number" class="basic_input" value="'.$value.'">
+
+            <div id="show_input_div" class="'.$class_input.'">
+                <div class="label_div">
+                    <label class="input_label">Госномер ТС</label>
+                </div>
+                <input id="transport_number" class="basic_input" value="'.$value.'">
+            </div>
         ';
 
         return($input);

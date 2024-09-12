@@ -94,10 +94,9 @@ function deleteTransportButtonHandler() //Обработчик кнопки уд
 
         //Заполнение формы данными ТС
         let choice_input=document.getElementById("choice_input");
-        transport_id=choice_input.value.replace("_","");
 
         let transport_id_input=document.getElementById("transport_id");
-        transport_id_input.value=transport_id;
+        transport_id_input.value=choice_input.value;
 
         let save_transport_button=document.getElementById("save_transport_button");
         save_transport_button.setAttribute("onclick","editTransportFormHandler(`delete`)");

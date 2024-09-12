@@ -236,6 +236,16 @@ function clearForm(form)
     }
 }
 
+//Функция смены видимости двух блоков
+function switchVisibility(show_block_id,hide_block_id)
+{
+	var show_block=document.getElementById(show_block_id);
+	var hide_block=document.getElementById(hide_block_id);
+
+	show_block.style.display="block";
+	hide_block.style.display="none";
+}
+
 
 
 

@@ -498,7 +498,7 @@ function parkingPlaceRentFormHandler(parking_place_id)
         let select=selects[i];
 
         //Поле ввода ТС
-        if(select.id=="transport_id")
+        if(select.id=="transport")
         {
             transport_id=select.value;
         }

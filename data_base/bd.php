@@ -795,7 +795,7 @@
                                 user_id=:user_id";
                                 $stmt=$db->prepare($sql);
 
-                                $stmt->bindValue(":transport_id", $transport_data["transport_id"]);
+                                $stmt->bindValue(":transport_id", $transport_data["id"]);
                                 $stmt->bindValue(":user_id", $user_data["id"]);
 
                                 $affectedRowsNumber=$stmt->execute();
