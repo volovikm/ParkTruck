@@ -223,6 +223,19 @@ function convertDate(date)
 	return(string);
 }
 
+//Функция очистки формы
+function clearForm(form)
+{
+    let inputs = form.querySelectorAll('input');
+
+    for (let i = 0; i < inputs.length; i++) 
+    {
+        let input=inputs[i];
+        input.value="";
+		input.checked=false;
+    }
+}
+
 
 
 

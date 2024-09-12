@@ -160,10 +160,6 @@
     text-align: left;
 }
 
-.text_to_left{
-    text-align: left;
-}
-
 .form_header{
     font-size: 1.5em;
     font-weight: bold;
@@ -251,6 +247,10 @@
 
 .center_text{
     text-align: center;
+}
+
+.text_to_left{
+    text-align: left;
 }
 
 .text_positive{

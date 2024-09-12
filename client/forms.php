@@ -831,6 +831,8 @@ class Form extends Input
     {
         $buttons="";
 
+        $button_scripts="";
+
         //Кнопка добавить ТС
         $add_transport_button='
         <div class="sidebar_button_div">
@@ -844,6 +846,15 @@ class Form extends Input
             <button id="edit_button" class="disabled_button sidebar_button" type="button">Редактировать</button>
         </div>
         ';
+        $button_scripts=$button_scripts.'<script>enableListButtons(`edit_button`,`secondary_button`,1)</script>';
+
+        //Кнопка удалить ТС
+        $delete_transport_button='
+        <div class="sidebar_button_div">
+            <button id="delete_button" class="disabled_button sidebar_button" type="button">Удалить</button>
+        </div>
+        ';
+        $button_scripts=$button_scripts.'<script>enableListButtons(`delete_button`,`secondary_button`,Infinity)</script>';
 
         //Кнопка выйти
         $exit_button='
@@ -854,6 +865,7 @@ class Form extends Input
 
         $buttons=$buttons.$add_transport_button;
         $buttons=$buttons.$edit_transport_button;
+        $buttons=$buttons.$delete_transport_button;
         $buttons=$buttons.$exit_button;
 
         //Форма отдельного ТС
@@ -910,6 +922,8 @@ class Form extends Input
             <script src="scripts/list.js"></script>
             <script>listRequest("transport","'.$form_data['id'].'");</script>
 
+            '.$button_scripts.'
+
             <script src="scripts/forms.js"></script>
 
             <script src="scripts/transport.js"></script>
@@ -922,14 +936,20 @@ class Form extends Input
     //Форма отдельного ТС
     public function editTransportForm($form_data)
     {
+        //Поле id ТС
+        $transport_id_input=$this->invisibleInput("transport_id"); 
+        
         //Поле госномера ТС
         $transport_number_input=$this->transportNumberInput();
 
-        //Поле госномера ТС
-        $transport_mark_input=$this->transportMarkInput();
+        //Поле названия ТС
+        $transport_name_input=$this->transportNameInput();
 
-        //Поле госномера ТС
-        $transport_model_input=$this->transportModelInput();
+        //Поле ввода размера 
+        $transport_size_select=$this->sizeSelect();
+
+        //Поле ввода особенностей ТС
+        $transport_options_block=$this->transportOptionsBlock();
 
         $form='
         <div id="edit_transport_form" class="base_form interface_block edit_transport_form_div">
@@ -938,22 +958,29 @@ class Form extends Input
             <div class="input_form_div">
 
                 <div>
+                '.$transport_id_input.'
+                </div>
+
+                <div>
                 '.$transport_number_input.'
                 </div>
 
                 <div>
-                '.$transport_mark_input.'
+                '.$transport_name_input.'
                 </div>
 
                 <div>
-                '.$transport_model_input.'
+                '.$transport_size_select.'
                 </div>
 
+                <div>
+                '.$transport_options_block.'
+                </div>
 
             </div>
 
             <div class="error_message_div">
-                <div id="error_message_parking_place" class="error_message">
+                <div id="error_message_transport" class="error_message">
 
                 </div>
             </div>
@@ -965,7 +992,6 @@ class Form extends Input
 
         </div>
         ';
-        //transportFormHandler()
 
         return($form);
     }

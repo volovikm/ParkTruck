@@ -108,6 +108,36 @@ class Rights extends DataBaseRequests
         return($rights);
     }
 
+    public function transportRights($user_data,$role,$action,$user_transport_data,$transport_data=false) //Проверка прав на действия с ТС
+    {
+        //$user_data: array | false
+
+        //Проверки прав
+        $rights=false;
+
+        if($action=="add")
+        {
+            if($user_data!==false && $role=="driver" && count($user_transport_data)<=100)
+            {
+                
+                $rights=true;
+    
+            }
+        }
+        
+        if(($action=="edit" || $action=="delete") && $transport_data!=false)
+        {
+            if($user_data!==false && $role=="driver" && $transport_data["user_id"]==$user_data["id"])
+            {
+                
+                $rights=true;
+    
+            }
+        }
+        
+        return($rights);
+    }
+
     /*
     public function showRentIntervalRights($user_data,$role) //Проверка прав на демонстрацию информации о бронировании
     {

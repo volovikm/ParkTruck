@@ -160,10 +160,12 @@ class Input
                 <label class="input_label">Типовой размер</label>
             </div>
             <select id="size" name="size" class="basic_input">
-                <option value="C">Грузовой</option>
-                <option value="CE">Грузовой с прицепом</option>
-                <option value="C1">Малый грузовой</option>
-                <option value="B">Легковой</option>
+                <option value="light_cargo">Грузовой малый</option> 
+                <option value="medium_cargo">Грузовой средний</option>
+                <option value="light_vehicle">Легковой</option>
+                <option value="euro_truck">Еврофура</option>
+                <option value="hood_truck">Капотник</option>
+                <option value="trailer_truck">Сцепка</option>
             </select>
         ';
         
@@ -278,27 +280,49 @@ class Input
 
     //Поля формы добавления ТС
 
-    //Поле ввода марки ТС
-    public function transportMarkInput($value="")
+    //Поле ввода названия ТС
+    public function transportNameInput($value="")
     {
         $input='
             <div class="label_div">
-                <label class="input_label">Марка ТС</label>
+                <label class="input_label">Название ТС</label>
             </div>
-            <input id="transport_mark" class="basic_input" value="'.$value.'">
+            <input id="transport_name" class="basic_input" value="'.$value.'">
         ';
  
         return($input);
     }
 
-    //Поле ввода модели ТС
-    public function transportModelInput($value="")
+    //Поле ввода опций ТС
+    public function transportOptionsBlock()
     {
+        $refrigerator_checkbox=$this->checkBox("refrigerator");
+        $refrigerator=$refrigerator_checkbox.'<label>Рефрежиратор</label>';
+
+        $oversized_checkbox=$this->checkBox("oversized");
+        $oversized=$oversized_checkbox.'<label>Негабарит</label>';
+
+        $electrocar_checkbox=$this->checkBox("electrocar");
+        $electrocar=$electrocar_checkbox.'<label>Электромобиль</label>';
+
         $input='
+        <div class="text_to_left">
             <div class="label_div">
-                <label class="input_label">Модель ТС</label>
+                <label class="input_label">Особенности ТС</label>
             </div>
-            <input id="transport_model" class="basic_input" value="'.$value.'">
+
+            <div>
+                '.$refrigerator.'
+            </div>
+
+            <div>
+                '.$oversized.'
+            </div>
+
+            <div>
+                '.$electrocar.'
+            </div>
+        </div>
         ';
  
         return($input);

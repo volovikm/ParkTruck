@@ -587,3 +587,94 @@ function parkingPlaceRentFormHandler(parking_place_id)
     var data_json = JSON.stringify(data);
     requestTo(rentDataHandler,data_json,url);
 }
+
+//Обработчик формы добавления ТС
+function editTransportFormHandler(action)
+{
+    let url="../request_handler.php";
+
+    var edit_transport_form = document.getElementById("edit_transport_form");
+    let inputs = edit_transport_form.querySelectorAll('input');
+    let selects = edit_transport_form.querySelectorAll('select');
+
+    let transport_id="";
+    let transport_number="";
+    let transport_name="";
+    let transport_size="";  
+    let properties="";
+
+    for (let i = 0; i < inputs.length; i++) 
+    {
+        let input=inputs[i];
+
+        //id ТС
+        if(input.id=="transport_id")
+        {
+            transport_id=input.value;
+        }
+
+        //Поле ввода госномера
+        if(input.id=="transport_number")
+        {
+            transport_number=input.value;
+        }
+
+        //Поле ввода названия ТС
+        if(input.id=="transport_name")
+        {
+            transport_name=input.value;
+        }
+
+        //Чекбокс рефрежиратор
+        if(input.id=="refrigerator" && input.checked)
+        {
+            properties=properties+"refrigerator ";
+        }
+
+        //Чекбокс негабарит
+        if(input.id=="oversized" && input.checked)
+        {
+            properties=properties+"oversized ";
+        }
+
+        //Чекбокс электромобиль
+        if(input.id=="electrocar" && input.checked)
+        {
+            properties=properties+"electrocar ";
+        }
+    }
+
+    for (let i = 0; i < selects.length; i++) 
+    {
+        let select=selects[i];
+
+        //Поле ввода типового размера
+        if(select.id=="size")
+        {
+            transport_size=select.value;
+        }
+    }
+
+    //Проверки формы
+    let error_message=document.getElementById("error_message_transport");
+
+    //Проверка пустой формы
+    if(transport_number==="" && action!=="delete")
+    {
+        error_message.innerHTML="Заполните госномер ТС";
+        return(false);
+    }
+
+    //Отправка данных формы
+    var data = {
+        transport_action: true,
+        action: action,
+        transport_id: transport_id,
+        transport_number: transport_number,
+        transport_name: transport_name,
+        transport_size: transport_size,
+        properties: properties,
+    };
+    var data_json = JSON.stringify(data);
+    requestTo(transportDataHandler,data_json,url);
+}

@@ -31,6 +31,8 @@ $form=$form->transportForm($form_data);
         <script src="scripts/request.js"></script>
         <script src="scripts/main.js"></script>
         <script src="scripts/moment.js"></script>
+        
+        <script src="scripts/transport.js"></script>
 
         <link rel="stylesheet" href="styles/transport.css">
         <link rel="stylesheet" href="styles/main.css">

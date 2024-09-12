@@ -17,6 +17,8 @@
     Метод getRentIntervals- принимает запрос на вывод данных об интервалах бронирования за период, выводит данные массивом в ответ
     Метод getRentIntervalData - принимает запрос на вывод данных о конкретном интервале бронирования, выводит данные массивом в ответ
     Метод stopRent - принимает запрос на отмену бронирования, запускает отмену
+    Метод transportAction - принимает запрос на действия с ТС, и тип действия, запускает соответствующее действие
+    Метод getTransportData - принимаеит запрос на вывод данных конкретного ТС, запускает вывод
 
     Метод getListData - принимает запрос на вывод данных списка, возвращает массив списка
 */
@@ -134,6 +136,22 @@ class Request extends DataBaseRequests
             if(isset($request_content['stop_rent'])) 
             {
                 $response=$this->stopRent($request_content);
+
+                $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
+            }
+
+            //Запрос на действия с ТС
+            if(isset($request_content['transport_action']))
+            {
+                $response=$this->transportAction($request_content);
+
+                $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
+            }
+
+            //Запрос на вывод данныз конкретного ТС
+            if(isset($request_content['get_transport_data']))
+            {
+                $response=$this->getTransportData($request_content);
 
                 $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
             }
@@ -748,6 +766,118 @@ class Request extends DataBaseRequests
         return($response);
     }
 
+    public function transportAction($request_content) //Метод действий с ТС
+    {
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
+        $account = new Account();
+
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/rights_check.php");
+        $rights = new Rights();
+
+        $user_data=$account->checkAuth();
+        $role=$account->getRole($user_data);
+
+        $action=$request_content["action"];  
+
+        //Добавление нового ТС
+        if($action=="add")
+        {
+            //Список всех ТС пользователя
+            $user_transport_data=$this->getUserTransportDataRequest($user_data);
+
+            //Проверка прав на добавление ТС
+            $add_rights=$rights->transportRights($user_data,$role,$action,$user_transport_data);
+            if(!$add_rights)
+            {
+                $response='{"response":"request_error"}';
+                return($response);
+            }
+
+            //Добавление ТС
+            $response=$this->addNewTransportRequest($request_content,$user_data);
+            if(!$response)
+            {
+                $response='{"response":"request_error"}';
+                return($response);
+            }
+        }
+
+        //Редактирование ТС
+        if($action=="edit")
+        {
+            //Список всех ТС пользователя
+            $user_transport_data=$this->getUserTransportDataRequest($user_data);
+
+            //Данные конкретного ТС
+            $transport_data=($this->getTransportDataByIdRequest($user_data,$request_content["transport_id"]))[0];
+
+            //Проверка прав на редактирование ТС
+            $edit_rights=$rights->transportRights($user_data,$role,$action,$user_transport_data,$transport_data);
+            if(!$edit_rights)
+            {
+                $response='{"response":"request_error"}';
+                return($response);
+            }
+
+            //Редактирование ТС
+            $response=$this->editTransportRequest($request_content,$user_data);
+            if(!$response)
+            {
+                $response='{"response":"request_error"}';
+                return($response);
+            }
+        }
+
+        //Удаление ТС
+        if($action=="delete")
+        {
+            //Список всех ТС пользователя
+            $user_transport_data=$this->getUserTransportDataRequest($user_data);
+
+            //Данные конкретного ТС
+            $transport_data=($this->getTransportDataByIdRequest($user_data,$request_content["transport_id"]))[0];
+
+            //Проверка прав на редактирование ТС
+            $edit_rights=$rights->transportRights($user_data,$role,$action,$user_transport_data,$transport_data);
+            if(!$edit_rights)
+            {
+                $response='{"response":"request_error"}';
+                return($response);
+            }
+
+            //Удаление ТС
+            $response=$this->deleteTransportRequest($request_content,$user_data);
+            if(!$response)
+            {
+                $response='{"response":"request_error"}';
+                return($response);
+            }
+        }
+
+        $response='{"response":"transport_action_complete"}';
+        return($response);
+    }
+
+    public function getTransportData($request_content) //Метод вывода данных конкретного ТС 
+    {
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
+        $account = new Account();
+
+        $user_data=$account->checkAuth();
+        $role=$account->getRole($user_data);
+
+        $transport_data=$this->getTransportDataByIdRequest($user_data,$request_content["transport_id"]);
+
+        //Вывод данных интервалов
+        $response='{
+            "response": "transport_data_complete",
+            "response_content": {
+                "transport_data": '.json_encode($transport_data).'
+            }
+        }';
+        return($response);
+    }
+
 
 
     //Методы работы со списками
@@ -770,9 +900,6 @@ class Request extends DataBaseRequests
                 "size"=>"Размер",
                 "price_days"=>"Тариф:  руб\\сутки, ",
                 "price_hours"=>" руб\\час ",
-                "length_"=>"Длина, м",
-                "width"=>"Ширина, м",
-                "height"=>"Высота, м",
                 "rent"=>""
             ];
 
@@ -790,14 +917,18 @@ class Request extends DataBaseRequests
                 {$list_data[$i]["height"]="Не ограничена";}
 
                 //Размер
-                if($list_data[$i]["size"]=='C')
-                {$list_data[$i]["size"]="Грузовой";}
-                if($list_data[$i]["size"]=='CE')
-                {$list_data[$i]["size"]="Грузовой с прицепом";}
-                if($list_data[$i]["size"]=='C1')
-                {$list_data[$i]["size"]="Малый грузовой";}
-                if($list_data[$i]["size"]=='B')
+                if($list_data[$i]["size"]=='light_cargo')
+                {$list_data[$i]["size"]="Грузовой малый";}
+                if($list_data[$i]["size"]=='medium_cargo')
+                {$list_data[$i]["size"]="Грузовой средний";}
+                if($list_data[$i]["size"]=='light_vehicle')
                 {$list_data[$i]["size"]="Легковой";}
+                if($list_data[$i]["size"]=='euro_truck')
+                {$list_data[$i]["size"]="Еврофура";}
+                if($list_data[$i]["size"]=='hood_truck')
+                {$list_data[$i]["size"]="Капотник";}
+                if($list_data[$i]["size"]=='trailer_truck')
+                {$list_data[$i]["size"]="Сцепка";}
 
                 //Данные бронирования
                 $list_data[$i]["rent"]=[];
@@ -825,9 +956,9 @@ class Request extends DataBaseRequests
             $list_data["header"]=[
                 "choice_checkbox"=>"",
                 "transport_number"=>"Госномер",
-                "mark"=>"Марка",
-                "model"=>"Модель",
-                "size"=>"Типовой размер",
+                "transport_name"=>"Название ТС",
+                "transport_size"=>"Типовой размер",
+                "properties"=>"Особенности",
             ];
 
             //Данные без изменений
@@ -839,33 +970,43 @@ class Request extends DataBaseRequests
                 if(!isset($list_data[$i]))
                 {continue;}
 
-                /*
-
-                //Органичение высоты
-                if($list_data[$i]["height_not_limited"]=='1')
-                {$list_data[$i]["height"]="Не ограничена";}
-
                 //Размер
-                if($list_data[$i]["size"]=='C')
-                {$list_data[$i]["size"]="Грузовой";}
-                if($list_data[$i]["size"]=='CE')
-                {$list_data[$i]["size"]="Грузовой с прицепом";}
-                if($list_data[$i]["size"]=='C1')
-                {$list_data[$i]["size"]="Малый грузовой";}
-                if($list_data[$i]["size"]=='B')
-                {$list_data[$i]["size"]="Легковой";}
+                if($list_data[$i]["transport_size"]=='light_cargo')
+                {$list_data[$i]["transport_size"]="Грузовой малый";}
+                if($list_data[$i]["transport_size"]=='medium_cargo')
+                {$list_data[$i]["transport_size"]="Грузовой средний";}
+                if($list_data[$i]["transport_size"]=='light_vehicle')
+                {$list_data[$i]["transport_size"]="Легковой";}
+                if($list_data[$i]["transport_size"]=='euro_truck')
+                {$list_data[$i]["transport_size"]="Еврофура";}
+                if($list_data[$i]["transport_size"]=='hood_truck')
+                {$list_data[$i]["transport_size"]="Капотник";}
+                if($list_data[$i]["transport_size"]=='trailer_truck')
+                {$list_data[$i]["transport_size"]="Сцепка";}
 
-                //Данные бронирования
-                $list_data[$i]["rent"]=[];
+                //Особенности
+                $properties_array=explode(" ",$list_data[$i]["properties"]);
+                $list_data[$i]["properties"]="";
+                if(count($properties_array)>1)
+                {
+                    for($j=0;$j<count($properties_array);$j++)
+                    {
+                        if($properties_array[$j]=="refrigerator")
+                        {
+                            $list_data[$i]["properties"]=$list_data[$i]["properties"]."Рефрежиратор; ";
+                        }
 
-                $list_data[$i]["rent"]["content"]="";
+                        if($properties_array[$j]=="oversized")
+                        {
+                            $list_data[$i]["properties"]=$list_data[$i]["properties"]."Негабарит; ";
+                        }
 
-                $list_data[$i]["rent"]["additional_info"]["link_button"]["text"]="Интервалы бронирования";
-                $list_data[$i]["rent"]["additional_info"]["link_button"]["action"]="show_modal_window";
-                $list_data[$i]["rent"]["additional_info"]["link_button"]["action_info"]["item_id"]=$list_data[$i]["parking_place_id"];
-                $list_data[$i]["rent"]["additional_info"]["link_button"]["action_info"]["block_id"]="parking_place_intervals_form";
-
-                */
+                        if($properties_array[$j]=="electrocar")
+                        {
+                            $list_data[$i]["properties"]=$list_data[$i]["properties"]."Электромобиль; ";
+                        }
+                    }
+                }
             }
         }
 

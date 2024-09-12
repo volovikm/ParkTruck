@@ -4,8 +4,8 @@
                 //Соединение с базой данных
                 public function connectDataBase() 
                 {
-                        $db = new PDO('mysql:host=prk4440820.mysql;dbname=prk4440820_base', 'prk4440820_adm', 'kQp3JiE/');
-                        //$db = new PDO('mysql:host=127.0.0.1;dbname=prk4440820_base', 'root', '');
+                        //$db = new PDO('mysql:host=prk4440820.mysql;dbname=prk4440820_base', 'prk4440820_adm', 'kQp3JiE/');
+                        $db = new PDO('mysql:host=127.0.0.1;dbname=prk4440820_base', 'root', '');
                         return($db);
                 }
 
@@ -706,6 +706,116 @@
                                 $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         }catch (PDOException $e) {}
                         return($array);
+                }
+
+                public function addNewTransportRequest($transport_data,$user_data)
+                {
+                        $db=$this->connectDataBase();
+
+                        try {
+                                $sql = "INSERT INTO transport (
+                                user_id,
+                                transport_number, 
+                                transport_name,
+                                transport_size,
+                                properties
+                                ) VALUES (
+                                :user_id,
+                                :transport_number, 
+                                :transport_name,
+                                :transport_size,
+                                :properties
+                                )";
+                                $stmt=$db->prepare($sql);
+
+                                $stmt->bindValue(":user_id", $user_data['id']);
+                                $stmt->bindValue(":transport_number", $transport_data['transport_number']);
+                                $stmt->bindValue(":transport_name", $transport_data['transport_name']);
+                                $stmt->bindValue(":transport_size", $transport_data['transport_size']);
+                                $stmt->bindValue(":properties", $transport_data['properties']);
+
+                                $affectedRowsNumber=$stmt->execute();
+                                if($affectedRowsNumber > 0 ){
+                                        return(true);
+                                }
+                                return(false);
+                        }catch (PDOException $e) {}
+                }
+
+                public function getTransportDataByIdRequest($user_data,$transport_id)
+                {
+                        $db=$this->connectDataBase();
+
+                        $array=false;
+                        try 
+                        {
+                                $sql="SELECT * FROM `transport` 
+                                WHERE
+                                (id = :transport_id AND
+                                user_id=:user_id)";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":transport_id", $transport_id);
+                                $stmt->bindValue(":user_id", $user_data["id"]);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        }catch (PDOException $e) {}
+                        return($array);
+                }
+
+                public function editTransportRequest($transport_data,$user_data)
+                {
+                        $db=$this->connectDataBase();
+
+                        try 
+                        {
+                                $sql = "UPDATE transport SET
+                                
+                                transport_number=:transport_number,
+                                transport_name=:transport_name,
+                                transport_size=:transport_size,
+                                properties=:properties
+
+                                WHERE 
+                                id=:transport_id AND
+                                user_id=:user_id";
+                                $stmt = $db->prepare($sql);
+
+                                $stmt->bindValue(":transport_number", $transport_data["transport_number"]);
+                                $stmt->bindValue(":transport_name", $transport_data["transport_name"]);
+                                $stmt->bindValue(":transport_size", $transport_data["transport_size"]);
+                                $stmt->bindValue(":properties", $transport_data["properties"]);
+
+                                $stmt->bindValue(":transport_id", $transport_data["transport_id"]);
+                                $stmt->bindValue(":user_id", $user_data["id"]);
+
+                                $stmt->execute();
+                                $affectedRowsNumber=$stmt->execute(); 
+                                if($affectedRowsNumber > 0 ){
+                                        return(true);
+                                }
+                        }catch (PDOException $e) {}
+                        return(false);
+                }
+
+                public function deleteTransportRequest($transport_data,$user_data)
+                {
+                        $db=$this->connectDataBase();
+
+                        try {
+                                $sql = "DELETE FROM transport WHERE 
+                                id = :transport_id AND
+                                user_id=:user_id";
+                                $stmt=$db->prepare($sql);
+
+                                $stmt->bindValue(":transport_id", $transport_data["transport_id"]);
+                                $stmt->bindValue(":user_id", $user_data["id"]);
+
+                                $affectedRowsNumber=$stmt->execute();
+                                if($affectedRowsNumber > 0 ){
+                                        return(true);
+                                }
+                                return(false);
+                        }catch (PDOException $e) {}
                 }
 
 
