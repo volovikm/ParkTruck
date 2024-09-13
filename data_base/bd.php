@@ -292,7 +292,8 @@
                                 longitude,
                                 adress,
                                 user_id,
-                                draft
+                                draft,
+                                properties
                                 ) VALUES (
                                 :parking_id,
                                 :name, 
@@ -300,7 +301,8 @@
                                 :longitude,
                                 :adress,
                                 :user_id,
-                                :draft
+                                :draft,
+                                :properties
                                 )";
                                 $stmt=$db->prepare($sql);
                                 $stmt->bindValue(":parking_id", $parking_data['parking_id']);
@@ -309,7 +311,8 @@
                                 $stmt->bindValue(":longitude", $parking_data['longitude']);
                                 $stmt->bindValue(":adress", $parking_data['adress']);
                                 $stmt->bindValue(":user_id", $parking_data['user_id']);
-                                $stmt->bindValue(":draft", $parking_data['draft']);
+                                $stmt->bindValue(":draft", $parking_data['draft']); 
+                                $stmt->bindValue(":properties", $parking_data['properties']);
                                 $affectedRowsNumber=$stmt->execute();
                                 if($affectedRowsNumber > 0 ){
                                         return(true);
@@ -351,13 +354,15 @@
                         try 
                         {
                                 $sql = "UPDATE parkings SET
-                                name=:name
+                                name=:name,
+                                properties=:properties
                                 WHERE 
                                 parking_id=:parking_id AND 
                                 user_id=:user_id";
                                 $stmt = $db->prepare($sql);
                                 $stmt->bindValue(":name", $parking_data['name']);
                                 $stmt->bindValue(":parking_id", $parking_data['parking_id']);
+                                $stmt->bindValue(":properties", $parking_data['properties']);
                                 $stmt->bindValue(":user_id", $user_id);
                                 $stmt->execute();
                                 $array = $stmt->fetchAll(PDO::FETCH_ASSOC);

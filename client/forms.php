@@ -209,6 +209,25 @@ class Form extends Input
         $coordinates_display='';
         $buttons='';
 
+        //Особенности парковки
+        $properties_images="";
+        $parking_properties=file_get_contents("../documents/parking_properties.json");
+        $parking_properties=json_decode($parking_properties,true);
+        $properties_array=explode(" ",$form_data['properties']);
+        foreach($properties_array as $key=>$value)
+        {   
+            if($value!="")
+            {
+                $properties_images=$properties_images."<img class='properties_image' src='../images/".$value.".svg'>";
+            }
+        }
+
+        $properties_display='
+            <span class="info_note_header_value">Особенности: </span> 
+            <span>'.$properties_images.'</span>
+        ';
+        
+
         $parking_place_form="";
         $parking_place_rent_form="";
         $parking_place_intervals_form="";
@@ -384,6 +403,17 @@ class Form extends Input
             </div> 
             ';
 
+            //Поле ввода особенностей
+            $properties_display='<span class="info_note_header_value">Особенности: </span> ';
+            foreach($parking_properties as $key => $value)
+            {
+                $checkbox=$this->checkBox($key);
+                $properties_display=$properties_display.'
+                <div>
+                '.$checkbox.'<label>'.$value.'</label>
+                </div>';
+            }
+
             //Форма ввода данных парковочного места
             $form_data["action"]="create_new";
             $parking_place_form=$this->parkingPlacesForm($form_data);
@@ -408,6 +438,27 @@ class Form extends Input
             <div class="info_note_header_value">Название парковки: </div> 
             <div>'.$name_input.' </div> 
             ';
+
+            //Поле ввода особенностей
+            $properties_array=explode(" ",$form_data['properties']);
+            $properties_display='<span class="info_note_header_value">Особенности: </span> ';
+            foreach($parking_properties as $key => $value) //Все особенности из списка
+            {
+                $checked=false;
+                foreach($properties_array as $key1 => $value1) //Особенности данного места из базы
+                {
+                    if($value1==$key)
+                    {
+                        $checked=true;
+                    }
+                }
+
+                $checkbox=$this->checkBox($key,$checked);
+                $properties_display=$properties_display.'
+                <div>
+                '.$checkbox.'<label>'.$value.'</label>
+                </div>';
+            }
 
             //Форма ввода данных парковочного места
             $parking_place_form=$this->parkingPlacesForm($form_data);
@@ -458,6 +509,10 @@ class Form extends Input
 
                     <div class="info_note_div">
                         '.$name_display.'
+                    </div>  
+
+                    <div class="info_note_div">
+                        '.$properties_display.'
                     </div>  
 
                 </div>

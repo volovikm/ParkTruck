@@ -180,6 +180,7 @@ function parkingCardFormHandler(action,draft=false,parking_id=false)
     let latitude="";
     let longitude="";
     let adress="";
+    let properties="";
     let parking_places="";
 
     //Сбор данных input, select
@@ -210,6 +211,12 @@ function parkingCardFormHandler(action,draft=false,parking_id=false)
         if(input.id=="adress")
         {
             adress=input.value;
+        }
+
+        //Поля ввода особенностей
+        if(input.getAttribute("type")=="checkbox" && input.checked)
+        {
+            properties=properties+input.getAttribute("id")+" ";
         }
     }
 
@@ -280,6 +287,7 @@ function parkingCardFormHandler(action,draft=false,parking_id=false)
         longitude: longitude,
         adress: adress,
         draft: draft,
+        properties: properties,
         parking_places: parking_places
     };
     var data_json = JSON.stringify(data);

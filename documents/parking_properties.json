@@ -1,0 +1,17 @@
+{
+    "refregirator": "Стоянка для рефрежираторов",
+    "oversized": "Вмещает негабаритные ТС",
+    "electrocar": "Зарядка для электромобилей",
+    "security": "Круглосуточная охрана",
+    "private_territory": "Закрытая территория",
+    "cafe": "Кафе",
+    "shower": "Душ",
+    "laundry": "Прачечная",
+    "gas_station": "АЗС",
+    "gas_metan_station": "АГЗС",
+    "toilet": "Туалет",
+    "Motel": "Мотель",
+    "tire_service": "Шиномонтаж",
+    "overpass": "Эстакада",
+    "car_wash": "Мойка"
+  }
