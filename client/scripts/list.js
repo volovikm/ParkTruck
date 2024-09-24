@@ -95,7 +95,6 @@ function listDisplay(list_array)
         var value="";
         var additional_info="";
         var value_style="";
-        var block_choice=false;
         for(let i=0; i<list_array.length; i++)
         {
             //list_array[i][key] - значение каждой ячейки списка
@@ -157,6 +156,11 @@ function listDisplay(list_array)
                     if(additional_info["link_button"]["action"]=="show_modal_window") //Открытие модального окна по кнопке
                     {
                         link_button.setAttribute("onclick","showModalWindowFromList('"+additional_info["link_button"]["action_info"]["block_id"]+"','"+additional_info["link_button"]["action_info"]["item_id"]+"')");
+                    }
+
+                    if(additional_info["link_button"]["action"]=="redirect") //Переход на другую страницу по кнопке
+                    {
+                        link_button.setAttribute("onclick","location.href='"+additional_info["link_button"]["action_info"]["link"]+"'");
                     }
                     
                     column_block.append(link_button);

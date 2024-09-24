@@ -921,6 +921,58 @@ class Request extends DataBaseRequests
         $list_type=$request_content['list_type'];
         $list_info=$request_content['list_info'];
 
+        //Список парковок
+        if($list_type=="parkings")
+        {
+            require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
+            $account = new Account();
+
+            $user_data=$account->checkAuth();
+            $role=$account->getRole($user_data);
+
+            $list_data=[];
+            if($role=="parking_owner")
+            {
+                $parkings_data=$this->userParkingsDataRequest($user_data["id"]);
+                $list_data=$parkings_data;
+            }
+            if($role=="admin")
+            {
+                
+            }
+            
+            $list_clear_data=$list_data;
+
+            //Разделы заголовка
+            $list_data["header"]=[
+                "link"=>"",
+                "draft"=>"",
+                "name"=>"Название парковки",
+                "adress"=>"Адрес"
+            ];
+
+            //Данные без изменений
+            $list_data["clear_data"]=$list_clear_data;
+
+            //Подготовка данных для вывода
+            for($i=0;$i<count($list_data);$i++)
+            {
+                if(!isset($list_data[$i]))
+                {continue;}
+
+                $list_data[$i]["link"]["content"]="";
+
+                $list_data[$i]["link"]["additional_info"]["link_button"]["text"]="Открыть парковку";
+                $list_data[$i]["link"]["additional_info"]["link_button"]["action"]="redirect";
+                $list_data[$i]["link"]["additional_info"]["link_button"]["action_info"]["link"]="parking_card.php?parking_id=".$list_data[$i]["parking_id"];
+
+                if($list_data[$i]["draft"]=="1")
+                {$list_data[$i]["draft"]="Черновик";}
+                if($list_data[$i]["draft"]=="0")
+                {$list_data[$i]["draft"]="";}
+            }
+        }
+
         //Список парковочных мест
         if($list_type=="parking_places")
         {

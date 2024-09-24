@@ -13,7 +13,7 @@ $redirect = new Redirect();
 
 //Проверка пользователя
 $user_data=$account->complexUserCheck();
-$view_page_allowed=$account->allowActionByRole($user_data,["driver","parking_owner","admin"]);
+$view_page_allowed=$account->allowActionByRole($user_data,["parking_owner"]);
 if(!$view_page_allowed)
 {$redirect->redirectTo($redirect->index);}
 
@@ -21,9 +21,9 @@ if(!$view_page_allowed)
 $header->user_data = $user_data;
 $header=$header->displayHeader();
 
-//Форма списка бронирований
+//Форма списка парковок
 $form_data=$user_data;
-$form=$form->rentForm($form_data);
+$form=$form->userParkingsForm($form_data);
 ?>
 <html>
     <head>
@@ -32,9 +32,9 @@ $form=$form->rentForm($form_data);
         <script src="scripts/main.js"></script>
         <script src="scripts/moment.js"></script>
         
-        <script src="scripts/rent.js"></script>
+        <script src="scripts/parkings.js"></script>
 
-        <link rel="stylesheet" href="styles/rent.css">
+        <link rel="stylesheet" href="styles/parkings.css">
         <link rel="stylesheet" href="styles/main.css">
     </head>
 
