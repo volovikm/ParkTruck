@@ -36,7 +36,7 @@ class Header extends Account
             {
                 $menu_list=$menu_list.'
                 <div><a href="transport.php" class="menu-item">Транспортные средства</a><div>
-                <div><a href="" class="menu-item">Бронирования</a><div>
+                <div><a href="rent.php" class="menu-item">Бронирования</a><div>
                 ';
             }
             

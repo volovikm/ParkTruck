@@ -354,9 +354,9 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
     let error_message=document.getElementById("error_message_parking_place");
 
     //Проверка пустой формы
-    if(price_days==="" && price_hours==="")
+    if(price_days==="" || price_hours==="")
     {
-        error_message.innerHTML="Заполните хотя бы один тариф";
+        error_message.innerHTML="Заполните значения тарифов";
         return(false);
     }
 

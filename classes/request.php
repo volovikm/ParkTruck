@@ -665,6 +665,13 @@ class Request extends DataBaseRequests
             $rent_data["transport_number"]=$transport_data["transport_number"];
         }
 
+        //Определение id водителя
+        $rent_data["user_id"]="0";
+        if($role!="unauthorized")
+        {
+            $rent_data["user_id"]=$user_data["id"];
+        }
+
         $response=$this->rentParkingPlaceRequest($user_data,$rent_data);
         if(!$response)
         {
@@ -746,26 +753,39 @@ class Request extends DataBaseRequests
         $user_data=$account->checkAuth();
         $role=$account->getRole($user_data);
 
-        $rent_id=$request_content["rent_id"];  
-
-        $rent_data=($this->getRentDataById($rent_id))[0];
-        $parking_place_data=($this->getParkingPlaceDataByIdRequest($rent_data["parking_place_id"]))[0];
-        $parking_data=($this->parkingCardDataRequest($parking_place_data["parking_id"]))[0];
-
-        //Проверка прав
-        $edit_rights=$rights->editParkingRights($parking_data,$user_data,$role);
-        if(!$edit_rights)
+        $rent_id_string=$request_content["rent_id"];  
+        $rent_id_array=explode("_",$rent_id_string);
+        for($i=0;$i<count($rent_id_array);$i++)
         {
-            $response='{"response":"request_error"}';
-            return($response);
-        }
+            $rent_id=$rent_id_array[$i];
+            if($rent_id==""){continue;}
 
-        //Отмена бронирования
-        $response=$this->stopRentRequest($rent_id,$user_data);
-        if(!$response)
-        {
-            $response='{"response":"request_error"}';
-            return($response);
+            $rent_data=($this->getRentDataById($rent_id))[0];
+            $parking_place_data=($this->getParkingPlaceDataByIdRequest($rent_data["parking_place_id"]))[0];
+            $parking_data=($this->parkingCardDataRequest($parking_place_data["parking_id"]))[0];
+
+            //Проверка прав
+            $edit_rights=$rights->editParkingRights($parking_data,$user_data,$role);
+            if(!$edit_rights && $role=="parking_owner")
+            {
+                $response='{"response":"request_error"}';
+                return($response);
+            }
+
+            $cancel_rent_rights=$rights->cancelRentRights($user_data,$rent_data,$parking_data);;
+            if(!$cancel_rent_rights)
+            {
+                $response='{"response":"request_error"}';
+                return($response);
+            }
+
+            //Отмена бронирования
+            $response=$this->stopRentRequest($rent_id,$user_data);
+            if(!$response)
+            {
+                $response='{"response":"request_error"}';
+                return($response);
+            }
         }
 
         //Успешная отмена бронирования
@@ -1021,10 +1041,83 @@ class Request extends DataBaseRequests
             }
         }
 
+        //Список бронирований
+        if($list_type=="rent")
+        {
+            require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
+            $account = new Account();
+
+            require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/date_conversion.php");
+            $date_conversion = new DateConversion();
+
+            $user_data=$account->checkAuth();
+            $list_data=$this->getRentDataByUserId($user_data);
+            $list_clear_data=$list_data;
+
+            //Разделы заголовка
+            $list_data["header"]=[
+                "choice_checkbox"=>"",
+                "rent_number"=>"Номер бронирования",
+                "transport_number"=>"Госномер ТС",
+                "start_datetime"=>"Начало",
+                "end_datetime"=>"Конец",
+                "status"=>"Статус",
+                "parking_adress"=>"Адрес парковки",
+            ];
+
+            //Данные без изменений
+            $list_data["clear_data"]=$list_clear_data;
+
+            //Подготовка данных для вывода
+            for($i=0;$i<count($list_data);$i++)
+            {
+                if(!isset($list_data[$i]))
+                {continue;}
+
+                //Адрес парковки
+                $parking_place_data=($this->getParkingPlaceDataByIdRequest(id: $list_data[$i]["parking_place_id"]))[0];
+                $parking_data=($this->parkingCardDataRequest($parking_place_data["parking_id"]))[0];
+                $list_data[$i]["parking_adress"]=$parking_data["adress"];
+
+                //Начало бронирования
+                $list_data[$i]["start_datetime"]=($date_conversion->convertDate($list_data[$i]["rent_start_date"]))." ".$list_data[$i]["rent_start_time"];
+            
+                //Конец бронирования
+                $list_data[$i]["end_datetime"]=($date_conversion->convertDate($list_data[$i]["rent_end_date"]))." ".$list_data[$i]["rent_end_time"];
+
+                //Статус
+                if($list_data[$i]["active"]=="1")
+                {
+                    $list_data[$i]["status"]="Активно";
+                }
+                if($list_data[$i]["canceled"]=="1")
+                {
+                    $list_data[$i]["status"]="Отмена ";
+
+                    $canceled_by_id=$list_data[$i]["canceled_by"];
+                    $canceled_by_data=$this->findUserById($canceled_by_id);
+                    if($canceled_by_data["role"]=="driver")
+                    {
+                        $list_data[$i]["status"]=$list_data[$i]["status"]."пользователем";
+                    }
+                    if($canceled_by_data["role"]=="parking_owner")
+                    {
+                        $list_data[$i]["status"]=$list_data[$i]["status"]."администрацией парковки";
+                    }
+                }
+                
+            }
+        }
+
         $response=$list_data;
 
         return($response);
     }
 }
+
+/*
+Перенести путевку на github
+Сделать тестовую лицензию на путевке
+*/
 
 ?>

@@ -1039,6 +1039,91 @@ class Form extends Input
         return($form);
     }
 
+    //Форма списка бронирований
+    public function rentForm($form_data)
+    {
+        $buttons="";
+
+        $button_scripts="";
+
+        //Кнопка отменить бронирование
+        $cancel_rent_button='
+        <div class="sidebar_button_div">
+            <button id="cancel_rent_button" class="disabled_button sidebar_button" type="button">Отменить бронирование</button>
+        </div>
+        ';
+        $button_scripts=$button_scripts.'<script>enableListButtons(`cancel_rent_button`,`secondary_button`,Infinity)</script>';
+
+        //Кнопка выйти
+        $exit_button='
+        <div class="sidebar_button_div">
+            <button id="cancel_button" class="secondary_button sidebar_button" type="button">На главную</button>
+        </div>
+        ';
+
+        $buttons=$buttons.$cancel_rent_button;
+        $buttons=$buttons.$exit_button;
+
+        $form='
+
+        <form id="rent_form" class="rent_form">
+
+            <div class="sidebar">
+
+                <div class="error_message_div">
+                    <div id="error_message" class="error_message">
+
+                    </div>
+                </div>
+
+                <div class="buttons_block">
+                    '.$buttons.'
+                </div>
+
+            </div>
+
+            <div class="main_space">
+
+                <div class="info_note_main_header_div">
+                    Бронирования
+                </div>
+
+                <div class="list_filter_div">
+
+                </div>
+
+                <div id="list_container" class="list">
+
+                    <div id="list_rows" class="list_rows">
+                    </div>
+
+                    <div id="list_content" class="list_content">
+                    </div>
+
+                    <div class="list_row_1 list_row"></div>
+                    <div id="list_row_pattern_1" class="list_row_1 list_row list_row_pattern"></div>
+                    <div id="list_row_pattern_2" class="list_row_2 list_row list_row_pattern"></div>
+                    <input id="choice_checkbox_pattern" class="choice_checkbox choice_checkbox_pattern" type="checkbox">
+                    <input id="choice_input" class="choice_input">
+                    
+                </div>
+                
+            </div>\
+
+            <script src="scripts/list.js"></script>
+            <script>listRequest("rent","'.$form_data['id'].'");</script>
+
+            '.$button_scripts.'
+
+            <script src="scripts/forms.js"></script>
+
+            <script src="scripts/rent.js"></script>
+
+        </form>';
+
+        return($form);
+    }
+
 }
 
 ?>

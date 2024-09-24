@@ -520,6 +520,7 @@
                                 result_price,
                                 transport_id,
                                 transport_number,
+                                user_id,
                                 active
                                 ) VALUES (
                                 :rent_number, 
@@ -532,6 +533,7 @@
                                 :result_price,
                                 :transport_id,
                                 :transport_number,
+                                :user_id,
                                 :active
                                 )";
                                 $stmt=$db->prepare($sql);
@@ -545,6 +547,7 @@
                                 $stmt->bindValue(":result_price", $rent_data['result_price']);
                                 $stmt->bindValue(":transport_id", $rent_data['transport_id']);
                                 $stmt->bindValue(":transport_number", $rent_data['transport_number']);
+                                $stmt->bindValue(":user_id", $rent_data['user_id']);
                                 $stmt->bindValue(":active", '1');
                                 $affectedRowsNumber=$stmt->execute();
                                 if($affectedRowsNumber > 0 ){
@@ -657,6 +660,24 @@
                         return($array);
                 }
 
+                public function getRentDataByUserId($user_data) //Запрос на получение данных бронирования по id пользователя
+                {
+                        $db=$this->connectDataBase();
+
+                        $array=false;
+                        try 
+                        {
+                                $sql="SELECT * FROM `rent` 
+                                WHERE
+                                user_id = :user_id";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":user_id", $user_data["id"]);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        }catch (PDOException $e) {}
+                        return($array);
+                }
+
                 public function stopRentRequest($rent_id,$user_data) //Запрос на отмену бронирования владельцем парковки
                 {
                         $db=$this->connectDataBase();
@@ -668,7 +689,7 @@
                                 canceled='1',
                                 canceled_by= :user_id
                                 WHERE 
-                                rent_id=:rent_id";
+                                (rent_id=:rent_id OR id=:rent_id)";
                                 $stmt = $db->prepare($sql);
                                 $stmt->bindValue(":rent_id", $rent_id);
                                 $stmt->bindValue(":user_id", $user_data["id"]);
