@@ -39,6 +39,23 @@ class Header extends Account
                 <div><a href="rent.php" class="menu-item">Бронирования</a><div>
                 ';
             }
+
+            if(($this->role) =="parking_owner")
+            {
+                $menu_list=$menu_list.'
+                <div><a href="rent.php" class="menu-item">Бронирования</a><div>
+                <div><a href="parkings.php" class="menu-item">Мои парковки</a><div>
+                ';
+            }
+
+            if(($this->role) =="admin")
+            {
+                $menu_list=$menu_list.'
+                <div><a href="users.php" class="menu-item">Пользователи</a><div>
+                <div><a href="parkings.php" class="menu-item">Парковки</a><div>
+                <div><a href="rent.php" class="menu-item">Бронирования</a><div>
+                ';
+            }
             
         }
         else

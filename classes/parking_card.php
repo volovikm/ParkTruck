@@ -75,6 +75,7 @@ class ParkingCard extends DataBaseRequests
         $form_data['adress']="";
         $form_data['user_id']="";
         $form_data['draft']="0";
+        $form_data['properties']="0";
 
         $form_data['action']="create_new";
 

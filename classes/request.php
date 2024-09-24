@@ -1051,7 +1051,26 @@ class Request extends DataBaseRequests
             $date_conversion = new DateConversion();
 
             $user_data=$account->checkAuth();
-            $list_data=$this->getRentDataByUserId($user_data);
+            $role=$account->getRole($user_data);
+
+            $list_data=[];
+            if($role=="parking_owner")
+            {
+                $parkings_data=$this->userParkingsDataRequest($user_data["id"]);
+                for($i=0;$i<count($parkings_data);$i++)
+                {
+                    $list_data=array_merge($list_data,$this->getRentDataByParkingId($parkings_data[$i]));
+                }
+            }
+            if($role=="driver")
+            {
+                $list_data=$this->getRentDataByUserId($user_data);
+            }
+            if($role=="admin")
+            {
+                
+            }
+            
             $list_clear_data=$list_data;
 
             //Разделы заголовка
@@ -1090,6 +1109,10 @@ class Request extends DataBaseRequests
                 {
                     $list_data[$i]["status"]="Активно";
                 }
+                if($list_data[$i]["active"]=="0" && $list_data[$i]["canceled"]=="0")
+                {
+                    $list_data[$i]["status"]="Завершено";
+                }
                 if($list_data[$i]["canceled"]=="1")
                 {
                     $list_data[$i]["status"]="Отмена ";
@@ -1105,7 +1128,6 @@ class Request extends DataBaseRequests
                         $list_data[$i]["status"]=$list_data[$i]["status"]."администрацией парковки";
                     }
                 }
-                
             }
         }
 

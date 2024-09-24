@@ -204,22 +204,6 @@
                         return($array);
                 }
 
-                //Запрос данных всех активных парковок LEGACY
-                public function allActiveParkingsDataRequest() 
-                {
-                        $db=$this->connectDataBase();
-
-                        $array=false;
-                        try 
-                        {
-                                $sql="SELECT * FROM `parkings` WHERE draft='0'";
-                                $stmt = $db->prepare($sql);
-                                $stmt->execute();
-                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                        }catch (PDOException $e) {}
-                        return($array);
-                }
-
                 //Запрос данных парковок пользователя
                 public function userParkingsDataRequest($user_id) 
                 {
@@ -512,6 +496,7 @@
                                 $sql = "INSERT INTO rent (
                                 rent_number, 
                                 rent_id,
+                                parking_id,
                                 parking_place_id,
                                 rent_start_date,
                                 rent_start_time,
@@ -525,6 +510,7 @@
                                 ) VALUES (
                                 :rent_number, 
                                 :rent_id,
+                                :parking_id,
                                 :parking_place_id,
                                 :rent_start_date,
                                 :rent_start_time,
@@ -539,6 +525,7 @@
                                 $stmt=$db->prepare($sql);
                                 $stmt->bindValue(":rent_number", $rent_data['rent_number']);
                                 $stmt->bindValue(":rent_id", $rent_data['rent_id']);
+                                $stmt->bindValue(":parking_id", $rent_data['parking_id']);
                                 $stmt->bindValue(":parking_place_id", $rent_data['parking_place_id']);
                                 $stmt->bindValue(":rent_start_date", $rent_data['date_start']);
                                 $stmt->bindValue(":rent_start_time", $rent_data['time_start']);
@@ -672,6 +659,25 @@
                                 user_id = :user_id";
                                 $stmt = $db->prepare($sql);
                                 $stmt->bindValue(":user_id", $user_data["id"]);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        }catch (PDOException $e) {}
+                        return($array);
+                }
+
+                public function getRentDataByParkingId($parking_data) //Запрос на получение данных бронирования по id парковки
+                {
+                        $db=$this->connectDataBase();
+
+                        $array=false;
+                        try 
+                        {
+                                $sql="SELECT * FROM `rent` 
+                                WHERE
+                                (parking_id = :parking_id OR parking_id=:id)";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":parking_id", $parking_data["parking_id"]);
+                                $stmt->bindValue(":id", $parking_data["id"]);
                                 $stmt->execute();
                                 $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         }catch (PDOException $e) {}
