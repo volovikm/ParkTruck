@@ -10,6 +10,11 @@ class Rights extends DataBaseRequests
         //Проверки прав
         $rights=false;
 
+        if($role=="admin")
+        {
+            $rights=true;
+        }
+
         if($role=="driver" || $role=="unauthorized")
         {
 

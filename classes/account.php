@@ -102,6 +102,10 @@ class Account extends Session
         {
             $role_text="Владелец парковки";
         }
+        if($role=="admin")
+        {
+            $role_text="Администратор";
+        }
 
         return($role_text);
     }

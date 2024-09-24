@@ -22,18 +22,21 @@
                                 telephone, 
                                 role,
                                 password_hash,
-                                reg_confirm_code
+                                reg_confirm_code,
+                                reg_confirmed
                                 ) VALUES (
                                 :telephone, 
                                 :role,
                                 :password_hash,
-                                :reg_confirm_code
+                                :reg_confirm_code,
+                                :reg_confirmed
                                 )";
                                 $stmt=$db->prepare($sql);
                                 $stmt->bindValue(":telephone", $reg_data['telephone']);
                                 $stmt->bindValue(":role", $reg_data['role']);
                                 $stmt->bindValue(":password_hash", $reg_data['password_hash']);
                                 $stmt->bindValue(":reg_confirm_code", $reg_data['reg_confirm_code']);
+                                $stmt->bindValue(":reg_confirmed", $reg_data['reg_confirmed']);
                                 $affectedRowsNumber=$stmt->execute();
                                 if($affectedRowsNumber > 0 ){
                                         return(true);

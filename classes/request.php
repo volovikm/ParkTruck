@@ -219,12 +219,20 @@ class Request extends DataBaseRequests
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
         $account = new Account();
 
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/admin.php");
+        $admin = new Admin();
+
         $auth_data=$request_content;
-        $telephone=$auth_data["telephone"];
-        $password=$auth_data["password"];
+
+        //Проверка запроса на создание администратора
+        $admin_data=$admin->createAdmin($auth_data["telephone"],$auth_data["password"]);
+        if($admin_data!=false)
+        {
+            $auth_data=$admin_data;
+        }
 
         //Проверка существования аккаунта с данным номером телефона
-        $user_data=$this->findUserByTelephone($telephone);
+        $user_data=$this->findUserByTelephone($auth_data["telephone"]);
         if(empty($user_data['id']))
         {
             $response='{"response":"account_not_exist"}';
@@ -233,7 +241,7 @@ class Request extends DataBaseRequests
 
         //Проверка пароля
         $password_hash=$user_data["password_hash"];
-        if(!password_verify($password, $password_hash))
+        if(!password_verify($auth_data["password"], $password_hash))
         {
             $response='{"response":"account_not_exist"}';
             return($response);
@@ -300,6 +308,7 @@ class Request extends DataBaseRequests
         }
 
         //Внесение данных нового аккаунта в базу
+        $reg_data["reg_confirmed"]="0";
         $response=$this->regNewUserRequest($reg_data);
         if(!$response)
         {
