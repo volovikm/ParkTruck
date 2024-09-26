@@ -13,7 +13,7 @@ $redirect = new Redirect();
 
 //Проверка пользователя
 $user_data=$account->complexUserCheck();
-$view_page_allowed=$account->allowActionByRole($user_data,["parking_owner","admin"]);
+$view_page_allowed=$account->allowActionByRole($user_data,["admin"]);
 if(!$view_page_allowed)
 {$redirect->redirectTo($redirect->index);}
 
@@ -21,9 +21,8 @@ if(!$view_page_allowed)
 $header->user_data = $user_data;
 $header=$header->displayHeader();
 
-//Форма списка парковок
-$form_data=$user_data;
-$form=$form->userParkingsForm($form_data);
+//Форма списка пользователей
+$form=$form->usersForm();
 ?>
 <html>
     <head>
@@ -32,9 +31,9 @@ $form=$form->userParkingsForm($form_data);
         <script src="scripts/main.js"></script>
         <script src="scripts/moment.js"></script>
         
-        <script src="scripts/parkings.js"></script>
+        <script src="scripts/users.js"></script>
 
-        <link rel="stylesheet" href="styles/parkings.css">
+        <link rel="stylesheet" href="styles/users.css">
         <link rel="stylesheet" href="styles/main.css">
     </head>
 

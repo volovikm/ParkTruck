@@ -23,13 +23,19 @@
                                 role,
                                 password_hash,
                                 reg_confirm_code,
-                                reg_confirmed
+                                reg_confirmed,
+                                status,
+                                reg_date,
+                                reg_time
                                 ) VALUES (
                                 :telephone, 
                                 :role,
                                 :password_hash,
                                 :reg_confirm_code,
-                                :reg_confirmed
+                                :reg_confirmed,
+                                :status,
+                                :reg_date,
+                                :reg_time
                                 )";
                                 $stmt=$db->prepare($sql);
                                 $stmt->bindValue(":telephone", $reg_data['telephone']);
@@ -37,6 +43,9 @@
                                 $stmt->bindValue(":password_hash", $reg_data['password_hash']);
                                 $stmt->bindValue(":reg_confirm_code", $reg_data['reg_confirm_code']);
                                 $stmt->bindValue(":reg_confirmed", $reg_data['reg_confirmed']);
+                                $stmt->bindValue(":status", "active");
+                                $stmt->bindValue(":reg_date", $reg_data['reg_date']);
+                                $stmt->bindValue(":reg_time", $reg_data['reg_time']);
                                 $affectedRowsNumber=$stmt->execute();
                                 if($affectedRowsNumber > 0 ){
                                         return(true);
@@ -101,11 +110,9 @@
                         try 
                         {
                                 $sql="SELECT * FROM `users` WHERE 
-                                telephone = :telephone AND
-                                deleted = :deleted";
+                                telephone = :telephone";
                                 $stmt = $db->prepare($sql);
                                 $stmt->bindValue(":telephone", $telephone);
-                                $stmt->bindValue(":deleted", '0');
                                 $stmt->execute();
                                 $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 if(isset($array[0]))
@@ -698,7 +705,8 @@
                                 canceled='1',
                                 canceled_by= :user_id
                                 WHERE 
-                                (rent_id=:rent_id OR id=:rent_id)";
+                                (rent_id=:rent_id OR id=:rent_id) AND
+                                active='1'";
                                 $stmt = $db->prepare($sql);
                                 $stmt->bindValue(":rent_id", $rent_id);
                                 $stmt->bindValue(":user_id", $user_data["id"]);
@@ -709,6 +717,21 @@
                                 }
                         }catch (PDOException $e) {}
                         return(false);
+                }
+
+                public function getAllRentData() //Запрос на получение всех бронирований за всё время
+                {
+                        $db=$this->connectDataBase();
+
+                        $array=false;
+                        try 
+                        {
+                                $sql="SELECT * FROM `rent` ";
+                                $stmt = $db->prepare($sql);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        }catch (PDOException $e) {}
+                        return($array);
                 }
 
 
@@ -839,6 +862,23 @@
                                 }
                                 return(false);
                         }catch (PDOException $e) {}
+                }
+
+
+                //Запосы администратора
+                public function getAllUsersData()
+                {
+                        $db=$this->connectDataBase();
+
+                        $array=false;
+                        try 
+                        {
+                                $sql="SELECT * FROM `users`";
+                                $stmt = $db->prepare($sql);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        }catch (PDOException $e) {}
+                        return($array);
                 }
 
 

@@ -4,6 +4,9 @@ class DateConversion
 {
     public function convertDate($date) 
     {
+        if($date=="")
+        {return($date);}
+
         $base_date_array=preg_split('/-/', $date); 
         $day=$base_date_array[2];
         $month=$base_date_array[1];

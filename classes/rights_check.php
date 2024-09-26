@@ -160,6 +160,11 @@ class Rights extends DataBaseRequests
             $rights=true;
         }
 
+        if($user_data["role"]=="admin")
+        {
+            $rights=true;
+        }
+
         return($rights);
     }
 }

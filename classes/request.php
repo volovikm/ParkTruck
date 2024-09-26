@@ -309,6 +309,8 @@ class Request extends DataBaseRequests
 
         //Внесение данных нового аккаунта в базу
         $reg_data["reg_confirmed"]="0";
+        $reg_data["reg_date"]=date("Y-m-d");
+        $reg_data["reg_time"]=date("H:i");
         $response=$this->regNewUserRequest($reg_data);
         if(!$response)
         {
@@ -947,7 +949,8 @@ class Request extends DataBaseRequests
             }
             if($role=="admin")
             {
-                
+                $parkings_data=$this->allParkingsDataRequest();
+                $list_data=$parkings_data;
             }
             
             $list_clear_data=$list_data;
@@ -1129,7 +1132,7 @@ class Request extends DataBaseRequests
             }
             if($role=="admin")
             {
-                
+                $list_data=$this->getAllRentData();
             }
             
             $list_clear_data=$list_data;
@@ -1188,9 +1191,62 @@ class Request extends DataBaseRequests
                     {
                         $list_data[$i]["status"]=$list_data[$i]["status"]."администрацией парковки";
                     }
+                    if($canceled_by_data["role"]=="admin")
+                    {
+                        $list_data[$i]["status"]=$list_data[$i]["status"]."администратором";
+                    }
                 }
             }
         }
+
+        //Список пользователей
+        if($list_type=="users")
+        {
+            require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
+            $account = new Account();
+
+            require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/date_conversion.php");
+            $date_conversion = new DateConversion();
+
+            $user_data=$account->checkAuth();
+            $role=$account->getRole($user_data);
+
+            $list_data=$this->getAllUsersData();
+
+            //Разделы заголовка
+            $list_data["header"]=[
+                "choice_checkbox"=>"",
+                "telephone"=>"Телефон",
+                "role"=>"Роль",
+                "reg_datetime"=>"Дата регистрации",
+                "status"=>"Статус",
+            ];
+
+            //Подготовка данных для вывода
+            for($i=0;$i<count($list_data);$i++)
+            {
+                if(!isset($list_data[$i]))
+                {continue;}
+
+                //Роль
+                $list_data[$i]["role"]=$account->roleToText($list_data[$i]["role"]);
+
+                //Дата регистрации
+                $list_data[$i]["reg_datetime"]=($date_conversion->convertDate($list_data[$i]["reg_date"]))." ".$list_data[$i]["reg_time"];
+
+                //Хэш пароля
+                $list_data[$i]["password_hash"]="";
+
+                //Статус
+                if($list_data[$i]["status"]=="active")
+                {$list_data[$i]["status"]="Активен";}
+                if($list_data[$i]["status"]=="deleted")
+                {$list_data[$i]["status"]="Удалён";}
+                if($list_data[$i]["status"]=="blocked")
+                {$list_data[$i]["status"]="Заблокирован";}
+            }
+        }
+
 
         $response=$list_data;
 
