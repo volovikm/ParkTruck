@@ -20,6 +20,7 @@
     Метод transportAction - принимает запрос на действия с ТС, и тип действия, запускает соответствующее действие
     Метод getTransportData - принимает запрос на вывод данных конкретного ТС, запускает вывод
     Метод userAdminAction - принимает запрос на действия с аккаунтом пользователя от администратора, запускает соответствующее действие
+    Метод getParkingPreviewData - принимает запрос на вывод данных конкретной парковки для превью
 
     Метод getListData - принимает запрос на вывод данных списка, возвращает массив списка
 */
@@ -113,6 +114,14 @@ class Request extends DataBaseRequests
                 {
                     $response=$this->startRent($request_content);
                 }
+
+                $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
+            }
+
+            //Запрос на вывод данных конкретной парковки
+            if(isset($request_content['get_parking_preview_data']))
+            {
+                $response=$this->getParkingPreviewData($request_content);
 
                 $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
             }
@@ -978,6 +987,20 @@ class Request extends DataBaseRequests
         //Вывод данных
         $response='{
             "response": "user_action_complete"
+        }';
+        return($response);
+    }
+
+    public function getParkingPreviewData($request_content) //Метод вывода данных конкретной парковки для превью
+    {
+        $parking_data=$this->parkingCardDataRequest($request_content["parking_id"]);
+
+        //Вывод данных интервалов
+        $response='{
+            "response": "parking_preview_data_complete",
+            "response_content": {
+                "parking_preview_data": '.json_encode($parking_data).'
+            }
         }';
         return($response);
     }

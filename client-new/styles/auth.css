@@ -1,0 +1,25 @@
+input::placeholder {
+    color: grey;
+    font-size: 16px;
+    font-style: italic;
+  }
+
+.password_restore_link_div{
+    text-align: left;
+}
+
+.auth_button_div{
+    margin-top: 15px;
+}
+
+.support_links_div{
+    margin-top: 15px;
+}
+
+.reg_redirect_link_div{
+    margin-top: 15px;
+}
+
+.error_message_div{
+    margin-bottom: 15px;
+}

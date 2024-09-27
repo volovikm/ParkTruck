@@ -1,0 +1,311 @@
+.main_button {
+    background-color: rgb(23, 99, 191);
+    color: white;
+    border: none;
+    font-size: 16px;
+    border-radius: 10px;
+    opacity: 0.8;
+    cursor: pointer;
+    padding: 14px 20px;
+}
+
+.secondary_button {
+    background-color: white;
+    color: rgb(23, 99, 191);
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid rgb(23, 99, 191);
+    opacity: 0.8;
+    cursor: pointer;
+    padding: 14px 20px;
+}
+
+.disabled_button {
+    background-color: white;
+    color: DarkGray;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid rgb(194, 190, 190);
+    pointer-events: none;
+    padding: 14px 20px;
+}
+
+.link_button {
+    color: rgb(23, 99, 191);
+    background: transparent;
+    border: none;
+    text-decoration: underline;
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.body{
+    background-color: #e6f0f7; 
+}
+
+body{
+    margin: 0;
+    font-family:Arial, Verdana, sans-serif;
+}
+
+.base_form{
+    width: 380px;
+}
+
+.interface_block {
+    background-color: white;
+    color: rgb(23, 99, 191);
+    border-radius: 10px;
+    border: 1px solid rgb(23, 99, 191);
+    padding: 0 0;
+}
+
+.basic_input{
+    border-radius: 10px;
+    border: 1px solid rgb(23, 99, 191);
+    width: 100%;
+    height: 35px;
+    padding-left: 10px;
+    margin: 8px 0;
+    display: inline-block;
+    box-sizing: border-box;
+    text-decoration-color: rgb(23, 99, 191);
+}
+
+.datetime_input{
+    border-radius: 10px;
+    width: 48%;
+    border: 1px solid rgb(23, 99, 191);
+    text-decoration-color: rgb(23, 99, 191);
+    box-sizing: border-box;
+    display: inline-block;
+    height: 35px;
+    padding-left: 10px;
+    margin: 8px 0;
+}
+
+.date_input{
+    border-radius: 10px;
+    width: 100%;
+    border: 1px solid rgb(23, 99, 191);
+    text-decoration-color: rgb(23, 99, 191);
+    box-sizing: border-box;
+    display: inline-block;
+    height: 35px;
+    padding-left: 10px;
+    margin: 8px 0;
+}
+
+.invisible_input{
+    display: none;
+}
+
+.password-control_div{
+    margin-top: 0px;
+    height: 0px;
+}
+
+.password-control {
+    position: relative;
+    top: -35px;
+    right: -110px;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url(../images/eye.png) 0 0 no-repeat;
+    cursor: pointer;
+}
+
+.password-control.view {
+    background: url(../images/no-eye.png) 0 0 no-repeat;
+    cursor: pointer;
+}
+
+.link {
+    color: #002bc7;
+    text-decoration: none;
+}
+
+.error_message{
+    text-align: center;
+    white-space: normal;
+    padding-left: 5px;
+    padding-right: 5px;
+    color: #c41104;
+}
+
+.main_form_div{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    width: fit-content;
+    margin-top: 16px;
+}
+
+.input_form_div{
+    padding: 16px;
+}
+
+.inline_div{
+    display: inline-block;
+    vertical-align: top;
+}
+
+.account_input{
+    background-color: #e6f0f7;
+}
+
+.input_label {
+    color: rgb(23, 99, 191);
+    font-weight: bold;
+}
+
+.label_div{
+    text-align: left;
+}
+
+.form_header{
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.form_header_note{
+    margin-top: 15px;
+}
+
+.list_row{
+    height: 40px;
+    width: 100%;
+}
+
+.list_row_first{
+    margin-top: 40px;
+}
+
+.list_row_1{
+    background-color: #e6f0f7;
+}
+
+.list_row_2{
+    background-color: rgb(255, 255, 255);
+}
+
+.list_row_pattern{
+    display: none;
+}
+
+.list_rows{
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    position: absolute;
+}
+
+.list_content{
+    width: 100%;
+    height: calc(100vh - 170px);
+    z-index: 2;
+    position: absolute;
+    overflow: auto;
+}
+
+.list_column{
+    height: 100%;
+    width: min-content;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.list_column_block{
+    color: rgb(23, 99, 191);
+    background-clip: border-box;
+    height: 30px;
+    padding: 5px;
+    text-align: center;
+}
+
+.list_header_block{
+    height: 30px;
+    width: 100%;
+    color: rgb(23, 99, 191);
+    font-weight: bold;
+    white-space: nowrap;
+    text-align: center;
+    padding: 5px;
+}
+
+.choice_checkbox{
+    height: 25px; 
+    width: 25px; 
+    cursor: pointer;
+}
+
+.choice_checkbox_pattern{
+    display: none;
+}
+
+.choice_input{
+    display: none;
+}
+
+.center_text{
+    text-align: center;
+}
+
+.text_to_left{
+    text-align: left;
+}
+
+.text_positive{
+    color: green;
+}
+
+.text_negative{
+    color: red;
+}
+
+.text_neutral{
+    color: grey;
+}
+
+.modal_window_div{
+    position: absolute;
+    top: 30%;
+    left: 45%;
+    text-align: center;
+    width: 450px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.modal_window_h3{
+    color: rgb(23, 99, 191);
+}
+
+.modal_window_buttons_block{
+    margin-bottom: 10px; 
+}
+
+.modal_window_button{
+    display: inline-block; 
+    vertical-align: top; 
+    height: 40px; 
+    margin-left: 10px; 
+    margin-right: 10px; 
+    margin-top: 10px;
+    width: 45%;
+}
+
+.modal_window_info_div{
+    text-align: left;
+    padding-left: 20px;
+    margin-bottom: 10px; 
+}
+
+.text_wrap{
+    white-space: normal;
+}
+
+.margin_bottom_block{
+    margin-bottom: 15px;
+}

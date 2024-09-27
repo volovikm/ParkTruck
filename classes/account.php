@@ -66,7 +66,7 @@ class Account extends Session
         {
             require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/redirect.php");
             $redirect = new Redirect();
-            $page= "ParkTruck/client/account/reg_confirm.php";
+            $page= "ParkTruck/client-new/account/reg_confirm.php";
             $redirect->redirectTo($page);
         }
 
