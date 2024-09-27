@@ -21,6 +21,8 @@ class Admin extends DataBaseRequests
         $reg_data['password_hash']=password_hash($this->admin_password,PASSWORD_DEFAULT);
         $reg_data['reg_confirm_code']="ADMIN";
         $reg_data['reg_confirmed']="1";
+        $reg_data["reg_date"]=date("Y-m-d");
+        $reg_data["reg_time"]=date("H:i");
 
         //Проверка наличия существующего аккаунта администратора
         $account_check_array=$this->checkExistingAccount($reg_data,true);

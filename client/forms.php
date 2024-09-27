@@ -1227,6 +1227,22 @@ class Form extends Input
 
         $button_scripts="";
 
+        //Кнопка удалить пользователя
+        $delete_user_button='
+        <div class="sidebar_button_div">
+            <button id="delete_user_button" class="disabled_button sidebar_button" type="button">Удалить</button>
+        </div>
+        ';
+        $button_scripts=$button_scripts.'<script>enableListButtons(`delete_user_button`,`secondary_button`,1)</script>';
+
+        //Кнопка заблокировать пользователя
+        $block_user_button='
+        <div class="sidebar_button_div">
+            <button id="block_user_button" class="disabled_button sidebar_button" type="button">Заблокировать/разблокировать</button>
+        </div>
+        ';
+        $button_scripts=$button_scripts.'<script>enableListButtons(`block_user_button`,`secondary_button`,1)</script>';
+
         //Кнопка выйти
         $exit_button='
         <div class="sidebar_button_div">
@@ -1234,6 +1250,8 @@ class Form extends Input
         </div>
         ';
 
+        $buttons=$buttons.$delete_user_button;
+        $buttons=$buttons.$block_user_button;
         $buttons=$buttons.$exit_button;
 
         $form='
@@ -1289,7 +1307,7 @@ class Form extends Input
 
             <script src="scripts/forms.js"></script>
 
-            <script src="scripts/rent.js"></script>
+            <script src="scripts/users.js"></script>
 
         </form>';
 

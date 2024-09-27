@@ -167,5 +167,20 @@ class Rights extends DataBaseRequests
 
         return($rights);
     }
+
+    public function adminRights($user_data,$role)//Проверка прав администратора
+    {
+        //$user_data: array | false
+
+        //Проверки прав
+        $rights=false;
+
+        if($role=="admin")
+        {
+            $rights=true;
+        }
+
+        return($rights);
+    }
 }
 ?>

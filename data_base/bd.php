@@ -124,6 +124,31 @@
                         return(false);
                 }
 
+                //Запрос на авторизацию
+                public function findUserByTelephoneForAuth($telephone) 
+                {
+                        $db=$this->connectDataBase();
+
+                        try 
+                        {
+                                $sql="SELECT * FROM `users` WHERE 
+                                telephone = :telephone AND
+                                status = :status";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":telephone", $telephone);
+                                $stmt->bindValue(":status", "active");
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                if(isset($array[0]))
+                                {
+                                        $array=$array[0];
+                                }
+                                return($array);
+                        }catch (PDOException $e) {}
+                        return(false);
+                }
+
+
                 //Запрос на данные аккаунта по id
                 public function findUserById($user_id) 
                 {
@@ -865,8 +890,8 @@
                 }
 
 
-                //Запосы администратора
-                public function getAllUsersData()
+                //Запросы администратора
+                public function getAllUsersData() //Запрос на получение данных всех пользователей
                 {
                         $db=$this->connectDataBase();
 
@@ -880,6 +905,86 @@
                         }catch (PDOException $e) {}
                         return($array);
                 }
+
+                public function setUserDeletedRequest($user_data) //Запрос на пометку пользователя удалённым
+                {
+                        $db=$this->connectDataBase();
+
+                        try 
+                        {
+                                $sql = "UPDATE users SET
+                                
+                                status=:status
+
+                                WHERE 
+                                id=:user_id";
+                                $stmt = $db->prepare($sql);
+
+                                $stmt->bindValue(":user_id", $user_data["id"]);
+                                $stmt->bindValue(":status", "deleted");
+
+                                $stmt->execute();
+                                $affectedRowsNumber=$stmt->execute(); 
+                                if($affectedRowsNumber > 0 ){
+                                        return(true);
+                                }
+                        }catch (PDOException $e) {}
+                        return(false);
+                }
+
+                public function setUserBlockedRequest($user_data) //Запрос на пометку пользователя заблокированным
+                {
+                        $db=$this->connectDataBase();
+
+                        try 
+                        {
+                                $sql = "UPDATE users SET
+                                
+                                status=:status
+
+                                WHERE 
+                                id=:user_id";
+                                $stmt = $db->prepare($sql);
+
+                                $stmt->bindValue(":user_id", $user_data["id"]);
+                                $stmt->bindValue(":status", "blocked");
+
+                                $stmt->execute();
+                                $affectedRowsNumber=$stmt->execute(); 
+                                if($affectedRowsNumber > 0 ){
+                                        return(true);
+                                }
+                        }catch (PDOException $e) {}
+                        return(false);
+                }
+
+                public function setUserActiveRequest($user_data) //Запрос на пометку пользователя разблокированным
+                {
+                        $db=$this->connectDataBase();
+
+                        try 
+                        {
+                                $sql = "UPDATE users SET
+                                
+                                status=:status
+
+                                WHERE 
+                                id=:user_id";
+                                $stmt = $db->prepare($sql);
+
+                                $stmt->bindValue(":user_id", $user_data["id"]);
+                                $stmt->bindValue(":status", "active");
+
+                                $stmt->execute();
+                                $affectedRowsNumber=$stmt->execute(); 
+                                if($affectedRowsNumber > 0 ){
+                                        return(true);
+                                }
+                        }catch (PDOException $e) {}
+                        return(false);
+                }
+
+
 
 
         }

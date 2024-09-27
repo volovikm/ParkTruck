@@ -18,7 +18,8 @@
     Метод getRentIntervalData - принимает запрос на вывод данных о конкретном интервале бронирования, выводит данные массивом в ответ
     Метод stopRent - принимает запрос на отмену бронирования, запускает отмену
     Метод transportAction - принимает запрос на действия с ТС, и тип действия, запускает соответствующее действие
-    Метод getTransportData - принимаеит запрос на вывод данных конкретного ТС, запускает вывод
+    Метод getTransportData - принимает запрос на вывод данных конкретного ТС, запускает вывод
+    Метод userAdminAction - принимает запрос на действия с аккаунтом пользователя от администратора, запускает соответствующее действие
 
     Метод getListData - принимает запрос на вывод данных списка, возвращает массив списка
 */
@@ -148,10 +149,18 @@ class Request extends DataBaseRequests
                 $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
             }
 
-            //Запрос на вывод данныз конкретного ТС
+            //Запрос на вывод данных конкретного ТС
             if(isset($request_content['get_transport_data']))
             {
                 $response=$this->getTransportData($request_content);
+
+                $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
+            }
+
+            //Запрос на действия с аккаунтом от лица администратора
+            if(isset($request_content['user_action']))
+            {
+                $response=$this->userAdminAction($request_content);
 
                 $this->response_json=json_encode($response, JSON_UNESCAPED_UNICODE);
             }
@@ -232,7 +241,7 @@ class Request extends DataBaseRequests
         }
 
         //Проверка существования аккаунта с данным номером телефона
-        $user_data=$this->findUserByTelephone($auth_data["telephone"]);
+        $user_data=$this->findUserByTelephoneForAuth($auth_data["telephone"]);
         if(empty($user_data['id']))
         {
             $response='{"response":"account_not_exist"}';
@@ -920,6 +929,55 @@ class Request extends DataBaseRequests
             "response_content": {
                 "transport_data": '.json_encode($transport_data).'
             }
+        }';
+        return($response);
+    }
+
+    public function userAdminAction($request_content) //Метод действий с аккаунтом от администратора
+    {
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
+        $account = new Account();
+
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/rights_check.php");
+        $rights = new Rights();
+
+        $user_data=$account->checkAuth();
+        $role=$account->getRole($user_data);
+
+        //Проверка прав на действия с пользователями
+        $action_rights=$rights->adminRights($user_data,$role);
+        if(!$action_rights)
+        {
+            $response='{"response":"request_error"}';
+            return($response);
+        }
+
+        //Выполнение действий
+        $action_type=$request_content["action_type"];
+        $request_content["user_id"]=explode("_",$request_content["user_id"])[1];
+        $required_user_data=$this->findUserById($request_content["user_id"]);
+
+        if($action_type=="delete")
+        {
+            $this->setUserDeletedRequest($required_user_data);
+        }
+
+        if($action_type=="block")
+        {
+            if($required_user_data["status"]=="blocked")
+            {
+                $this->setUserActiveRequest($required_user_data);
+            }
+
+            if($required_user_data["status"]=="active")
+            {
+                $this->setUserBlockedRequest($required_user_data);
+            }
+        }
+
+        //Вывод данных
+        $response='{
+            "response": "user_action_complete"
         }';
         return($response);
     }
