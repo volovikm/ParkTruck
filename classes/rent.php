@@ -112,6 +112,7 @@ class Rent extends DataBaseRequests
             {$rent_allowed=false;}
 
             //Новый интервал равен существующему
+            
             if($rent_start_timestamp==$start_timestamp && $rent_end_timestamp==$end_timestamp)
             {$rent_allowed=false;}
 

@@ -13,5 +13,8 @@
     "Motel": "Мотель",
     "tire_service": "Шиномонтаж",
     "overpass": "Эстакада",
-    "car_wash": "Мойка"
+    "car_wash": "Мойка",
+    "payment_cash": "Оплата наличными",
+    "payment_card": "Оплата по карте",
+    "payment_agreement": "Оплата по договору"
   }

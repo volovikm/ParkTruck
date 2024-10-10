@@ -448,7 +448,7 @@ function parkingPlaceFormHandler(action,parking_place_id=false)
 }
 
 //Обработчик формы бронирования парковочного места
-function parkingPlaceRentFormHandler(parking_place_id)
+function parkingPlaceRentFormHandler()
 {
     let url="../request_handler.php";
 
@@ -462,9 +462,8 @@ function parkingPlaceRentFormHandler(parking_place_id)
     let time_start="";
     let date_end="";
     let time_end="";
-    let result_price="";
 
-    let rent_action="rent_start";
+    let rent_action="rent_find";
 
     for (let i = 0; i < inputs.length; i++) 
     {
@@ -512,9 +511,6 @@ function parkingPlaceRentFormHandler(parking_place_id)
         }
     }
 
-    var result_price_value=document.getElementById("result_price_value");
-    result_price=result_price_value.textContent;
-
     //Проверки формы
     let error_message=document.getElementById("error_message_rent_parking_place");
 
@@ -529,26 +525,19 @@ function parkingPlaceRentFormHandler(parking_place_id)
         error_message.innerHTML="Заполните время начала и окончания бронирования";
         return(false);
     }
-    if(result_price==="")
-    {
-        error_message.innerHTML="Дата и время окончания бронирования должны быть позже даты и времени начала бронирования";
-        return(false);
-    }
 
     //Отправка данных формы
     var data = {
         rent_action: rent_action,
-        parking_place_id: parking_place_id,
         transport_number: transport_number,
         transport_id: transport_id,
         date_start: date_start,
         time_start: time_start,
         date_end: date_end,
-        time_end: time_end,
-        result_price: result_price
+        time_end: time_end
     };
     var data_json = JSON.stringify(data);
-    requestTo(rentDataHandler,data_json,url);
+    requestTo(findRentDataHandler,data_json,url);
 }
 
 //Обработчик формы добавления ТС
@@ -640,4 +629,40 @@ function editTransportFormHandler(action)
     };
     var data_json = JSON.stringify(data);
     requestTo(transportDataHandler,data_json,url);
+}
+
+//Обработчик формы фильтров на карте
+function filterFormHandler()
+{
+    let url="../request_handler.php";
+
+    var filters_form = document.getElementById("filters_form");
+    let inputs = filters_form.querySelectorAll('input');
+    let selects = filters_form.querySelectorAll('select');
+
+    let filters=[];
+
+    for (let i = 0; i < inputs.length; i++) 
+    {
+        let input=inputs[i];
+
+        if(input.checked || (input.value!="" && input.getAttribute("type")!="checkbox"))
+        {
+            filters.push([input.id,input.value]);
+        }
+        
+    }
+
+    for (let i = 0; i < selects.length; i++) 
+    {
+        let select=selects[i];
+
+        filters.push([select.id,select.value]);
+    }
+
+    filter_value=JSON.stringify(filters);
+
+    //Установка данных фильтров в localstorage
+    localStorage.setItem("filter_value", filter_value);
+    window.location.reload();
 }

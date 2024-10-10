@@ -155,17 +155,22 @@ class Input
     //Поле ввода типового размера парковочного места
     public function sizeSelect()
     {
+        $options="";
+        $sizes=file_get_contents("../documents/transport_sizes.json");
+        $sizes=json_decode($sizes,true);
+        foreach($sizes as $key=>$value)
+        {   
+            $options=$options.'<option value="'.$key.'">'.$value.'</option>';
+        }
+
         $input='
             <div class="label_div">
                 <label class="input_label">Типовой размер</label>
             </div>
             <select id="size" name="size" class="basic_input">
-                <option value="light_cargo">Грузовой малый</option> 
-                <option value="medium_cargo">Грузовой средний</option>
-                <option value="light_vehicle">Легковой</option>
-                <option value="euro_truck">Еврофура</option>
-                <option value="hood_truck">Капотник</option>
-                <option value="trailer_truck">Сцепка</option>
+
+                '.$options.'
+
             </select>
         ';
         
@@ -218,7 +223,7 @@ class Input
             $options=$options.'<option value="'.$transport_array[$i]["id"].'">'.$transport_array[$i]["transport_number"].", ".$transport_array[$i]["transport_name"].'</option>';
         }
 
-        if(count($transport_array)==0)
+        if(count($transport_array)==0 || (count($transport_array)==1 && $transport_array[0]=="empty"))
         {
             $return_arr["transport_par"]=false;
 
@@ -258,9 +263,11 @@ class Input
             $class_input="invisible_input";
         }
 
+        $transport_size_select=$this->sizeSelect();
+
         $input='
             <div id="placeholder_div" class="'.$class_placeholder.'">
-                <div onclick="switchVisibility(`show_input_div`,`placeholder_div`);" class="input_label link_button text_to_left margin_bottom_block">Ввести госномер вручную</div>
+                <div onclick="switchVisibility(`show_input_div`,`placeholder_div`);" class="input_label link_button text_to_left margin_bottom_block">Ввести госномер и размер ТС вручную</div>
             </div>
 
             <div id="show_input_div" class="'.$class_input.'">
@@ -268,6 +275,9 @@ class Input
                     <label class="input_label">Госномер ТС</label>
                 </div>
                 <input id="transport_number" class="basic_input" value="'.$value.'">
+
+                '.$transport_size_select.'
+                
             </div>
         ';
 

@@ -22,22 +22,6 @@ function accountButtonHandler() //Обработчик кнопки аккаун
     });
 }
 
-
-function searchButtonHandler() //Обработчик кнопки поиска
-{
-	let button=document.getElementById("search_button");
-    if(button===null)
-    {return(false);}
-
-    //click listener на кнопку
-    button.addEventListener("click", (event) => {
-
-		console.log(1);
-        
-    });
-}
-;
-
 function filterButtonHandler() //Обработчик кнопки фильтра
 {
 	let button=document.getElementById("filter_button");
@@ -47,7 +31,8 @@ function filterButtonHandler() //Обработчик кнопки фильтр�
     //click listener на кнопку
     button.addEventListener("click", (event) => {
 
-		console.log(1);
+        var filter_menu_div=document.getElementById("filter_menu_div");
+        filter_menu_div.style.display="block";
         
     });
 }
@@ -67,6 +52,5 @@ function logoutButtonHandler() //Обработчик кнопки выхода 
 }
 
 accountButtonHandler();
-searchButtonHandler();
 filterButtonHandler();
 logoutButtonHandler();

@@ -85,7 +85,7 @@ function arrayToObject(arr)
 function choiceCheckbox(id)
 {
 	var choice_input = document.getElementById("choice_input");
-	
+
 	var choice_value=choice_input.value;
 	var choice_arr=choice_value.split(["_"]);
 
@@ -99,6 +99,8 @@ function choiceCheckbox(id)
 		choice_input.value=choice_input.value+"_"+id;
 		choice_input.click();
 	}
+
+	console.log(choice_value);
 }
 
 //Функция сброса выбора в списке
@@ -108,8 +110,8 @@ function dropChoice()
 	choice_input.value="";
     choice_input.click();
 
-	var list_content=document.getElementById("list_content");
-    var choice_checkbox_array = list_content.querySelectorAll("input[type='checkbox']");
+	var list_container=document.getElementById("list_container");
+    var choice_checkbox_array = list_container.querySelectorAll("input[type='checkbox']");
 	for(let i=0;i<choice_checkbox_array.length;i++)
 	{
 		choice_checkbox_array[i].checked=false;
@@ -189,12 +191,12 @@ function setTodayDate(date_input_id=null,set_today_min=null)
     var today_year=today.getFullYear();
     
     //Месяц клиента
-    var today_month=today.getMonth();
-    if (today.getMonth()+1 < 10) {today_month='0' + (today.getMonth()+1);}
+    var today_month=today.getMonth()+1;
+    if (today_month < 10) {today_month='0' + today_month;}
        
     //День клиента      
     var today_day=today.getDate();
-    if (today.getDate()+1 < 10) {today_day='0' + today.getDate();}
+    if (today_day < 10) {today_day='0' + today_day;}
     
     //Полная дата
     var today_date=today_year+'-'+today_month+'-'+today_day;
@@ -227,6 +229,7 @@ function convertDate(date)
 function clearForm(form)
 {
     let inputs = form.querySelectorAll('input');
+	let selects = form.querySelectorAll('select');
 
     for (let i = 0; i < inputs.length; i++) 
     {
@@ -234,6 +237,12 @@ function clearForm(form)
         input.value="";
 		input.checked=false;
     }
+
+	for (let i = 0; i < selects.length; i++) 
+	{
+		let select=selects[i];
+		select.value="";
+	}
 }
 
 //Функция смены видимости двух блоков
@@ -244,6 +253,22 @@ function switchVisibility(show_block_id,hide_block_id)
 
 	show_block.style.display="block";
 	hide_block.style.display="none";
+}
+
+//Функция обработки клика вне заданного блока
+function clickOutsideBlockHandler(button_id,block_id)
+{
+	var block = document.getElementById(block_id);
+	var button = document.getElementById(button_id);
+
+	document.addEventListener( 'click', (e) => {
+		const withinBoundaries_block = e.composedPath().includes(block);
+		const withinBoundaries_button = e.composedPath().includes(button);
+	
+		if (!withinBoundaries_block && !withinBoundaries_button) {
+			block.style.display = 'none'; 
+		}
+	})
 }
 
 

@@ -82,7 +82,7 @@ class ParkingCard extends DataBaseRequests
         return($form_data);
     }
 
-    public function editHandler() //Обработчик редактирования карточки
+    public function editHandler($user_data) //Обработчик редактирования карточки
     {
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/redirect.php");
         $redirect = new Redirect();

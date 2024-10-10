@@ -28,6 +28,9 @@ if($show_add_parking_button_allowed){
 //Превью парковки
 $parking_preview_form=$form->parkingPreviewForm($role);
 
+//Форма фильтров
+$filter_form=$form->filterForm($user_data,$role);
+
 ?>
 <html>
     <head>
@@ -39,6 +42,9 @@ $parking_preview_form=$form->parkingPreviewForm($role);
         <script src="scripts/map.js"></script>
 
         <link rel="stylesheet" href="styles/map.css">
+        <link rel="stylesheet" href="styles/parking_preview.css">
+        <link rel="stylesheet" href="styles/parking_card.css">
+        <link rel="stylesheet" href="styles/filters_form.css">
     </head>
 
     <body>
@@ -52,7 +58,20 @@ $parking_preview_form=$form->parkingPreviewForm($role);
             <?php echo($parking_preview_form); ?>
         </div>
 
+        <div class="filter_menu_div" id="filter_menu_div">
+            <?php echo($filter_form); ?>
+        </div>
+
+        <div class="parking_card_div interface_block" id="parking_card_div">
+
+            <div class="text_to_right close_parking_card_button_div">
+                <button id="close_parking_card_button" class="close_button_cross main_color">+</button>
+                <script>closeParkingCardButtonHandler();</script>
+            </div>
+
+            <iframe class="parking_card_frame" id="parking_card_frame"></iframe>
+        </div>
+
     </body>
     
-
 </html>

@@ -1,0 +1,8 @@
+{
+    "light_cargo": "Грузовой малый",
+    "medium_cargo": "Грузовой средний",
+    "light_vehicle": "Легковой",
+    "euro_truck": "Еврофура",
+    "hood_truck": "Капотник",
+    "trailer_truck": "Сцепка"
+}

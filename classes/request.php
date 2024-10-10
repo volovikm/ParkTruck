@@ -13,7 +13,8 @@
     Метод editParkingCard - принимает запрос на редактирование существующей карточки парковки, проверяет данные, запускает редактирование
     Метод saveDraftParkingCard - принимает запрос на сохранение черновика, запускает запрос в базу на сохранение черновика
     Метод deleteParkingCard - принимает запрос на удаление существующей парковки, запускает запрос в базу
-    Метод startRent - принимает запрос на начало бронирования парковочного места, запускает бронирование
+    Метод findRent - принимает запрос на бронированиt парковочного места, запускает нахождение мест, подходящих для бронирования
+    Метод startRent - принимает запрос на начало бронирования, запускает бронирование
     Метод getRentIntervals- принимает запрос на вывод данных об интервалах бронирования за период, выводит данные массивом в ответ
     Метод getRentIntervalData - принимает запрос на вывод данных о конкретном интервале бронирования, выводит данные массивом в ответ
     Метод stopRent - принимает запрос на отмену бронирования, запускает отмену
@@ -110,6 +111,11 @@ class Request extends DataBaseRequests
             //Запрос на действия с бронированием
             if(isset($request_content['rent_action']))
             {
+                if($request_content['rent_action']=="rent_find")
+                {
+                    $response=$this->findRent($request_content);
+                }
+
                 if($request_content['rent_action']=="rent_start")
                 {
                     $response=$this->startRent($request_content);
@@ -204,8 +210,16 @@ class Request extends DataBaseRequests
         require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/rights_check.php");
         $rights = new Rights();
 
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/filters.php");
+        $filters = new Filters();
+
         $user_data=$account->checkAuth();
         $role=$account->getRole($user_data);
+
+        //Фильтры
+        $filters_arr=$filters->parseFilters($request_content["filter"]);
+
+        //var_dump($filters_arr);
 
         //Получение данных всех парковок из базы
         $data=$this->allParkingsDataRequest();
@@ -213,8 +227,21 @@ class Request extends DataBaseRequests
         $result_data=$data;
         for($i=0;$i<count($data);$i++)
         {
-            $show_rights=$rights->showParkingRights($data[$i],$user_data,$role,$request_content['filter']);
+            $parking_places_arr=$this->allParkingPlacesRequest($data[$i]["parking_id"]);
+
+            $show_rights=$rights->showParkingRights($data[$i],$user_data,$role);
             if(!$show_rights)
+            {
+                unset($result_data[$i]);
+            }
+
+            //Нахождение парковочных мест
+            $parking_id=$data[$i]["id"];
+            $parking_places_data=$this->allParkingPlacesRequest($parking_id);
+
+            //Проверка парковки по фильтрам
+            $filters_match=$filters->filtersHandler($filters_arr,$user_data,$role,$data[$i],$parking_places_arr);
+            if(!$filters_match)
             {
                 unset($result_data[$i]);
             }
@@ -222,9 +249,7 @@ class Request extends DataBaseRequests
             //Добавление id текущего пользователя в массивы парковок
             $result_data[$i]['current_user_id']="unauthorized";
             if($user_data!==false)
-            {
-                $result_data[$i]['current_user_id']=$user_data['id'];
-            }
+            {$result_data[$i]['current_user_id']=$user_data['id'];}
         }
 
         $response=$result_data;
@@ -466,6 +491,7 @@ class Request extends DataBaseRequests
         for($i=0;$i<count($parking_places);$i++)
         {
             $parking_places[$i]["parking_place_id"]=$random->randomString(20);
+            $parking_places[$i]["status"]="free";
         }
 
         //Проверка прав
@@ -488,7 +514,7 @@ class Request extends DataBaseRequests
         $this->addNewParkingPlacesRequest($parking_places,$parking_data['parking_id']);
 
         //Успешное добавление парковки
-        $response='{"response":"parking_card_add_complete"}';
+        $response='{"response":"parking_card_add_complete", "response_content": "'.$parking_data['parking_id'].'"}';
         
         return($response);
     }
@@ -548,6 +574,7 @@ class Request extends DataBaseRequests
         for($i=0;$i<count($parking_places);$i++)
         {
             $parking_places[$i]["parking_place_id"]=$random->randomString(20);
+            $parking_places[$i]["status"]="free";
         }
         $this->deleteAllParkingPlacesRequest($parking_data['parking_id']);
         $this->addNewParkingPlacesRequest($parking_places,$parking_data['parking_id']);
@@ -590,7 +617,7 @@ class Request extends DataBaseRequests
         }
 
         //Успешная отметка черновика
-        $response='{"response":"parking_card_add_draft_complete"}';
+        $response='{"response":"parking_card_add_draft_complete", "response_content": "'.$parking_data['parking_id'].'"}';
         return($response);
     }
 
@@ -629,6 +656,46 @@ class Request extends DataBaseRequests
         //Успешное удаление парковки
         $response='{"response":"delete_complete"}';
         return($response);
+    }
+
+    public function findRent($request_content) //Метод нахождения мест, подходящих для бронирования
+    {
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
+        $account = new Account();
+
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/validation.php");
+        $validation = new Validation();
+
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/rent.php");
+        $rent=new Rent();
+
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/rights_check.php");
+        $rights = new Rights();
+
+        $user_data=$account->checkAuth();
+        $role=$account->getRole($user_data);
+
+        $rent_data=$request_content;
+
+        //Валидация данных бронирования
+        $valid_rent_data=$validation->validateRentData($rent_data);
+        if(!$valid_rent_data)
+        {
+            $response='{"response":"invalid_rent_data"}';
+            return($response);
+        }
+
+        //Проверка прав
+        $rent_rights=$rights->rentRights($rent_data,$user_data,$role);
+        if(!$rent_rights)
+        {
+            $response='{"response":"request_error"}';
+            return($response);
+        }
+
+        //Нахождение возможных мест для бронирования
+
+        return("qwerty");
     }
 
     public function startRent($request_content) //Метод бронирования парковки
@@ -818,7 +885,7 @@ class Request extends DataBaseRequests
         }
 
         //Успешная отмена бронирования
-        $response='{"response":"stop_rent_complete"}';
+        $response='{"response":"stop_rent_complete", "response_content": "'.$parking_data['parking_id'].'"}';
         return($response);
     }
 
@@ -993,8 +1060,27 @@ class Request extends DataBaseRequests
 
     public function getParkingPreviewData($request_content) //Метод вывода данных конкретной парковки для превью
     {
-        $parking_data=$this->parkingCardDataRequest($request_content["parking_id"]);
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/classes/account.php");
+        $account = new Account();
 
+        $user_data=$account->checkAuth();
+
+        $parking_data=$this->parkingCardDataRequest($request_content["parking_id"])[0];
+
+        $free_parking_places_data=$this->allParkingPlacesByStatusRequest($request_content["parking_id"],"free");
+        $occupied_parking_places_data=$this->allParkingPlacesByStatusRequest($request_content["parking_id"],"occupied");
+        
+        $parking_data["free_places_amount"]=count($free_parking_places_data);
+        $parking_data["occupied_places_amount"]=count($occupied_parking_places_data);
+        $parking_data["places_amount"]=$parking_data["free_places_amount"]+$parking_data["occupied_places_amount"];
+
+        $parking_data["current_user_id"]="null";
+        if($user_data!==false)
+        {
+            $parking_data["current_user_id"]=$user_data["id"];
+            $parking_data["role"]=$user_data["role"];
+        }
+        
         //Вывод данных интервалов
         $response='{
             "response": "parking_preview_data_complete",
@@ -1080,6 +1166,7 @@ class Request extends DataBaseRequests
                 "size"=>"Размер",
                 "price_days"=>"Тариф:  руб\\сутки, ",
                 "price_hours"=>" руб\\час ",
+                "status"=>"Статус",
                 "rent"=>""
             ];
 
@@ -1106,11 +1193,29 @@ class Request extends DataBaseRequests
                 if($list_data[$i]["size"]=='trailer_truck')
                 {$list_data[$i]["size"]="Сцепка";}
 
+                //Статус
+                if($list_data[$i]["status"]=='free')
+                {
+                    $list_data[$i]["status"]=[];
+                    $list_data[$i]["status"]["content"]="Свободно"; 
+                    $list_data[$i]["status"]["additional_info"]["style"]="positive";
+                }
+                if($list_data[$i]["status"]=='occupied')
+                {
+                    $list_data[$i]["status"]=[];
+                    $list_data[$i]["status"]["content"]="Занято"; 
+                    $list_data[$i]["status"]["additional_info"]["style"]="negative";
+                }
+                if($list_data[$i]["status"]=='disabled')
+                {
+                    $list_data[$i]["status"]=[];
+                    $list_data[$i]["status"]["content"]="Отключено"; 
+                    $list_data[$i]["status"]["additional_info"]["style"]="neutral";
+                }
+
                 //Данные бронирования
                 $list_data[$i]["rent"]=[];
-
                 $list_data[$i]["rent"]["content"]="";
-
                 $list_data[$i]["rent"]["additional_info"]["link_button"]["text"]="Интервалы бронирования";
                 $list_data[$i]["rent"]["additional_info"]["link_button"]["action"]="show_modal_window";
                 $list_data[$i]["rent"]["additional_info"]["link_button"]["action_info"]["item_id"]=$list_data[$i]["parking_place_id"];
@@ -1239,7 +1344,7 @@ class Request extends DataBaseRequests
                 {continue;}
 
                 //Адрес парковки
-                $parking_place_data=($this->getParkingPlaceDataByIdRequest(id: $list_data[$i]["parking_place_id"]))[0];
+                $parking_place_data=($this->getParkingPlaceDataByIdRequest( $list_data[$i]["parking_place_id"]))[0];
                 $parking_data=($this->parkingCardDataRequest($parking_place_data["parking_id"]))[0];
                 $list_data[$i]["parking_adress"]=$parking_data["adress"];
 

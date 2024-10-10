@@ -114,7 +114,7 @@ class Account extends Session
     {
         $allowed=false;
 
-        if($user_data===false)
+        if($user_data===false && !in_array("unauthorized",$allowed_roles))
         {return($allowed);}
 
         $user_role=$this->getRole($user_data);

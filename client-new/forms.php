@@ -226,7 +226,7 @@ class Form extends Input
         {   
             if($value!="")
             {
-                $properties_images=$properties_images."<img class='properties_image' src='../images/".$value.".svg'>";
+                $properties_images=$properties_images."<img class='properties_image' src='../client-new/images/".$value.".jpg'>";
             }
         }
 
@@ -346,13 +346,6 @@ class Form extends Input
         ';
         $button_scripts=$button_scripts.'<script>enableListButtons(`change_parking_place_button`,`secondary_button`,1)</script>';
 
-        //Кнопка забронировать парковочное место
-        $rent_parking_place_button='
-        <div class="sidebar_button_div">
-            <button id="rent_parking_place_button" class="main_button sidebar_button" type="button">Забронировать</button>
-        </div>
-        ';
-
 
 
         //Кнопки общих действий
@@ -372,15 +365,6 @@ class Form extends Input
 
 
         //Разделение интерфейса в зависимости от действий и ролей
-        if($role=="unauthorized" || $role=="driver")
-        {
-            $form_data['action']="rent";
-            $parking_place_rent_form=$this->parkingPlaceRentForm($form_data);
-
-            $buttons=$buttons.$rent_parking_place_button; //Кнопка забронировать (зависима от выбора места - возможен множественный выбор)
-            $buttons=$buttons.$exit_button; //Кнопка выйти
-        }
-
         if($role=="parking_owner" && $action=="watch")
         {
             if($draft){$buttons=$buttons.$save_draft_parking_card_button;} //Кнопка сохранить черновик
@@ -418,7 +402,8 @@ class Form extends Input
                 $checkbox=$this->checkBox($key);
                 $properties_display=$properties_display.'
                 <div>
-                '.$checkbox.'<label>'.$value.'</label>
+                '.$checkbox.'<label>'.$value.'</label> 
+                <img class="properties_image" src="../client-new/images/'.$key.'.jpg">
                 </div>';
             }
 
@@ -465,6 +450,7 @@ class Form extends Input
                 $properties_display=$properties_display.'
                 <div>
                 '.$checkbox.'<label>'.$value.'</label>
+                <img class="properties_image" src="../client-new/images/'.$key.'.jpg">
                 </div>';
             }
 
@@ -559,27 +545,20 @@ class Form extends Input
 
                 </div>
 
-                <div id="list_container" class="list">
-
-                    <div id="list_rows" class="list_rows">
-                    </div>
-
-                    <div id="list_content" class="list_content">
-                    </div>
-
-                    <div class="list_row_1 list_row"></div>
+                <div id="list_patterns">
                     <div id="list_row_pattern_1" class="list_row_1 list_row list_row_pattern"></div>
                     <div id="list_row_pattern_2" class="list_row_2 list_row list_row_pattern"></div>
                     <input id="choice_checkbox_pattern" class="choice_checkbox choice_checkbox_pattern" type="checkbox">
                     <input id="choice_input" class="choice_input">
-                    
+                </div>
+
+                <div id="list_container" class="list">
                 </div>
 
                 '.$parking_place_form.'
-                '.$parking_place_rent_form.'
                 '.$parking_place_intervals_form.'
                 
-            </div>\
+            </div>
 
             <script src="scripts/list.js"></script>
             <script>listRequest("parking_places","'.$form_data['parking_id'].'");</script>
@@ -614,10 +593,27 @@ class Form extends Input
             <span id="adress_display" class="info_note_value"></span> 
         ';
 
+        $places_amount_display='
+        <span class="info_note_header_value">Всего мест: </span> 
+        <span id="places_amount_display" class="info_note_value"></span> 
+        ';
+
+        $free_places_amount_display='
+        <span class="info_note_header_value text_positive">Свободно: </span> 
+        <span id="free_places_amount_display" class="info_note_value text_positive"></span> 
+        ';
+
+        $occupied_places_amount_display='
+        <span class="info_note_header_value text_negative">Занято: </span> 
+        <span id="occupied_places_amount_display" class="info_note_value text_negative"></span> 
+        ';
+
         $properties_display='
             <span class="info_note_header_value">Особенности: </span> 
             <span id="properties_display" class="info_note_value"></span> 
         ';
+
+        $parking_id_input=$this->invisibleInput("parking_id");
 
         $buttons="";
 
@@ -638,7 +634,13 @@ class Form extends Input
         $form='
         <div id="parking_preview_form" class="parking_preview_form">
 
+            <div class="text_to_right">
+                <button id="close_preview_button" class="close_button_cross white">+</button>
+            </div>
+
             <div>
+
+                '.$parking_id_input.'
 
                 <div class="margin_bottom_block">
                     '.$name_display.'
@@ -646,6 +648,18 @@ class Form extends Input
 
                 <div class="margin_bottom_block">
                     '.$adress_display.'
+                </div>
+
+                <div>
+                    '.$places_amount_display.'
+                </div>
+
+                <div>
+                    '.$free_places_amount_display.'
+                </div>
+
+                <div class="margin_bottom_block">
+                    '.$occupied_places_amount_display.'
                 </div>
 
                 <div class="margin_bottom_block">
@@ -659,6 +673,8 @@ class Form extends Input
                 '.$buttons.'
                 
             </div>
+
+            <script src="scripts/parking_preview.js"></script>
 
         </div>
         ';
@@ -740,8 +756,14 @@ class Form extends Input
         $user_data=$account->checkAuth();
         $role=$account->getRole($user_data);
 
+        //Поле заполнения фильтров
+        $filters_input=$this->invisibleInput("filters");
+
         //Поле ввода госномера
         $transport_number_input=$this->transportNumberInput();
+
+        //Поле ввода размера ТС
+        $transport_size_select=$this->sizeSelect();
 
         //Поле выбора ТС
         $transport_select="";
@@ -754,6 +776,7 @@ class Form extends Input
             if($transport_select_arr["transport_par"]) //В списке есть хотя бы одно ТС
             {
                 $transport_number_input=$this->transportNumberInput(true);
+                $transport_size_select="";
             }
         }
 
@@ -765,22 +788,15 @@ class Form extends Input
 
         $form='
 
-        <div id="parking_place_rent_form" class="base_form interface_block parking_place_form_div">
-            <div class="form_header">Парковочное место</div>
+        <form id="parking_place_rent_form" class="parking_place_rent_form">
 
-            <div class="parking_place_rent_info">
-                <div>
-                    Внутренний номер: <span id="parking_place_name_span"></span>
-                </div>
-                <div>
-                    Стоимость за сутки: <span id="price_days_span"></span> <span> руб</span> 
-                </div>
-                <div>
-                    Стоимость за час: <span id="price_hours_span"></span> <span> руб</span> 
-                </div>
-            </div>
+            <div class="sidebar">
 
-            <div class="input_form_div">
+                <div class="input_form_div">
+
+                <div>
+                '.$filters_input.'
+                </div>
 
                 <div>
                 '.$transport_select.'
@@ -797,29 +813,71 @@ class Form extends Input
                 <div>
                 '.$datetime_end.'
                 </div>
+                
+                </div>
 
-                <div class="result_price_div">
-                    Итоговая стоимость: <span id="result_price_span"></span>
-                    <span class="invisible_input" id="result_price_value"></span>
+                <div class="error_message_div">
+                    <div id="error_message_rent_parking_place" class="error_message">
+
+                    </div>
+                </div>
+
+                <div class="center_text">
+                    <button id="save_parking_place_rent_button" onclick="parkingPlaceRentFormHandler()" class="main_button" type="button">Подтвердить</button>
+                    <button id="cancel_parking_place_rent_button" class="secondary_button" type="button">Отменить</button>
+                </div>
+
+            </div>
+
+            <div class="main_space">
+
+                <div class="info_note_main_header_div">
+                    Парковочные места
+                </div>
+
+                <div class="list_filter_div">
+
+                </div>
+
+                <div id="list_patterns">
+                    <div id="list_row_pattern_1" class="list_row_1 list_row list_row_pattern"></div>
+                    <div id="list_row_pattern_2" class="list_row_2 list_row list_row_pattern"></div>
+                    <input id="choice_checkbox_pattern" class="choice_checkbox choice_checkbox_pattern" type="checkbox">
+                    <input id="choice_input" class="choice_input">
+                </div>
+
+                <div id="list_container" class="list">
                 </div>
                 
             </div>
 
-            <div class="error_message_div">
-                <div id="error_message_rent_parking_place" class="error_message">
+            <script src="scripts/parking_place_rent_form.js"></script>
 
-                </div>
-            </div>
+            <script src="scripts/forms.js"></script>
 
-            <div class="button_div">
-                <button id="save_parking_place_rent_button" class="main_button" type="button">Подтвердить</button>
-                <button id="cancel_parking_place_rent_button" class="secondary_button" type="button">Отменить</button>
-            </div>
-
-        </div>
+        </form>
         ';
 
         return($form);
+
+        /*  
+        <div class="parking_place_rent_info">
+                <div>
+                    Внутренний номер: <span id="parking_place_name_span"></span>
+                </div>
+                <div>
+                    Стоимость за сутки: <span id="price_days_span"></span> <span> руб</span> 
+                </div>
+                <div>
+                    Стоимость за час: <span id="price_hours_span"></span> <span> руб</span> 
+                </div>
+            </div>
+
+            <div class="result_price_div">
+                    Итоговая стоимость: <span id="result_price_span"></span>
+                    <span class="invisible_input" id="result_price_value"></span>
+                </div>
+        */
     }
 
     //Форма визуализации интервалов бронирования парковочного места
@@ -902,7 +960,7 @@ class Form extends Input
         $date_from_input=$this->dateInput("from","Период: 7 дней с ",true);
 
         $form='
-        <div id="parking_place_intervals_form" class="interface_block parking_place_form_div intervals_form_div">
+        <div id="parking_place_intervals_form" class="intervals_form_div">
             <div class="form_header">Парковочное место</div>
 
             <div class="parking_place_intervals_info">
@@ -1268,7 +1326,7 @@ class Form extends Input
         return($form);
     }
 
-    //Форома списка пользователей
+    //Форма списка пользователей
     public function usersForm()
     {
         $buttons="";
@@ -1358,6 +1416,140 @@ class Form extends Input
             <script src="scripts/users.js"></script>
 
         </form>';
+
+        return($form);
+    }
+
+    //Форма фильтров на карте
+    public function filterForm($user_data,$role)
+    {
+        require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/data_base/bd.php");
+        $sql = new DataBaseRequests();
+
+        $buttons="";
+
+        $buttons=$buttons.'
+            <button id="apply_filters_button" onclick="filterFormHandler()" class="main_button" type="button">Применить</button>
+        ';
+
+        $buttons=$buttons.'
+            <button id="clear_filters_button" class="secondary_button" type="button">Сбросить</button>
+        ';
+
+        //Чекбокс только мои парковки
+        $parkings_display_filter="";
+        if($role=="parking_owner")
+        {
+            $only_user_checkbox=$this->checkBox("only_user");
+            $parkings_display_filter='
+            <div>
+            '.$only_user_checkbox.'<label>Только мои парковки</label> 
+            </div>';
+        }
+
+        //Чекбоксы размера
+        $size_display="";
+        $sizes=file_get_contents("../documents/transport_sizes.json");
+        $sizes=json_decode($sizes,true);
+        foreach($sizes as $key=>$value)
+        {   
+            $size_checkbox=$this->checkBox($key);
+
+            $size_display=$size_display.'
+            <div>
+            '.$size_checkbox.'<label>'.$value.'</label> 
+            </div>';
+        }
+
+        //Выбор ТС
+        $transport_select_display='';
+        $transport_select="";
+        if($role=="driver")
+        {
+            $transport_array=$sql->getUserTransportDataRequest($user_data);
+            array_unshift($transport_array,["id"=>"","transport_number"=>"Все ТС","transport_name"=>""]); //Внесение пустого элемента в массив ТС для отсутвия выбора ТС
+
+            $transport_select_arr=$this->transportSelect($transport_array);
+            $transport_select=$transport_select_arr["select"];
+
+            $transport_select_display='
+            <div class="margin_bottom_block"> 
+                '.$transport_select.'
+            </div>';
+        }
+
+        //Ввод времени - свободные в указанный период времени
+        $datetime_start=$this->dateTimeInput("start","Свободные на период от:",true); //Поле ввода даты, времени начала бронирования
+        $datetime_end=$this->dateTimeInput("end","до:",true); //Поле ввода даты окончания бронирования
+
+        //Чекбокс только свободные в данный момент
+        $free_checkbox=$this->checkBox("only_free");
+        $free_display='
+        <div>
+        '.$free_checkbox.'<label>Только свободные в данный момент</label> 
+        </div>';
+
+        //Чекбоксы особенностей
+        $properties_display="";
+        $properties=file_get_contents("../documents/parking_properties.json");
+        $properties=json_decode($properties,true);
+        foreach($properties as $key=>$value)
+        {   
+            $property_checkbox=$this->checkBox($key);
+
+            $properties_display=$properties_display.'
+            <div>
+            '.$property_checkbox.'<label>'.$value.'</label> 
+            </div>';
+        }
+
+        $form='
+        <div id="filters_form" class="filters_form">
+
+            <script src="scripts/forms.js"></script>
+
+            <div class="text_to_right">
+                <button id="close_filters_button" class="close_button_cross white">+</button>
+            </div>
+
+            <div>
+
+                <div class="margin_bottom_block">
+                    '.$parkings_display_filter.'
+                </div>
+
+                <div class="margin_bottom_block">
+                    <label class="input_label">Размер ТС:</label>
+                    '.$size_display.'
+                </div>
+
+                '.$transport_select_display.'
+
+                <div class="margin_bottom_block">
+                    '.$datetime_start.'
+                    '.$datetime_end.'
+                </div>
+
+                <div class="margin_bottom_block">
+                    '.$free_display.'
+                </div>
+
+                <div class="margin_bottom_block">
+                    '.$properties_display.'
+                </div>
+                
+            </div>
+
+            <div class="center_text">
+                
+                '.$buttons.'
+                
+            </div>
+
+            <script src="scripts/filters_form.js"></script>
+
+        </div>
+        ';
 
         return($form);
     }

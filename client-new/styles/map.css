@@ -15,18 +15,6 @@
     cursor: pointer;
 }
 
-.parking_preview_div{
-    width: 300px; 
-    height: 500px;
-    background-color: rgb(133, 173, 243,1);
-    position: fixed;
-    right: 0;
-    bottom: 80px;
-    z-index: 3;
-    border-radius: 10px 0 0 0;
-    display: none;
-}
-
 .selection_marker{
     background-image: url('../images/red_marker.svg');
     background-repeat: no-repeat;
@@ -40,42 +28,28 @@
     display: none;
 }
 
-.parking_preview_form{
-    color: white;
-    padding: 10px;
-}
-
 .info_note_header_value{
     font-weight: bold;
 }
-/*
-.filter{
+
+.parking_card_div{
+    left: 10%;
+    top: 10%;
+    position: fixed;
+    width: 80%;
+    height: calc(100% - 80px - 20%);
+    z-index: 4;
+    display: none;
+}
+
+.parking_card_frame{
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 10px;
+}
+
+.close_parking_card_button_div{
     position: absolute;
-    width: 240px;
-    height: 28px;
-    top: 135px;
-    right: 3px;
-    background-color: white;
-    z-index: 3;
-    box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .15), 0 2px 5px -3px rgba(0, 0, 0, .15);
-    cursor: pointer;
-    white-space: nowrap;
+    right: 0;
 }
-
-.filter_text{
-    margin: auto;
-    font-family:Arial, Helvetica, sans-serif;
-    font-size: 13px;
-    text-align: center;
-    padding-top:6px;
-    padding-left:5px;
-    display: inline-block;
-    vertical-align: top;
-}
-
-.filter_select_div{
-    padding-top:5px;
-    display: inline-block;
-    vertical-align: top;
-}
-    */

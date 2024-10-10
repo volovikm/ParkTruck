@@ -239,6 +239,29 @@
                         return($array);
                 }
 
+                /*
+                //Запрос данных парковок с учётом фильтров
+                public function filtersParkingsDataRequest($filters) 
+                {
+                        $db=$this->connectDataBase();
+
+                        $array=false;
+                        try 
+                        {
+                                $sql="SELECT * FROM `parkings` ".$filters["condition"];
+                                $stmt = $db->prepare($sql);
+                                foreach($filters["parameters"] as $key=>$par)
+                                {
+                                        $stmt->bindValue(":".$par, $filters["parameters"][$key]);
+                                }
+                                
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        }catch (PDOException $e) {}
+                        return($array);
+                }
+                        */
+
                 //Запрос данных парковок пользователя
                 public function userParkingsDataRequest($user_id) 
                 {
@@ -434,6 +457,23 @@
                         return($array);
                 }
 
+                public function allParkingPlacesByStatusRequest($parking_id,$status) //Запрос данных парковочных мест по статусу
+                {
+                        $db=$this->connectDataBase();
+
+                        $array=false;
+                        try 
+                        {
+                                $sql="SELECT * FROM `parking_places` WHERE parking_id= :parking_id AND status=:status";
+                                $stmt = $db->prepare($sql);
+                                $stmt->bindValue(":parking_id", $parking_id);
+                                $stmt->bindValue(":status", $status);
+                                $stmt->execute();
+                                $array = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                        }catch (PDOException $e) {}
+                        return($array);
+                }
+
                 public function addNewParkingPlacesRequest($parking_places,$parking_id) 
                 {
                         $db=$this->connectDataBase();
@@ -447,14 +487,16 @@
                                         parking_place_name,
                                         size, 
                                         price_days,
-                                        price_hours
+                                        price_hours,
+                                        status
                                         ) VALUES (
                                         :parking_id,
                                         :parking_place_id,
                                         :parking_place_name,
                                         :size, 
                                         :price_days,
-                                        :price_hours
+                                        :price_hours,
+                                        :status
                                         )";
                                         $stmt=$db->prepare($sql);
                                         $stmt->bindValue(":parking_id", $parking_id);
@@ -463,6 +505,7 @@
                                         $stmt->bindValue(":size", $parking_place['size']);
                                         $stmt->bindValue(":price_days", $parking_place['price_days']);
                                         $stmt->bindValue(":price_hours", $parking_place['price_hours']);
+                                        $stmt->bindValue(":status", $parking_place['status']);
                                         $affectedRowsNumber=$stmt->execute();
                                 }catch (PDOException $e) {}
                         }

@@ -3,7 +3,7 @@
 require_once($_SERVER['DOCUMENT_ROOT']."/ParkTruck/data_base/bd.php");
 class Rights extends DataBaseRequests
 {
-    public function showParkingRights($parking_data,$user_data,$role,$filter=null) //Проверка прав на показ парковки
+    public function showParkingRights($parking_data,$user_data,$role) //Проверка прав на показ парковки
     {
         //$user_data: array | false
 
@@ -29,23 +29,9 @@ class Rights extends DataBaseRequests
             if($user_data===false)
             {return($rights);}
 
-            if($filter=="all" || $filter==null)
+            if( !($parking_data['user_id']!=$user_data['id'] && (boolean) $parking_data['draft']) )
             {
-                
-                if( !($parking_data['user_id']!=$user_data['id'] && (boolean) $parking_data['draft']) )
-                {
-                    $rights=true;
-                }
-
-            }
-            if($filter=="only_user")
-            {
-                
-                if($parking_data['user_id']==$user_data['id'])
-                {
-                    $rights=true;
-                }
-
+                $rights=true;
             }
         }
 

@@ -17,7 +17,6 @@ class Header extends Account
         //Список пунктов меню
         $menu_list='
         <div><a href="map.php" class="menu-item">Главная</a></div>
-        <div><a href="support.php" class="menu-item">Поддержка</a></div>
         ';
 
         if($this->user_data !== false) //Заголовок с авторизацией
@@ -115,8 +114,6 @@ class Header extends Account
         
             <div class="right-side">
 
-                <div id="search_button" class="search_button">
-                </div>
                 <div id="filter_button" class="filter_button">
                 </div>
                 

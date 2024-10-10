@@ -173,13 +173,10 @@ class Validation
         $valid_time_start=$this->validateTime($rent_data["time_start"]);
         $valid_time_end=$this->validateTime($rent_data["time_end"]);
 
-        //Проверка итоговой стоимости
-        $valid_result_price=$this->validateNumbers($rent_data["result_price"]);
-
         //Проверка соответствия времени начала и времени конца
         $valid_datetime_match=$this->validateDateTimeMatch($rent_data["date_start"]." ".$rent_data["time_start"],$rent_data["date_end"]." ".$rent_data["time_end"]);
 
-        if($valid_transport_number && $valid_transport_id && $valid_date_start && $valid_date_end && $valid_time_start && $valid_time_end && $valid_result_price && $valid_datetime_match)
+        if($valid_transport_number && $valid_transport_id && $valid_date_start && $valid_date_end && $valid_time_start && $valid_time_end && $valid_datetime_match)
         {
             $valid=true;
         }

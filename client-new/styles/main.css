@@ -174,6 +174,15 @@ body{
     margin-top: 15px;
 }
 
+.list_filter_div{
+    width: 100%;
+    height: 50px;
+}
+
+.list{
+    min-width: fit-content;
+}
+
 .list_row{
     height: 40px;
     width: 100%;
@@ -195,27 +204,37 @@ body{
     display: none;
 }
 
+.list_column{
+    height: 100%;
+    display: inline-block;
+    vertical-align: top;
+    background-clip: border-box;
+    color: rgb(23, 99, 191);
+    font-weight: bold;
+    white-space: nowrap;
+    text-align: center;
+    padding: 5px;
+}
+
+/*
 .list_rows{
-    width: 100%;
+    width: 70%;
+    min-width: calc(70% - 270px);
     height: 100%;
     z-index: 1;
-    position: absolute;
+    position: fixed;
 }
 
 .list_content{
-    width: 100%;
-    height: calc(100vh - 170px);
+    width: 70%;
+    min-width: calc(70% - 270px);
+    height: calc(100vh - 80px);
     z-index: 2;
     position: absolute;
     overflow: auto;
 }
 
-.list_column{
-    height: 100%;
-    width: min-content;
-    display: inline-block;
-    vertical-align: top;
-}
+
 
 .list_column_block{
     color: rgb(23, 99, 191);
@@ -234,11 +253,16 @@ body{
     text-align: center;
     padding: 5px;
 }
+    */
 
 .choice_checkbox{
     height: 25px; 
     width: 25px; 
     cursor: pointer;
+}
+
+.choice_checkbox_column{
+    width: 30px; 
 }
 
 .choice_checkbox_pattern{
@@ -255,6 +279,10 @@ body{
 
 .text_to_left{
     text-align: left;
+}
+
+.text_to_right{
+    text-align: right;
 }
 
 .text_positive{
@@ -308,4 +336,25 @@ body{
 
 .margin_bottom_block{
     margin-bottom: 15px;
+}
+
+.white{
+    color: white;
+}
+
+.black{
+    color: black;
+}
+
+.main_color{
+    color: rgb(68, 115, 197);
+}
+
+.close_button_cross{
+    transform: rotate(45deg);
+    font-size: 25;
+    font-weight: bold;
+    background: none;
+    border: none;
+    cursor: pointer;
 }

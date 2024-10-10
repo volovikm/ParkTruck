@@ -1,7 +1,5 @@
 //Запрос данных меток для карты
-let filter_value=readCookie("filter_value");
-if(filter_value===undefined)
-{filter_value="all";}
+let filter_value=localStorage.getItem("filter_value");
 
 var data = {
     get_parkings_data: 'true',
@@ -45,7 +43,6 @@ function createMap(map_data) //Функция создания карты
         let last_latitude=readCookie("last_latitude");
         let last_longitude=readCookie("last_longitude");
         let last_zoom=readCookie("last_zoom");
-        let filter_value=readCookie("filter_value");
 
         if(last_latitude === undefined || last_longitude === undefined || last_zoom === undefined)
         {
@@ -81,9 +78,6 @@ function createMap(map_data) //Функция создания карты
 
         //Обработка нажатия на кнопку добавления парковки
         addParkingButtonHandler(myMap);
-
-        //Обработка списка фильтров
-        filterMapSelectHandler(filter_value);
     }
 }
 
@@ -289,23 +283,48 @@ function openParkingPreview(preview_data_json)
     preview_data = JSON.parse(preview_data);
     let response_content=preview_data['response_content'];
 
-    parking_preview_data=response_content["parking_preview_data"][0];
+    parking_preview_data=response_content["parking_preview_data"];
 
     //Заполнение формы превью
     var name_display=document.getElementById("name_display");
     var adress_display=document.getElementById("adress_display");
     var properties_display=document.getElementById("properties_display");
+    var parking_id=document.getElementById("parking_id");
+    var places_amount_display=document.getElementById("places_amount_display");
+    var free_places_amount_display=document.getElementById("free_places_amount_display");
+    var occupied_places_amount_display=document.getElementById("occupied_places_amount_display");
 
+    parking_id.value=parking_preview_data["parking_id"];
     name_display.innerHTML=parking_preview_data["name"];
     adress_display.innerHTML=parking_preview_data["adress"];
     
-    
-    //properties_display.innerHTML=parking_preview_data["properties"];
+    var properties_html="";
+    properties_array=parking_preview_data["properties"].split(' ');
+    for(let i=0;i<properties_array.length;i++)
+    {
+        if(properties_array[i]=="")
+        {continue;}
 
+        properties_html=properties_html+"<image class='properties_image' src='images/"+properties_array[i]+".jpg'></image>"
+    }
+    properties_display.innerHTML=properties_html;
 
+    places_amount_display.innerHTML=parking_preview_data["places_amount"];
+    free_places_amount_display.innerHTML=parking_preview_data["free_places_amount"];
+    occupied_places_amount_display.innerHTML=parking_preview_data["occupied_places_amount"];
 
-
+    var open_parking_card_button=document.getElementById("open_parking_card_button");
+    if(parking_preview_data["user_id"]!=parking_preview_data["current_user_id"] && parking_preview_data["role"]!="admin" && open_parking_card_button!=null)
+    {
+        open_parking_card_button.style.display="none";
+    }
+    else if(open_parking_card_button!=null)
+    {
+        open_parking_card_button.style.display="inline-block";
+    }
 }
+
+
 
 
 
@@ -348,13 +367,18 @@ function addParkingButtonHandler(myMap) //Обработчик нажатия н
             let selection_marker_center=[center_latitude,center_longitude];
 
             selection_marker.style.display="none";
-            //add_parking_button.innerHTML="+";
+            add_parking_button.style.display="none";
             cancel_add_parking_button.style.display="none";
 
             //Переход на форму добавления парковки
             getAddress(selection_marker_center);
             setTimeout(function(){ 
-                redirectTo('parking_card.php?new_parking_card=true&latitude='+center_latitude+'&longitude='+center_longitude);
+
+                var parking_card_div=document.getElementById("parking_card_div");
+                var parking_card_frame=document.getElementById("parking_card_frame");
+
+                parking_card_div.style.display="block";
+                parking_card_frame.setAttribute("src",'parking_card.php?new_parking_card=true&latitude='+center_latitude+'&longitude='+center_longitude)
             },500);
             
             return(false);
@@ -375,33 +399,33 @@ function addParkingButtonHandler(myMap) //Обработчик нажатия н
     });
 }
 
-function filterMapSelectHandler(filter_value) //Обработчик фильтра показа парковок
+function closeParkingCardButtonHandler() //Обработчик кнопки закрытия карточки парковки
 {
-    let filter=document.getElementById("filter");
-    let filter_all=document.getElementById("filter_all");
-    let filter_only_user=document.getElementById("filter_only_user");
-
-    if(filter==null)
+    let button=document.getElementById("close_parking_card_button");
+    if(button===null)
     {return(false);}
 
-    if(filter_value=="all")
-    {
-        filter.value="all";
-        filter_all.selected=true;
-    }
-    else if(filter_value=="only_user")
-    {
-        filter.value="Только мои парковки";
-        filter_only_user.selected=true;
-    }
+    //click listener на кнопку
+    button.addEventListener("click", (event) => {
 
-    filter.onchange = function(event) {
-        const filter_value = event.target.value;
+        console.log("cancel_parking_card");
 
-        writeCookie("filter_value", filter_value, 30);
+        var parking_card_div=document.getElementById("parking_card_div");
+        var parking_card_frame=document.getElementById("parking_card_frame");
+
+        parking_card_div.style.display="none";
+        parking_card_frame.removeAttribute("src");
+
+        let add_parking_button=document.getElementById("add_parking_button");
+        if(add_parking_button!=null)
+        {
+            add_parking_button.style.display="inline-block";
+            add_parking_button.innerHTML="Добавить парковку";
+        }
 
         window.location.reload();
-    };
+
+    });
 }
 
 

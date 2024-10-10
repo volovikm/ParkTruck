@@ -19,7 +19,7 @@
 .center-block{
   text-align: left;
   height: 100%;
-  width: calc(100% - 160px - 100px - 20px);
+  width: calc(100% - 80px - 100px - 20px);
   display: inline-block;
   vertical-align: top;
 }
@@ -27,7 +27,7 @@
 .right-side{
   text-align: right;
   height: 100%;
-  width: 160px;
+  width: 80px;
   display: inline-block;
   vertical-align: top;
 }
@@ -36,16 +36,6 @@
   height: 100%;
   width: 100px;
   background-image: url("../images/account_image.jpeg");
-  background-repeat: no-repeat;
-  cursor: pointer;
-  display: inline-block;
-  vertical-align: top;
-}
-
-.search_button{
-  height: 100%;
-  width: 75px;
-  background-image: url("../images/search.jpeg");
   background-repeat: no-repeat;
   cursor: pointer;
   display: inline-block;
@@ -77,6 +67,7 @@
   position: fixed;
   bottom: 80px;
   border-radius: 0px 10px 0px 0px;
+  z-index: 100;
 }
 
 .auth_frame{

@@ -1,0 +1,18 @@
+
+.filters_form{
+    color: white; 
+    padding: 10px;  
+}
+
+.filter_menu_div{
+    width: 300px;
+    height: 600px;
+    background-color: rgb(133, 173, 243,1);
+    position: fixed;
+    right: 0;
+    bottom: 80px;
+    z-index: 3;
+    border-radius: 10px 0 0 0;
+    display: none;
+    overflow-y: auto;
+}
